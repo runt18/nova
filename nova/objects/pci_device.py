@@ -276,7 +276,7 @@ class PciDevice(base.NovaPersistentObject, base.NovaObject):
                                              self._context,
                                              self.compute_node_id,
                                              self.address)
-            if not all([vf.is_available() for vf in vfs_list]):
+            if not all( vf.is_available() for vf in vfs_list):
                 raise exception.PciDeviceVFInvalidStatus(
                     compute_node_id=self.compute_node_id,
                     address=self.address)
@@ -340,8 +340,8 @@ class PciDevice(base.NovaPersistentObject, base.NovaObject):
                                              self._context,
                                              self.compute_node_id,
                                              self.address)
-            if not all([vf.status in dependatns_ok_statuses for
-                        vf in vfs_list]):
+            if not all( vf.status in dependatns_ok_statuses for
+                        vf in vfs_list):
                 raise exception.PciDeviceVFInvalidStatus(
                     compute_node_id=self.compute_node_id,
                     address=self.address)
@@ -418,7 +418,7 @@ class PciDevice(base.NovaPersistentObject, base.NovaObject):
                                              self._context,
                                              self.compute_node_id,
                                              self.parent_addr)
-            if all([vf.is_available() for vf in vfs_list if vf.id != self.id]):
+            if all( vf.is_available() for vf in vfs_list if vf.id != self.id):
                 try:
                     parent = self.get_by_dev_addr(self._context,
                                                   self.compute_node_id,

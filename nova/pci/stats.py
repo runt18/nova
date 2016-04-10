@@ -274,8 +274,8 @@ class PciDeviceStats(object):
         # note (yjiang5): this function has high possibility to fail,
         # so no exception should be triggered for performance reason.
         pools = copy.deepcopy(self.pools)
-        return all([self._apply_request(pools, r, numa_cells)
-                        for r in requests])
+        return all( self._apply_request(pools, r, numa_cells)
+                        for r in requests)
 
     def apply_requests(self, requests, numa_cells=None):
         """Apply PCI requests to the PCI stats.
@@ -285,8 +285,8 @@ class PciDeviceStats(object):
         If numa_cells is provided then only devices contained in
         those nodes are considered.
         """
-        if not all([self._apply_request(self.pools, r, numa_cells)
-                                            for r in requests]):
+        if not all( self._apply_request(self.pools, r, numa_cells)
+                                            for r in requests):
             raise exception.PciDeviceRequestFailed(requests=requests)
 
     def __iter__(self):

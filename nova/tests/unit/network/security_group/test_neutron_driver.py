@@ -337,8 +337,8 @@ class TestNeutronDriver(test.NoDBTestCase):
         ports = []
         sg_bindings = {}
         for i in range(0, num_servers):
-            server_id = "server-%d" % i
-            port_id = "port-%d" % i
+            server_id = "server-{0:d}".format(i)
+            port_id = "port-{0:d}".format(i)
             servers.append({'id': server_id})
             device_ids.append(server_id)
             ports.append({'id': port_id,

@@ -37,8 +37,8 @@ class InstanceUsageAuditLogJsonTest(api_sample_base.ApiSampleTestBaseV21):
         return f
 
     def test_show_instance_usage_audit_log(self):
-        response = self._do_get('os-instance_usage_audit_log/%s' %
-                                urllib.quote('2012-07-05 10:00:00'))
+        response = self._do_get('os-instance_usage_audit_log/{0!s}'.format(
+                                urllib.quote('2012-07-05 10:00:00')))
         self._verify_response('inst-usage-audit-log-show-get-resp',
                               {}, response, 200)
 

@@ -45,7 +45,7 @@ FAKE_FLAVORS = {
 
 # TODO(jogo) dedup these across nova.api.openstack.contrib.test_flavor*
 def fake_flavor_get_by_flavor_id(flavorid, ctxt=None):
-    return FAKE_FLAVORS['flavor %s' % flavorid]
+    return FAKE_FLAVORS['flavor {0!s}'.format(flavorid)]
 
 
 def fake_get_all_flavors_sorted_list(context=None, inactive=False,
@@ -87,7 +87,7 @@ class FlavorSwapTestV21(test.NoDBTestCase):
         return jsonutils.loads(body).get('flavors')
 
     def assertFlavorSwap(self, flavor, swap):
-        self.assertEqual(str(flavor.get('%sswap' % self.prefix)), swap)
+        self.assertEqual(str(flavor.get('{0!s}swap'.format(self.prefix))), swap)
 
     def test_show(self):
         url = self.base_url + '/1'

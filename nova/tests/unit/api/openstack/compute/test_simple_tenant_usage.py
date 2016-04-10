@@ -70,7 +70,7 @@ def get_fake_db_instance(start, end, instance_id, tenant_id,
                          vm_state=vm_states.ACTIVE):
     inst = fakes.stub_instance(
             id=instance_id,
-            uuid='00000000-0000-0000-0000-00000000000000%02d' % instance_id,
+            uuid='00000000-0000-0000-0000-00000000000000{0:02d}'.format(instance_id),
             image_ref='1',
             project_id=tenant_id,
             user_id='fakeuser',
@@ -92,7 +92,7 @@ def fake_instance_get_active_by_window_joined(context, begin, end,
                                          STOP,
                                          x,
                                          project_id if project_id else
-                                         "faketenant_%s" % (x / SERVERS))
+                                         "faketenant_{0!s}".format((x / SERVERS)))
                                          for x in range(TENANTS * SERVERS)]
 
 
@@ -115,8 +115,7 @@ class SimpleTenantUsageTestV21(test.TestCase):
                                                        is_admin=False)
 
     def _test_verify_index(self, start, stop):
-        req = fakes.HTTPRequest.blank('?start=%s&end=%s' %
-                    (start.isoformat(), stop.isoformat()))
+        req = fakes.HTTPRequest.blank('?start={0!s}&end={1!s}'.format(start.isoformat(), stop.isoformat()))
         req.environ['nova.context'] = self.admin_context
         res_dict = self.controller.index(req)
         usages = res_dict['tenant_usages']
@@ -145,8 +144,7 @@ class SimpleTenantUsageTestV21(test.TestCase):
         self._test_verify_show(START, future)
 
     def _get_tenant_usages(self, detailed=''):
-        req = fakes.HTTPRequest.blank('?detailed=%s&start=%s&end=%s' %
-                    (detailed, START.isoformat(), STOP.isoformat()))
+        req = fakes.HTTPRequest.blank('?detailed={0!s}&start={1!s}&end={2!s}'.format(detailed, START.isoformat(), STOP.isoformat()))
         req.environ['nova.context'] = self.admin_context
 
         # Make sure that get_active_by_window_joined is only called with
@@ -189,8 +187,7 @@ class SimpleTenantUsageTestV21(test.TestCase):
 
     def _test_verify_show(self, start, stop):
         tenant_id = 1
-        req = fakes.HTTPRequest.blank('?start=%s&end=%s' %
-                    (start.isoformat(), stop.isoformat()))
+        req = fakes.HTTPRequest.blank('?start={0!s}&end={1!s}'.format(start.isoformat(), stop.isoformat()))
         req.environ['nova.context'] = self.user_context
 
         res_dict = self.controller.show(req, tenant_id)
@@ -198,8 +195,8 @@ class SimpleTenantUsageTestV21(test.TestCase):
         usage = res_dict['tenant_usage']
         servers = usage['server_usages']
         self.assertEqual(TENANTS * SERVERS, len(usage['server_usages']))
-        uuids = ['00000000-0000-0000-0000-00000000000000%02d' %
-                    x for x in range(SERVERS)]
+        uuids = ['00000000-0000-0000-0000-00000000000000{0:02d}'.format(
+                    x) for x in range(SERVERS)]
         for j in range(SERVERS):
             delta = STOP - START
             # NOTE(javeme): cast seconds from float to int for clarity
@@ -209,8 +206,7 @@ class SimpleTenantUsageTestV21(test.TestCase):
             self.assertIn(servers[j]['instance_id'], uuids)
 
     def test_verify_show_cannot_view_other_tenant(self):
-        req = fakes.HTTPRequest.blank('?start=%s&end=%s' %
-                    (START.isoformat(), STOP.isoformat()))
+        req = fakes.HTTPRequest.blank('?start={0!s}&end={1!s}'.format(START.isoformat(), STOP.isoformat()))
         req.environ['nova.context'] = self.alt_user_context
 
         rules = {
@@ -227,32 +223,30 @@ class SimpleTenantUsageTestV21(test.TestCase):
 
     def test_get_tenants_usage_with_bad_start_date(self):
         future = NOW + datetime.timedelta(hours=HOURS)
-        req = fakes.HTTPRequest.blank('?start=%s&end=%s' %
-                    (future.isoformat(), NOW.isoformat()))
+        req = fakes.HTTPRequest.blank('?start={0!s}&end={1!s}'.format(future.isoformat(), NOW.isoformat()))
         req.environ['nova.context'] = self.user_context
         self.assertRaises(webob.exc.HTTPBadRequest,
                           self.controller.show, req, 'faketenant_0')
 
     def test_get_tenants_usage_with_invalid_start_date(self):
-        req = fakes.HTTPRequest.blank('?start=%s&end=%s' %
-                    ("xxxx", NOW.isoformat()))
+        req = fakes.HTTPRequest.blank('?start={0!s}&end={1!s}'.format("xxxx", NOW.isoformat()))
         req.environ['nova.context'] = self.user_context
         self.assertRaises(webob.exc.HTTPBadRequest,
                           self.controller.show, req, 'faketenant_0')
 
     def _test_get_tenants_usage_with_one_date(self, date_url_param):
-        req = fakes.HTTPRequest.blank('?%s' % date_url_param)
+        req = fakes.HTTPRequest.blank('?{0!s}'.format(date_url_param))
         req.environ['nova.context'] = self.user_context
         res = self.controller.show(req, 'faketenant_0')
         self.assertIn('tenant_usage', res)
 
     def test_get_tenants_usage_with_no_start_date(self):
         self._test_get_tenants_usage_with_one_date(
-            'end=%s' % (NOW + datetime.timedelta(5)).isoformat())
+            'end={0!s}'.format((NOW + datetime.timedelta(5)).isoformat()))
 
     def test_get_tenants_usage_with_no_end_date(self):
         self._test_get_tenants_usage_with_one_date(
-            'start=%s' % (NOW - datetime.timedelta(5)).isoformat())
+            'start={0!s}'.format((NOW - datetime.timedelta(5)).isoformat()))
 
 
 class SimpleTenantUsageTestV2(SimpleTenantUsageTestV21):

@@ -254,16 +254,16 @@ class IronicHostManagerTestFilters(test.NoDBTestCase):
     @mock.patch.object(host_manager.HostManager, '_init_aggregates')
     def setUp(self, mock_init_agg, mock_init_inst):
         super(IronicHostManagerTestFilters, self).setUp()
-        self.flags(scheduler_available_filters=['%s.%s' % (__name__, cls) for
+        self.flags(scheduler_available_filters=['{0!s}.{1!s}'.format(__name__, cls) for
                                                 cls in ['FakeFilterClass1',
                                                         'FakeFilterClass2']])
         self.flags(scheduler_default_filters=['FakeFilterClass1'])
         self.flags(baremetal_scheduler_default_filters=['FakeFilterClass2'])
         self.host_manager = ironic_host_manager.IronicHostManager()
         self.fake_hosts = [ironic_host_manager.IronicNodeState(
-                'fake_host%s' % x, 'fake-node') for x in range(1, 5)]
+                'fake_host{0!s}'.format(x), 'fake-node') for x in range(1, 5)]
         self.fake_hosts += [ironic_host_manager.IronicNodeState(
-                'fake_multihost', 'fake-node%s' % x) for x in range(1, 5)]
+                'fake_multihost', 'fake-node{0!s}'.format(x)) for x in range(1, 5)]
 
     def test_default_filters(self):
         default_filters = self.host_manager.default_filters

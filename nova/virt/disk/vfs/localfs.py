@@ -138,7 +138,7 @@ class VFSLocalFS(vfs.VFS):
         LOG.debug("Set permissions path=%(path)s mode=%(mode)o",
                   {'path': path, 'mode': mode})
         canonpath = self._canonical_path(path)
-        utils.execute('chmod', "%o" % mode, canonpath, run_as_root=True)
+        utils.execute('chmod', "{0:o}".format(mode), canonpath, run_as_root=True)
 
     def set_ownership(self, path, user, group):
         LOG.debug("Set permissions path=%(path)s "

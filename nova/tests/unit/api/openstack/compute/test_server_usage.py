@@ -89,16 +89,16 @@ class ServerUsageTestV21(test.TestCase):
 
     def assertServerUsage(self, server, launched_at, terminated_at):
         resp_launched_at = timeutils.parse_isotime(
-            server.get('%slaunched_at' % self.prefix))
+            server.get('{0!s}launched_at'.format(self.prefix)))
         self.assertEqual(timeutils.normalize_time(resp_launched_at),
                          launched_at)
         resp_terminated_at = timeutils.parse_isotime(
-            server.get('%sterminated_at' % self.prefix))
+            server.get('{0!s}terminated_at'.format(self.prefix)))
         self.assertEqual(timeutils.normalize_time(resp_terminated_at),
                          terminated_at)
 
     def test_show(self):
-        url = self._prefix + ('/servers/%s' % UUID3)
+        url = self._prefix + ('/servers/{0!s}'.format(UUID3))
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)

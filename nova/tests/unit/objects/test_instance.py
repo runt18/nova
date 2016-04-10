@@ -1062,7 +1062,7 @@ class _TestInstanceObject(object):
         inst = objects.Instance.get_by_uuid(self.context, db_inst['uuid'])
         self.assertFalse(inst.obj_attr_is_set('fault'))
         self.flags(instance_name_template='foo-%(uuid)s')
-        self.assertEqual('foo-%s' % db_inst['uuid'], inst.name)
+        self.assertEqual('foo-{0!s}'.format(db_inst['uuid']), inst.name)
         self.assertFalse(inst.obj_attr_is_set('fault'))
 
     def test_from_db_object_not_overwrite_info_cache(self):
@@ -1332,9 +1332,9 @@ class TestInstanceObject(test_objects._LocalTest,
         instance = fake_instance.fake_instance_obj(self.context,
                                                    expected_attrs=attrs)
         fields_with_save_methods = [field for field in instance.fields
-                                    if hasattr(instance, '_save_%s' % field)]
+                                    if hasattr(instance, '_save_{0!s}'.format(field))]
         for field in fields_with_save_methods:
-            @mock.patch.object(instance, '_save_%s' % field)
+            @mock.patch.object(instance, '_save_{0!s}'.format(field))
             @mock.patch.object(instance, 'obj_attr_is_set')
             def _test(mock_is_set, mock_save_field):
                 mock_is_set.return_value = True

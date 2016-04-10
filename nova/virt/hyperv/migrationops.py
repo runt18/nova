@@ -64,7 +64,7 @@ class MigrationOps(object):
             if same_host:
                 # Since source and target are the same, we copy the files to
                 # a temporary location before moving them into place
-                dest_path = '%s_tmp' % instance_path
+                dest_path = '{0!s}_tmp'.format(instance_path)
                 if self._pathutils.exists(dest_path):
                     self._pathutils.rmtree(dest_path)
                 self._pathutils.makedirs(dest_path)

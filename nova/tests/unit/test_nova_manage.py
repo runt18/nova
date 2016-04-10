@@ -95,17 +95,17 @@ class FloatingIpCommandsTestCase(test.NoDBTestCase):
         self.assertRaises(exception.InvalidInput, address_to_hosts,
                           '192.168.100.1/31')
         # /30
-        expected = ["192.168.100.%s" % i for i in range(1, 3)]
+        expected = ["192.168.100.{0!s}".format(i) for i in range(1, 3)]
         result = address_to_hosts('192.168.100.0/30')
         self.assertEqual(2, len(list(result)))
         assert_loop(result, expected)
         # /29
-        expected = ["192.168.100.%s" % i for i in range(1, 7)]
+        expected = ["192.168.100.{0!s}".format(i) for i in range(1, 7)]
         result = address_to_hosts('192.168.100.0/29')
         self.assertEqual(6, len(list(result)))
         assert_loop(result, expected)
         # /28
-        expected = ["192.168.100.%s" % i for i in range(1, 15)]
+        expected = ["192.168.100.{0!s}".format(i) for i in range(1, 15)]
         result = address_to_hosts('192.168.100.0/28')
         self.assertEqual(14, len(list(result)))
         assert_loop(result, expected)
@@ -239,7 +239,7 @@ class NetworkCommandsTestCase(test.NoDBTestCase):
                        'vlan': self.net['vlan'],
                        'project_id': self.net['project_id'],
                        'uuid': self.net['uuid']}
-        answer = '%s\n%s\n' % (head, body)
+        answer = '{0!s}\n{1!s}\n'.format(head, body)
         self.assertEqual(result, answer)
 
     def test_delete(self):
@@ -326,7 +326,7 @@ class ProjectCommandsTestCase(test.TestCase):
 
         sys.stdout = sys.__stdout__
         result = output.getvalue()
-        print_format = "%-36s %-10s" % ('instances', 'unlimited')
+        print_format = "{0:<36!s} {1:<10!s}".format('instances', 'unlimited')
         self.assertIn(print_format, result)
 
     def test_quota_update_invalid_key(self):
@@ -704,7 +704,7 @@ class CellV2CommandsTestCase(test.TestCase):
                 'cpu_info': 'Schmintel i786',
             }
         for i in range(3):
-            host = 'host%s' % i
+            host = 'host{0!s}'.format(i)
             compute_node = objects.ComputeNode(ctxt, host=host, **values)
             compute_node.create()
         cell_transport_url = "fake://guest:devstack@127.0.0.1:9999/"
@@ -717,7 +717,7 @@ class CellV2CommandsTestCase(test.TestCase):
         self.assertEqual(cell_transport_url, cell_mapping.transport_url)
         # Verify the host mappings
         for i in range(3):
-            host = 'host%s' % i
+            host = 'host{0!s}'.format(i)
             host_mapping = objects.HostMapping.get_by_host(ctxt, host)
             self.assertEqual(cell_mapping.uuid, host_mapping.cell_mapping.uuid)
 
@@ -742,7 +742,7 @@ class CellV2CommandsTestCase(test.TestCase):
                 'cpu_info': 'Schmintel i786',
             }
         for i in range(3):
-            host = 'host%s' % i
+            host = 'host{0!s}'.format(i)
             compute_node = objects.ComputeNode(ctxt, host=host, **values)
             compute_node.create()
             host_mapping = objects.HostMapping(
@@ -756,8 +756,7 @@ class CellV2CommandsTestCase(test.TestCase):
         output = sys.stdout.getvalue().strip()
         expected = ''
         for i in range(3):
-            expected += ('Host host%s is already mapped to cell %s\n' %
-                         (i, cell_mapping_uuid))
+            expected += ('Host host{0!s} is already mapped to cell {1!s}\n'.format(i, cell_mapping_uuid))
         expected += 'All hosts are already mapped to cell(s), exiting.'
         self.assertEqual(expected, output)
 
@@ -783,12 +782,12 @@ class CellV2CommandsTestCase(test.TestCase):
                 'cpu_info': 'Schmintel i786',
             }
         for i in range(3):
-            host = 'host%s' % i
+            host = 'host{0!s}'.format(i)
             compute_node = objects.ComputeNode(ctxt, host=host, **values)
             compute_node.create()
         # Only create 2 existing HostMappings out of 3
         for i in range(2):
-            host = 'host%s' % i
+            host = 'host{0!s}'.format(i)
             host_mapping = objects.HostMapping(
                     ctxt, host=host, cell_mapping=cell_mapping)
             host_mapping.create()
@@ -803,8 +802,7 @@ class CellV2CommandsTestCase(test.TestCase):
         output = sys.stdout.getvalue().strip()
         expected = ''
         for i in range(2):
-            expected += ('Host host%s is already mapped to cell %s\n' %
-                         (i, cell_mapping_uuid))
+            expected += ('Host host{0!s} is already mapped to cell {1!s}\n'.format(i, cell_mapping_uuid))
         # The expected CellMapping UUID for the last host should be the same
         expected += cell_mapping.uuid
         self.assertEqual(expected, output)

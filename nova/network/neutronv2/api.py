@@ -637,7 +637,7 @@ class API(base_api.NetworkAPI):
                     and network.get('port_security_enabled', True))):
 
                 raise exception.SecurityGroupCannotBeApplied()
-            zone = 'compute:%s' % instance.availability_zone
+            zone = 'compute:{0!s}'.format(instance.availability_zone)
             port_req_body = {'port': {'device_id': instance.uuid,
                                       'device_owner': zone}}
             try:
@@ -712,7 +712,7 @@ class API(base_api.NetworkAPI):
             pci_dev = pci_manager.get_instance_pci_devs(
                 instance, pci_request_id).pop()
             devspec = pci_whitelist.get_pci_device_devspec(pci_dev)
-            profile = {'pci_vendor_info': "%s:%s" % (pci_dev.vendor_id,
+            profile = {'pci_vendor_info': "{0!s}:{1!s}".format(pci_dev.vendor_id,
                                                      pci_dev.product_id),
                        'pci_slot': pci_dev.address,
                        'physical_network':
@@ -1014,7 +1014,7 @@ class API(base_api.NetworkAPI):
             raise exception.NetworkNotFoundForInstance(
                 instance_id=instance.uuid)
 
-        zone = 'compute:%s' % instance.availability_zone
+        zone = 'compute:{0!s}'.format(instance.availability_zone)
         search_opts = {'device_id': instance.uuid,
                        'device_owner': zone,
                        'network_id': network_id}
@@ -1042,10 +1042,10 @@ class API(base_api.NetworkAPI):
     def remove_fixed_ip_from_instance(self, context, instance, address):
         """Remove a fixed IP from the instance."""
         neutron = get_client(context)
-        zone = 'compute:%s' % instance.availability_zone
+        zone = 'compute:{0!s}'.format(instance.availability_zone)
         search_opts = {'device_id': instance.uuid,
                        'device_owner': zone,
-                       'fixed_ips': 'ip_address=%s' % address}
+                       'fixed_ips': 'ip_address={0!s}'.format(address)}
         data = neutron.list_ports(**search_opts)
         ports = data['ports']
         for p in ports:
@@ -1168,8 +1168,8 @@ class API(base_api.NetworkAPI):
                         # TODO(jecarey) Need to look at consolidating list_port
                         # calls once able to OR filters.
                         search_opts = {'network_id': request.network_id,
-                                       'fixed_ips': 'ip_address=%s' % (
-                                           request.address),
+                                       'fixed_ips': 'ip_address={0!s}'.format((
+                                           request.address)),
                                        'fields': 'device_id'}
                         existing_ports = neutron.list_ports(
                                                     **search_opts)['ports']
@@ -1246,7 +1246,7 @@ class API(base_api.NetworkAPI):
         :returns: A list of dicts containing the uuids keyed by 'instance_uuid'
                   e.g. [{'instance_uuid': uuid}, ...]
         """
-        search_opts = {"fixed_ips": 'ip_address=%s' % address}
+        search_opts = {"fixed_ips": 'ip_address={0!s}'.format(address)}
         data = get_client(context).list_ports(**search_opts)
         ports = data.get('ports', [])
         return [{'instance_uuid': port['device_id']} for port in ports
@@ -1255,7 +1255,7 @@ class API(base_api.NetworkAPI):
     def _get_port_id_by_fixed_address(self, client,
                                       instance, address):
         """Return port_id from a fixed address."""
-        zone = 'compute:%s' % instance.availability_zone
+        zone = 'compute:{0!s}'.format(instance.availability_zone)
         search_opts = {'device_id': instance.uuid,
                        'device_owner': zone}
         data = client.list_ports(**search_opts)
@@ -1520,7 +1520,7 @@ class API(base_api.NetworkAPI):
                 return []
             with excutils.save_and_reraise_exception():
                 LOG.exception(_LE('Unable to access floating IP for %s'),
-                        ', '.join(['%s %s' % (k, v)
+                        ', '.join(['{0!s} {1!s}'.format(k, v)
                                    for k, v in six.iteritems(kwargs)]))
 
     def _get_floating_ip_by_address(self, client, address):

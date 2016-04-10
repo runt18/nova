@@ -152,7 +152,7 @@ class QuotaIntegrationTestCase(test.TestCase):
     def test_too_many_metadata_items(self):
         metadata = {}
         for i in range(CONF.quota_metadata_items + 1):
-            metadata['key%s' % i] = 'value%s' % i
+            metadata['key{0!s}'.format(i)] = 'value{0!s}'.format(i)
         inst_type = flavors.get_flavor_by_name('m1.small')
         image_uuid = 'cedef40a-ed67-4d10-800e-17455edce175'
         self.assertRaises(exception.QuotaError, self.compute_api.create,
@@ -182,13 +182,13 @@ class QuotaIntegrationTestCase(test.TestCase):
     def test_max_injected_files(self):
         files = []
         for i in range(CONF.quota_injected_files):
-            files.append(('/my/path%d' % i, 'config = test\n'))
+            files.append(('/my/path{0:d}'.format(i), 'config = test\n'))
         self._create_with_injected_files(files)  # no QuotaError
 
     def test_too_many_injected_files(self):
         files = []
         for i in range(CONF.quota_injected_files + 1):
-            files.append(('/my/path%d' % i, 'my\ncontent%d\n' % i))
+            files.append(('/my/path{0:d}'.format(i), 'my\ncontent{0:d}\n'.format(i)))
         self.assertRaises(exception.QuotaError,
                           self._create_with_injected_files, files)
 
@@ -2410,9 +2410,9 @@ class QuotaReserveSqlAlchemyTestCase(test.TestCase):
         self.addCleanup(restore_sync_functions)
 
         for res_name in ('instances', 'cores', 'ram', 'fixed_ips'):
-            method_name = '_sync_%s' % res_name
+            method_name = '_sync_{0!s}'.format(res_name)
             sqa_api.QUOTA_SYNC_FUNCTIONS[method_name] = make_sync(res_name)
-            res = quota.ReservableResource(res_name, '_sync_%s' % res_name)
+            res = quota.ReservableResource(res_name, '_sync_{0!s}'.format(res_name))
             self.resources[res_name] = res
 
         self.expire = timeutils.utcnow() + datetime.timedelta(seconds=3600)
@@ -2519,8 +2519,7 @@ class QuotaReserveSqlAlchemyTestCase(test.TestCase):
             for key, value in usage.items():
                 actual = getattr(usage_dict[resource], key)
                 self.assertEqual(actual, value,
-                                 "%s != %s on usage for resource %s" %
-                                 (actual, value, resource))
+                                 "{0!s} != {1!s} on usage for resource {2!s}".format(actual, value, resource))
 
     def _make_reservation(self, uuid, usage_id, project_id, user_id, resource,
                           delta, expire, created_at, updated_at):
@@ -2552,8 +2551,7 @@ class QuotaReserveSqlAlchemyTestCase(test.TestCase):
             for key, value in resv.items():
                 actual = getattr(resv_obj, key)
                 self.assertEqual(actual, value,
-                                 "%s != %s on reservation for resource %s" %
-                                 (actual, value, resource))
+                                 "{0!s} != {1!s} on reservation for resource {2!s}".format(actual, value, resource))
 
         self.assertEqual(len(reservations), 0)
 

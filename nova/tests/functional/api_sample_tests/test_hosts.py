@@ -34,24 +34,24 @@ class HostsSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         return f
 
     def test_host_startup(self):
-        response = self._do_get('os-hosts/%s/startup' % self.compute.host)
+        response = self._do_get('os-hosts/{0!s}/startup'.format(self.compute.host))
         self._verify_response('host-get-startup', {}, response, 200)
 
     def test_host_reboot(self):
-        response = self._do_get('os-hosts/%s/reboot' % self.compute.host)
+        response = self._do_get('os-hosts/{0!s}/reboot'.format(self.compute.host))
         self._verify_response('host-get-reboot', {}, response, 200)
 
     def test_host_shutdown(self):
-        response = self._do_get('os-hosts/%s/shutdown' % self.compute.host)
+        response = self._do_get('os-hosts/{0!s}/shutdown'.format(self.compute.host))
         self._verify_response('host-get-shutdown', {}, response, 200)
 
     def test_host_maintenance(self):
-        response = self._do_put('os-hosts/%s' % self.compute.host,
+        response = self._do_put('os-hosts/{0!s}'.format(self.compute.host),
                                 'host-put-maintenance-req', {})
         self._verify_response('host-put-maintenance-resp', {}, response, 200)
 
     def test_host_get(self):
-        response = self._do_get('os-hosts/%s' % self.compute.host)
+        response = self._do_get('os-hosts/{0!s}'.format(self.compute.host))
         self._verify_response('host-get-resp', {}, response, 200)
 
     def test_hosts_list(self):

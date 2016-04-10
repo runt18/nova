@@ -332,7 +332,7 @@ class VMwareVCDriver(driver.ComputeDriver):
           domain-26.9d51f082-58a4-4449-beed-6fd205a5726b
         """
 
-        return '%s.%s' % (mo_id, self._vcenter_uuid)
+        return '{0!s}.{1!s}'.format(mo_id, self._vcenter_uuid)
 
     def _get_available_resources(self, host_stats):
         return {'vcpus': host_stats['vcpus'],

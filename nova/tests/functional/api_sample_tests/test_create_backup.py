@@ -46,6 +46,6 @@ class CreateBackupSamplesJsonTest(test_servers.ServersSampleBase):
     @mock.patch.object(fake._FakeImageService, 'detail', return_value=[])
     def test_post_backup_server(self, mock_method):
         # Get api samples to backup server request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'create-backup-req', {})
         self.assertEqual(202, response.status_code)

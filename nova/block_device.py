@@ -543,7 +543,7 @@ def instance_block_mapping(instance, bdms):
     if ebs_devices:
         ebs_devices.sort()
         for nebs, ebs in enumerate(ebs_devices):
-            mappings['ebs%d' % nebs] = ebs
+            mappings['ebs{0:d}'.format(nebs)] = ebs
 
     swap = [bdm for bdm in blanks if bdm.guest_format == 'swap']
     if swap:
@@ -552,7 +552,7 @@ def instance_block_mapping(instance, bdms):
     ephemerals = [bdm for bdm in blanks if bdm.guest_format != 'swap']
     if ephemerals:
         for num, eph in enumerate(ephemerals):
-            mappings['ephemeral%d' % num] = eph.device_name
+            mappings['ephemeral{0:d}'.format(num)] = eph.device_name
 
     return mappings
 

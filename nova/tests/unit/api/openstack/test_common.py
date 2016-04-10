@@ -261,7 +261,7 @@ class PaginationParamsTest(test.NoDBTestCase):
     def test_valid_limit_and_marker(self):
         # Test valid limit and marker parameters.
         marker = '263abb28-1de6-412f-b00b-f0ee0c4333c2'
-        req = webob.Request.blank('/?limit=20&marker=%s' % marker)
+        req = webob.Request.blank('/?limit=20&marker={0!s}'.format(marker))
         self.assertEqual(common.get_pagination_params(req),
                          {'marker': marker, 'limit': 20})
 
@@ -617,7 +617,7 @@ class ViewBuilderLinkTest(test.NoDBTestCase):
 
     def setUp(self):
         super(ViewBuilderLinkTest, self).setUp()
-        self.request = self.req("/%s" % self.project_id)
+        self.request = self.req("/{0!s}".format(self.project_id))
         self.vb = common.ViewBuilder()
 
     def req(self, url, use_admin_context=False):
@@ -634,7 +634,7 @@ class ViewBuilderLinkTest(test.NoDBTestCase):
         next_link = self.vb._get_next_link(self.request, identifier,
                                            collection)
         expected = "/".join((self.request.url,
-                             "%s?marker=%s" % (collection, identifier)))
+                             "{0!s}?marker={1!s}".format(collection, identifier)))
         self.assertEqual(expected, next_link)
 
     def test_get_href_link(self):

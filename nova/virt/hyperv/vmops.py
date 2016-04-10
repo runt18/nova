@@ -602,7 +602,7 @@ class VMOps(object):
         # write it to a file.
         console_log_path = self._pathutils.get_vm_console_log_paths(
             instance_name)[0]
-        pipe_path = r'\\.\pipe\%s' % instance_uuid
+        pipe_path = r'\\.\pipe\{0!s}'.format(instance_uuid)
 
         @utils.synchronized(pipe_path)
         def log_serial_output():
@@ -660,7 +660,7 @@ class VMOps(object):
 
     def _create_vm_com_port_pipe(self, instance):
         # Creates a pipe to the COM 0 serial port of the specified vm.
-        pipe_path = r'\\.\pipe\%s' % instance.uuid
+        pipe_path = r'\\.\pipe\{0!s}'.format(instance.uuid)
         self._vmutils.get_vm_serial_port_connection(
             instance.name, update_connection=pipe_path)
 

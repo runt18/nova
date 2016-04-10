@@ -102,11 +102,11 @@ class NovaMigrationsCheckers(test_migrations.ModelsMigrationsSync,
 
     def assertColumnExists(self, engine, table_name, column):
         self.assertTrue(oslodbutils.column_exists(engine, table_name, column),
-                        'Column %s.%s does not exist' % (table_name, column))
+                        'Column {0!s}.{1!s} does not exist'.format(table_name, column))
 
     def assertColumnNotExists(self, engine, table_name, column):
         self.assertFalse(oslodbutils.column_exists(engine, table_name, column),
-                        'Column %s.%s should not exist' % (table_name, column))
+                        'Column {0!s}.{1!s} should not exist'.format(table_name, column))
 
     def assertTableNotExists(self, engine, table):
         self.assertRaises(sqlalchemy.exc.NoSuchTableError,
@@ -114,13 +114,11 @@ class NovaMigrationsCheckers(test_migrations.ModelsMigrationsSync,
 
     def assertIndexExists(self, engine, table_name, index):
         self.assertTrue(oslodbutils.index_exists(engine, table_name, index),
-                        'Index %s on table %s does not exist' %
-                        (index, table_name))
+                        'Index {0!s} on table {1!s} does not exist'.format(index, table_name))
 
     def assertIndexNotExists(self, engine, table_name, index):
         self.assertFalse(oslodbutils.index_exists(engine, table_name, index),
-                         'Index %s on table %s should not exist' %
-                         (index, table_name))
+                         'Index {0!s} on table {1!s} should not exist'.format(index, table_name))
 
     def assertIndexMembers(self, engine, table, index, members):
         # NOTE(johannes): Order of columns can matter. Most SQL databases
@@ -183,7 +181,7 @@ class NovaMigrationsCheckers(test_migrations.ModelsMigrationsSync,
 
     def migrate_up(self, version, with_data=False):
         if with_data:
-            check = getattr(self, "_check_%03d" % version, None)
+            check = getattr(self, "_check_{0:03d}".format(version), None)
             if version not in self._skippable_migrations():
                 self.assertIsNotNone(check,
                                      ('DB Migration %i does not have a '
@@ -921,7 +919,7 @@ class TestNovaMigrationsMySQL(NovaMigrationsCheckers,
             "AND TABLE_NAME != 'migrate_version'" %
             {'database': self.migrate_engine.url.database})
         count = noninnodb.scalar()
-        self.assertEqual(count, 0, "%d non InnoDB tables created" % count)
+        self.assertEqual(count, 0, "{0:d} non InnoDB tables created".format(count))
 
 
 class TestNovaMigrationsPostgreSQL(NovaMigrationsCheckers,

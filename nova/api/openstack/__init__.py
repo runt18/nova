@@ -122,7 +122,7 @@ class FaultWrapper(base_wsgi.Middleware):
         if safe:
             user_locale = req.best_match_language()
             inner_msg = translate(inner.message, user_locale)
-            outer.explanation = '%s: %s' % (inner.__class__.__name__,
+            outer.explanation = '{0!s}: {1!s}'.format(inner.__class__.__name__,
                                             inner_msg)
 
         notifications.send_api_fault(req.url, status, inner)
@@ -203,14 +203,14 @@ class ProjectMapper(APIMapper):
         if CONF.osapi_v21.project_id_regex:
             project_id_regex = CONF.osapi_v21.project_id_regex
 
-        project_id_token = '{project_id:%s}' % project_id_regex
+        project_id_token = '{{project_id:{0!s}}}'.format(project_id_regex)
         if 'parent_resource' not in kwargs:
-            kwargs['path_prefix'] = '%s/' % project_id_token
+            kwargs['path_prefix'] = '{0!s}/'.format(project_id_token)
         else:
             parent_resource = kwargs['parent_resource']
             p_collection = parent_resource['collection_name']
             p_member = parent_resource['member_name']
-            kwargs['path_prefix'] = '%s/%s/:%s_id' % (
+            kwargs['path_prefix'] = '{0!s}/{1!s}/:{2!s}_id'.format(
                 project_id_token,
                 p_collection,
                 p_member)
@@ -228,7 +228,7 @@ class ProjectMapper(APIMapper):
             parent_resource = kwargs['parent_resource']
             p_collection = parent_resource['collection_name']
             p_member = parent_resource['member_name']
-            kwargs['path_prefix'] = '%s/:%s_id' % (p_collection,
+            kwargs['path_prefix'] = '{0!s}/:{1!s}_id'.format(p_collection,
                                                    p_member)
         routes.Mapper.resource(self, member_name,
                                      collection_name,
@@ -241,7 +241,7 @@ class PlainMapper(APIMapper):
             parent_resource = kwargs['parent_resource']
             p_collection = parent_resource['collection_name']
             p_member = parent_resource['member_name']
-            kwargs['path_prefix'] = '%s/:%s_id' % (p_collection, p_member)
+            kwargs['path_prefix'] = '{0!s}/:{1!s}_id'.format(p_collection, p_member)
         routes.Mapper.resource(self, member_name,
                                      collection_name,
                                      **kwargs)

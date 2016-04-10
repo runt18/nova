@@ -33,7 +33,7 @@ class DesignerTestCase(test.NoDBTestCase):
             # 'extra_specs' field.
             designer.set_vif_bandwidth_config(None, {})
         except KeyError as e:
-            self.fail('KeyError: %s' % e)
+            self.fail('KeyError: {0!s}'.format(e))
 
     def test_set_vif_guest_frontend_config(self):
         conf = config.LibvirtConfigGuestInterface()

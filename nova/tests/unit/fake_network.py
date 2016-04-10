@@ -113,7 +113,7 @@ class FakeNetworkManager(network_manager.NetworkManager):
             return fakenet
 
         def network_get(self, context, network_id, project_only="allow_none"):
-            return {'cidr_v6': '2001:db8:69:%x::/64' % network_id}
+            return {'cidr_v6': '2001:db8:69:{0:x}::/64'.format(network_id)}
 
         def network_get_by_uuid(self, context, network_uuid):
             raise exception.NetworkNotFoundForUUID(uuid=network_uuid)
@@ -166,26 +166,26 @@ def fake_network(network_id, ipv6=None):
     if ipv6 is None:
         ipv6 = CONF.use_ipv6
     fake_network = {'id': network_id,
-             'uuid': getattr(uuids, 'network%i' % network_id),
-             'label': 'test%d' % network_id,
+             'uuid': getattr(uuids, 'network{0:d}'.format(network_id)),
+             'label': 'test{0:d}'.format(network_id),
              'injected': False,
              'multi_host': False,
-             'cidr': '192.168.%d.0/24' % network_id,
+             'cidr': '192.168.{0:d}.0/24'.format(network_id),
              'cidr_v6': None,
              'netmask': '255.255.255.0',
              'netmask_v6': None,
-             'bridge': 'fake_br%d' % network_id,
-             'bridge_interface': 'fake_eth%d' % network_id,
-             'gateway': '192.168.%d.1' % network_id,
+             'bridge': 'fake_br{0:d}'.format(network_id),
+             'bridge_interface': 'fake_eth{0:d}'.format(network_id),
+             'gateway': '192.168.{0:d}.1'.format(network_id),
              'gateway_v6': None,
-             'broadcast': '192.168.%d.255' % network_id,
-             'dns1': '192.168.%d.3' % network_id,
-             'dns2': '192.168.%d.4' % network_id,
-             'dns3': '192.168.%d.3' % network_id,
+             'broadcast': '192.168.{0:d}.255'.format(network_id),
+             'dns1': '192.168.{0:d}.3'.format(network_id),
+             'dns2': '192.168.{0:d}.4'.format(network_id),
+             'dns3': '192.168.{0:d}.3'.format(network_id),
              'vlan': None,
              'host': None,
              'project_id': uuids.project,
-             'vpn_public_address': '192.168.%d.2' % network_id,
+             'vpn_public_address': '192.168.{0:d}.2'.format(network_id),
              'vpn_public_port': None,
              'vpn_private_address': None,
              'dhcp_start': None,
@@ -196,12 +196,12 @@ def fake_network(network_id, ipv6=None):
              'updated_at': None,
              'deleted_at': None,
              'mtu': None,
-             'dhcp_server': '192.168.%d.1' % network_id,
+             'dhcp_server': '192.168.{0:d}.1'.format(network_id),
              'enable_dhcp': True,
              'share_address': False}
     if ipv6:
-        fake_network['cidr_v6'] = '2001:db8:0:%x::/64' % network_id
-        fake_network['gateway_v6'] = '2001:db8:0:%x::1' % network_id
+        fake_network['cidr_v6'] = '2001:db8:0:{0:x}::/64'.format(network_id)
+        fake_network['gateway_v6'] = '2001:db8:0:{0:x}::1'.format(network_id)
         fake_network['netmask_v6'] = '64'
     if CONF.flat_injected:
         fake_network['injected'] = True
@@ -220,8 +220,8 @@ def fake_vif(x):
            'updated_at': None,
            'deleted_at': None,
            'deleted': 0,
-           'address': 'DE:AD:BE:EF:00:%02x' % x,
-           'uuid': getattr(uuids, 'vif%i' % x),
+           'address': 'DE:AD:BE:EF:00:{0:02x}'.format(x),
+           'uuid': getattr(uuids, 'vif{0:d}'.format(x)),
            'network_id': x,
            'instance_uuid': uuids.vifs_1}
 
@@ -246,7 +246,7 @@ def next_fixed_ip(network_id, num_floating_ips=0):
              for i in range(num_floating_ips)]
     return {'id': next_id,
             'network_id': network_id,
-            'address': '192.168.%d.%03d' % (network_id, (next_id + 99)),
+            'address': '192.168.{0:d}.{1:03d}'.format(network_id, (next_id + 99)),
             'instance_uuid': uuids.fixed_ip,
             'allocated': False,
             'reserved': False,
@@ -266,7 +266,7 @@ def next_fixed_ip(network_id, num_floating_ips=0):
 def next_floating_ip(fixed_ip_id):
     next_id = next(floating_ip_id)
     return {'id': next_id,
-            'address': '10.10.10.%03d' % (next_id + 99),
+            'address': '10.10.10.{0:03d}'.format((next_id + 99)),
             'fixed_ip_id': fixed_ip_id,
             'project_id': None,
             'auto_assigned': False}

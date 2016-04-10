@@ -465,7 +465,7 @@ class SMBFSVolumeDriverTestCase(test_base.HyperVBaseTestCase):
     _FAKE_DISK_NAME = 'fake_volume_name.vhdx'
     _FAKE_USERNAME = 'fake_username'
     _FAKE_PASSWORD = 'fake_password'
-    _FAKE_SMB_OPTIONS = '-o username=%s,password=%s' % (_FAKE_USERNAME,
+    _FAKE_SMB_OPTIONS = '-o username={0!s},password={1!s}'.format(_FAKE_USERNAME,
                                                         _FAKE_PASSWORD)
     _FAKE_CONNECTION_INFO = {'data': {'export': _FAKE_SHARE,
                                       'name': _FAKE_DISK_NAME,

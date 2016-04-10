@@ -103,7 +103,7 @@ class CellState(object):
 
     def __repr__(self):
         me = "me" if self.is_me else "not_me"
-        return "Cell '%s' (%s)" % (self.name, me)
+        return "Cell '{0!s}' ({1!s})".format(self.name, me)
 
 
 def sync_before(f):

@@ -201,7 +201,7 @@ class FiltersTestCase(test.NoDBTestCase):
             exp_output = ("['FilterA: (start: 3, end: 2)', "
                           "'FilterB: (start: 2, end: 0)']")
             cargs = mock_log.call_args[0][0]
-            self.assertIn("with instance ID '%s'" % fake_uuid, cargs)
+            self.assertIn("with instance ID '{0!s}'".format(fake_uuid), cargs)
             self.assertIn(exp_output, cargs)
 
     def test_get_filtered_objects_debug_log_none_returned(self):
@@ -231,7 +231,7 @@ class FiltersTestCase(test.NoDBTestCase):
             exp_output = ("[('FilterA', [('Host1', ''), ('Host2', '')]), " +
                           "('FilterB', None)]")
             cargs = mock_log.call_args[0][0]
-            self.assertIn("with instance ID '%s'" % fake_uuid, cargs)
+            self.assertIn("with instance ID '{0!s}'".format(fake_uuid), cargs)
             self.assertIn(exp_output, cargs)
 
     def test_get_filtered_objects_compatible_with_filt_props_dicts(self):
@@ -262,5 +262,5 @@ class FiltersTestCase(test.NoDBTestCase):
             exp_output = ("['FilterA: (start: 3, end: 2)', "
                           "'FilterB: (start: 2, end: 0)']")
             cargs = mock_log.call_args[0][0]
-            self.assertIn("with instance ID '%s'" % fake_uuid, cargs)
+            self.assertIn("with instance ID '{0!s}'".format(fake_uuid), cargs)
             self.assertIn(exp_output, cargs)

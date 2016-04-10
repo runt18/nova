@@ -104,7 +104,7 @@ class RoleBasedPolicyFixture(RealPolicyFixture):
 
         # Convert all actions to require specified role
         for action, rule in six.iteritems(policy):
-            policy[action] = 'role:%s' % self.role
+            policy[action] = 'role:{0!s}'.format(self.role)
 
         self.policy_dir = self.useFixture(fixtures.TempDir())
         self.policy_file = os.path.join(self.policy_dir.path,

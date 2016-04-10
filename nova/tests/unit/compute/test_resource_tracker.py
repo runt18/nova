@@ -685,7 +685,7 @@ class BaseTrackerTestCase(BaseTestCase):
 
         if field not in tracker.compute_node:
             raise test.TestingException(
-                "'%(field)s' not in compute node." % {'field': field})
+                "'{field!s}' not in compute node.".format(**{'field': field}))
         x = getattr(tracker.compute_node, field)
 
         if field == 'numa_topology':

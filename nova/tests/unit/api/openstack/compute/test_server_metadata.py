@@ -54,7 +54,7 @@ def fake_instance_save(inst, **kwargs):
 
 def return_server_metadata(context, server_id):
     if not isinstance(server_id, six.string_types) or not len(server_id) == 36:
-        msg = 'id %s must be a uuid in return server metadata' % server_id
+        msg = 'id {0!s} must be a uuid in return server metadata'.format(server_id)
         raise Exception(msg)
     return stub_server_metadata()
 
@@ -79,7 +79,7 @@ def stub_server_metadata():
 def stub_max_server_metadata():
     metadata = {"metadata": {}}
     for num in range(CONF.quota_metadata_items):
-        metadata['metadata']['key%i' % num] = "blah"
+        metadata['metadata']['key{0:d}'.format(num)] = "blah"
     return metadata
 
 
@@ -135,7 +135,7 @@ class ServerMetaDataTestV21(test.TestCase):
     def _set_up_resources(self):
         self.controller = server_metadata_v21.ServerMetadataController()
         self.uuid = str(uuid.uuid4())
-        self.url = '/fake/servers/%s/metadata' % self.uuid
+        self.url = '/fake/servers/{0!s}/metadata'.format(self.uuid)
 
     def _get_request(self, param_url=''):
         return fakes.HTTPRequestV21.blank(self.url + param_url)
@@ -586,7 +586,7 @@ class ServerMetaDataTestV21(test.TestCase):
                       return_create_instance_metadata)
         data = {"metadata": {}}
         for num in range(CONF.quota_metadata_items + 1):
-            data['metadata']['key%i' % num] = "blah"
+            data['metadata']['key{0:d}'.format(num)] = "blah"
         req = self._get_request()
         req.method = 'POST'
         req.body = jsonutils.dump_as_bytes(data)
@@ -625,7 +625,7 @@ class ServerMetaDataTestV21(test.TestCase):
                       return_create_instance_metadata)
         data = {"metadata": {}}
         for num in range(CONF.quota_metadata_items + 1):
-            data['metadata']['key%i' % num] = "blah"
+            data['metadata']['key{0:d}'.format(num)] = "blah"
         req = self._get_request()
         req.method = 'PUT'
         req.body = jsonutils.dump_as_bytes(data)
@@ -641,7 +641,7 @@ class ServerMetaDataTestV21(test.TestCase):
                       return_create_instance_metadata)
         data = {"metadata": {}}
         for num in range(CONF.quota_metadata_items + 1):
-            data['metadata']['key%i' % num] = "blah"
+            data['metadata']['key{0:d}'.format(num)] = "blah"
         req = self._get_request()
         req.method = 'PUT'
         req.body = jsonutils.dump_as_bytes(data)
@@ -676,7 +676,7 @@ class ServerMetaDataTestV2(ServerMetaDataTestV21):
     def _set_up_resources(self):
         self.controller = server_metadata_v2.Controller()
         self.uuid = str(uuid.uuid4())
-        self.url = '/v1.1/fake/servers/%s/metadata' % self.uuid
+        self.url = '/v1.1/fake/servers/{0!s}/metadata'.format(self.uuid)
 
     def _get_request(self, param_url=''):
         return fakes.HTTPRequest.blank(self.url + param_url)
@@ -701,7 +701,7 @@ class BadStateServerMetaDataTestV21(test.TestCase):
     def _set_up_resources(self):
         self.controller = server_metadata_v21.ServerMetadataController()
         self.uuid = str(uuid.uuid4())
-        self.url = '/fake/servers/%s/metadata' % self.uuid
+        self.url = '/fake/servers/{0!s}/metadata'.format(self.uuid)
 
     def _get_request(self, param_url=''):
         return fakes.HTTPRequestV21.blank(self.url + param_url)
@@ -766,7 +766,7 @@ class BadStateServerMetaDataTestV2(BadStateServerMetaDataTestV21):
     def _set_up_resources(self):
         self.controller = server_metadata_v2.Controller()
         self.uuid = str(uuid.uuid4())
-        self.url = '/v1.1/fake/servers/%s/metadata' % self.uuid
+        self.url = '/v1.1/fake/servers/{0!s}/metadata'.format(self.uuid)
 
     def _get_request(self, param_url=''):
         return fakes.HTTPRequest.blank(self.url + param_url)
@@ -787,7 +787,7 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.create, self.req, fakes.FAKE_UUID,
             body={'metadata': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_index_policy_failed(self):
@@ -797,7 +797,7 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_update_policy_failed(self):
@@ -808,7 +808,7 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.update, self.req, fakes.FAKE_UUID, fakes.FAKE_UUID,
             body={'meta': {'fake_meta': 'fake_meta'}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_update_all_policy_failed(self):
@@ -819,7 +819,7 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.update_all, self.req, fakes.FAKE_UUID,
             body={'metadata': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_policy_failed(self):
@@ -829,7 +829,7 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.delete, self.req, fakes.FAKE_UUID, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_show_policy_failed(self):
@@ -839,5 +839,5 @@ class ServerMetaPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, fakes.FAKE_UUID, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

@@ -30,13 +30,13 @@ class LibvirtNetVolumeDriverTestCase(
     def _assertNetworkAndProtocolEquals(self, tree):
         self.assertEqual('network', tree.get('type'))
         self.assertEqual('rbd', tree.find('./source').get('protocol'))
-        rbd_name = '%s/%s' % ('rbd', self.name)
+        rbd_name = '{0!s}/{1!s}'.format('rbd', self.name)
         self.assertEqual(rbd_name, tree.find('./source').get('name'))
 
     def _assertISCSINetworkAndProtocolEquals(self, tree):
         self.assertEqual('network', tree.get('type'))
         self.assertEqual('iscsi', tree.find('./source').get('protocol'))
-        iscsi_name = '%s/%s' % (self.iqn, self.vol['id'])
+        iscsi_name = '{0!s}/{1!s}'.format(self.iqn, self.vol['id'])
         self.assertEqual(iscsi_name, tree.find('./source').get('name'))
 
     def sheepdog_connection(self, volume):
@@ -61,7 +61,7 @@ class LibvirtNetVolumeDriverTestCase(
         return {
             'driver_volume_type': 'rbd',
             'data': {
-                'name': '%s/%s' % ('rbd', volume['name']),
+                'name': '{0!s}/{1!s}'.format('rbd', volume['name']),
                 'auth_enabled': CONF.libvirt.rbd_secret_uuid is not None,
                 'auth_username': CONF.libvirt.rbd_user,
                 'secret_type': 'ceph',

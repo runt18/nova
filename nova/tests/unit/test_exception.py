@@ -197,7 +197,7 @@ class ExceptionValidMessageTestCase(test.NoDBTestCase):
 
             e = obj
             if e.msg_fmt == "An unknown exception occurred.":
-                failures.append('%s needs a more specific msg_fmt' % name)
+                failures.append('{0!s} needs a more specific msg_fmt'.format(name))
 
         if failures:
             self.fail('\n'.join(failures))

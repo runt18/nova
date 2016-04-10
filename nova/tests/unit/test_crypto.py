@@ -71,7 +71,7 @@ class X509Test(test.NoDBTestCase):
                                      'rsautl',
                                      '-certin',
                                      '-encrypt',
-                                     '-inkey', '%s' % public_key,
+                                     '-inkey', '{0!s}'.format(public_key),
                                      process_input=process_input,
                                      binary=True)
 

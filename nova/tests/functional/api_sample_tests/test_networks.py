@@ -54,14 +54,14 @@ class NetworksJsonTests(api_sample_base.ApiSampleTestBaseV21):
 
     def test_network_disassociate(self):
         uuid = test_networks.FAKE_NETWORKS[0]['uuid']
-        response = self._do_post('os-networks/%s/action' % uuid,
+        response = self._do_post('os-networks/{0!s}/action'.format(uuid),
                                  'networks-disassociate-req', {})
         self.assertEqual(202, response.status_code)
         self.assertEqual("", response.content)
 
     def test_network_show(self):
         uuid = test_networks.FAKE_NETWORKS[0]['uuid']
-        response = self._do_get('os-networks/%s' % uuid)
+        response = self._do_get('os-networks/{0!s}'.format(uuid))
         self._verify_response('network-show-resp', {}, response, 200)
 
     def test_network_create(self):

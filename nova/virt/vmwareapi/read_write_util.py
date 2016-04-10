@@ -43,10 +43,10 @@ class VMwareHTTPReadFile(rw_handles.FileHandle):
 
     def _get_base_url(self, scheme, host, port, file_path):
         if netutils.is_valid_ipv6(host):
-            base_url = "%s://[%s]:%s/folder/%s" % (scheme, host, port,
+            base_url = "{0!s}://[{1!s}]:{2!s}/folder/{3!s}".format(scheme, host, port,
                                                 urllib.pathname2url(file_path))
         else:
-            base_url = "%s://%s:%s/folder/%s" % (scheme, host, port,
+            base_url = "{0!s}://{1!s}:{2!s}/folder/{3!s}".format(scheme, host, port,
                                               urllib.pathname2url(file_path))
         return base_url
 

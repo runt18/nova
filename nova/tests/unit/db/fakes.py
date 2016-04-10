@@ -39,7 +39,7 @@ class FakeModel(object):
             raise NotImplementedError()
 
     def __repr__(self):
-        return '<FakeModel: %s>' % self.values
+        return '<FakeModel: {0!s}>'.format(self.values)
 
     def get(self, name):
         return self.values[name]
@@ -337,7 +337,7 @@ def stub_out_db_network_api(test):
              fake_network_set_host,
              fake_network_update,
              fake_project_get_networks]
-    funcs = {'nova.db.%s' % fn.__name__.replace('fake_', ''): fn
+    funcs = {'nova.db.{0!s}'.format(fn.__name__.replace('fake_', '')): fn
              for fn in funcs}
 
     stub_out(test, funcs)

@@ -233,7 +233,7 @@ class PciDeviceStatsWithTagsTestCase(test.NoDBTestCase):
         self.pci_tagged_devices = []
         for dev in range(4):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:0a:00.%d' % dev,
+                       'address': '0000:0a:00.{0:d}'.format(dev),
                        'vendor_id': '1137',
                        'product_id': '0071',
                        'status': 'available',
@@ -247,7 +247,7 @@ class PciDeviceStatsWithTagsTestCase(test.NoDBTestCase):
         self.pci_untagged_devices = []
         for dev in range(3):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:0b:00.%d' % dev,
+                       'address': '0000:0b:00.{0:d}'.format(dev),
                        'vendor_id': '1137',
                        'product_id': '0072',
                        'status': 'available',
@@ -359,9 +359,9 @@ class PciDeviceVFPFStatsTestCase(test.NoDBTestCase):
         self.sriov_pf_devices = []
         for dev in range(2):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:81:00.%d' % dev,
+                       'address': '0000:81:00.{0:d}'.format(dev),
                        'vendor_id': '8086',
-                       'product_id': '%d' % pf_product_id,
+                       'product_id': '{0:d}'.format(pf_product_id),
                        'status': 'available',
                        'request_id': None,
                        'dev_type': fields.PciDeviceType.SRIOV_PF,
@@ -373,13 +373,13 @@ class PciDeviceVFPFStatsTestCase(test.NoDBTestCase):
         self.sriov_vf_devices = []
         for dev in range(8):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:81:10.%d' % dev,
+                       'address': '0000:81:10.{0:d}'.format(dev),
                        'vendor_id': '8086',
-                       'product_id': '%d' % vf_product_id,
+                       'product_id': '{0:d}'.format(vf_product_id),
                        'status': 'available',
                        'request_id': None,
                        'dev_type': fields.PciDeviceType.SRIOV_VF,
-                       'parent_addr': '0000:81:00.%d' % int(dev / 4),
+                       'parent_addr': '0000:81:00.{0:d}'.format(int(dev / 4)),
                        'numa_node': 0}
             self.sriov_vf_devices.append(objects.PciDevice.create(None,
                                                                   pci_dev))

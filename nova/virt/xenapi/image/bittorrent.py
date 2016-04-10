@@ -78,7 +78,7 @@ class BittorrentStore(object):
 
             def _default_torrent_url_fn(image_id):
                 return urlparse.urljoin(CONF.xenserver.torrent_base_url,
-                                        "%s.torrent" % image_id)
+                                        "{0!s}.torrent".format(image_id))
 
             return _default_torrent_url_fn
 

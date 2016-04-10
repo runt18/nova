@@ -263,7 +263,7 @@ def get_service_type(f):
 
 
 def pretty_choice_list(l):
-    return ', '.join("'%s'" % i for i in l)
+    return ', '.join("'{0!s}'".format(i) for i in l)
 
 
 def exit(msg=''):

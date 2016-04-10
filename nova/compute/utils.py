@@ -289,7 +289,7 @@ def notify_about_instance_usage(notifier, context, instance, event_suffix,
     else:
         method = notifier.info
 
-    method(context, 'compute.instance.%s' % event_suffix, usage_info)
+    method(context, 'compute.instance.{0!s}'.format(event_suffix), usage_info)
 
 
 def notify_about_server_group_update(context, event_suffix, sg_payload):
@@ -300,7 +300,7 @@ def notify_about_server_group_update(context, event_suffix, sg_payload):
     """
     notifier = rpc.get_notifier(service='servergroup')
 
-    notifier.info(context, 'servergroup.%s' % event_suffix, sg_payload)
+    notifier.info(context, 'servergroup.{0!s}'.format(event_suffix), sg_payload)
 
 
 def notify_about_aggregate_update(context, event_suffix, aggregate_payload):
@@ -320,7 +320,7 @@ def notify_about_aggregate_update(context, event_suffix, aggregate_payload):
     notifier = rpc.get_notifier(service='aggregate',
                                 host=aggregate_identifier)
 
-    notifier.info(context, 'aggregate.%s' % event_suffix, aggregate_payload)
+    notifier.info(context, 'aggregate.{0!s}'.format(event_suffix), aggregate_payload)
 
 
 def notify_about_host_update(context, event_suffix, host_payload):
@@ -339,7 +339,7 @@ def notify_about_host_update(context, event_suffix, host_payload):
 
     notifier = rpc.get_notifier(service='api', host=host_identifier)
 
-    notifier.info(context, 'HostAPI.%s' % event_suffix, host_payload)
+    notifier.info(context, 'HostAPI.{0!s}'.format(event_suffix), host_payload)
 
 
 def get_nw_info_for_instance(instance):

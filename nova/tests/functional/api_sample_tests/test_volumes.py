@@ -175,7 +175,7 @@ class VolumesSampleJsonTest(test_servers.ServersSampleBase):
                 'volume_desc': "Volume Description",
         }
         vol_id = self._get_volume_id()
-        response = self._do_get('os-volumes/%s' % vol_id)
+        response = self._do_get('os-volumes/{0!s}'.format(vol_id))
         self._verify_response('os-volumes-get-resp', subs, response, 200)
 
     def test_volumes_index(self):
@@ -202,7 +202,7 @@ class VolumesSampleJsonTest(test_servers.ServersSampleBase):
     def test_volumes_delete(self):
         self._post_volume()
         vol_id = self._get_volume_id()
-        response = self._do_delete('os-volumes/%s' % vol_id)
+        response = self._do_delete('os-volumes/{0!s}'.format(vol_id))
         self.assertEqual(202, response.status_code)
         self.assertEqual('', response.content)
 
@@ -277,8 +277,7 @@ class VolumeAttachmentsSample(test_servers.ServersSampleBase):
             'device': device_name
         }
         server_id = self._post_server()
-        response = self._do_post('servers/%s/os-volume_attachments'
-                                 % server_id,
+        response = self._do_post('servers/{0!s}/os-volume_attachments'.format(server_id),
                                  'attach-volume-to-server-req', subs)
 
         self._verify_response('attach-volume-to-server-resp', subs,
@@ -288,8 +287,7 @@ class VolumeAttachmentsSample(test_servers.ServersSampleBase):
         server_id = self._post_server()
         self._stub_db_bdms_get_all_by_instance(server_id)
 
-        response = self._do_get('servers/%s/os-volume_attachments'
-                                % server_id)
+        response = self._do_get('servers/{0!s}/os-volume_attachments'.format(server_id))
         self._verify_response('list-volume-attachments-resp', {},
                               response, 200)
 
@@ -298,8 +296,7 @@ class VolumeAttachmentsSample(test_servers.ServersSampleBase):
         attach_id = "a26887c6-c47b-4654-abb5-dfadf7d3f803"
         self._stub_db_bdms_get_all_by_instance(server_id)
         self._stub_compute_api_get()
-        response = self._do_get('servers/%s/os-volume_attachments/%s'
-                                % (server_id, attach_id))
+        response = self._do_get('servers/{0!s}/os-volume_attachments/{1!s}'.format(server_id, attach_id))
         self._verify_response('volume-attachment-detail-resp', {},
                               response, 200)
 
@@ -311,8 +308,7 @@ class VolumeAttachmentsSample(test_servers.ServersSampleBase):
         self.stub_out('nova.volume.cinder.API.get', fakes.stub_volume_get)
         self.stub_out('nova.compute.api.API.detach_volume',
                       lambda *a, **k: None)
-        response = self._do_delete('servers/%s/os-volume_attachments/%s'
-                                   % (server_id, attach_id))
+        response = self._do_delete('servers/{0!s}/os-volume_attachments/{1!s}'.format(server_id, attach_id))
         self.assertEqual(202, response.status_code)
         self.assertEqual('', response.content)
 
@@ -328,8 +324,7 @@ class VolumeAttachmentsSample(test_servers.ServersSampleBase):
         self.stub_out('nova.volume.cinder.API.get', fakes.stub_volume_get)
         self.stub_out('nova.compute.api.API.swap_volume',
                       lambda *a, **k: None)
-        response = self._do_put('servers/%s/os-volume_attachments/%s'
-                                % (server_id, attach_id),
+        response = self._do_put('servers/{0!s}/os-volume_attachments/{1!s}'.format(server_id, attach_id),
                                 'update-volume-req',
                                 subs)
         self.assertEqual(202, response.status_code)

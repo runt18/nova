@@ -83,7 +83,7 @@ class LibvirtVolumeBaseTestCase(test.NoDBTestCase):
         }
         self.name = 'volume-00000001'
         self.location = '10.0.2.15:3260'
-        self.iqn = 'iqn.2010-10.org.openstack:%s' % self.name
+        self.iqn = 'iqn.2010-10.org.openstack:{0!s}'.format(self.name)
         self.vol = {'id': 1, 'name': self.name}
         self.uuid = '875a8070-d0b9-4949-8b31-104d125c9a64'
         self.user = 'foo'
@@ -98,10 +98,10 @@ class LibvirtISCSIVolumeBaseTestCase(LibvirtVolumeBaseTestCase):
 
     def iscsi_connection(self, volume, location, iqn, auth=False,
                          transport=None):
-        dev_name = 'ip-%s-iscsi-%s-lun-1' % (location, iqn)
+        dev_name = 'ip-{0!s}-iscsi-{1!s}-lun-1'.format(location, iqn)
         if transport is not None:
             dev_name = 'pci-0000:00:00.0-' + dev_name
-        dev_path = '/dev/disk/by-path/%s' % (dev_name)
+        dev_path = '/dev/disk/by-path/{0!s}'.format((dev_name))
         ret = {
                 'driver_volume_type': 'iscsi',
                 'data': {

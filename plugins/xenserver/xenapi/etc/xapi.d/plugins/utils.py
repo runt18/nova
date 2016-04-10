@@ -45,18 +45,18 @@ def delete_if_exists(path):
         os.unlink(path)
     except OSError, e:  # noqa
         if e.errno == errno.ENOENT:
-            LOG.warning("'%s' was already deleted, skipping delete" % path)
+            LOG.warning("'{0!s}' was already deleted, skipping delete".format(path))
         else:
             raise
 
 
 def _link(src, dst):
-    LOG.info("Hard-linking file '%s' -> '%s'" % (src, dst))
+    LOG.info("Hard-linking file '{0!s}' -> '{1!s}'".format(src, dst))
     os.link(src, dst)
 
 
 def _rename(src, dst):
-    LOG.info("Renaming file '%s' -> '%s'" % (src, dst))
+    LOG.info("Renaming file '{0!s}' -> '{1!s}'".format(src, dst))
     try:
         os.rename(src, dst)
     except OSError, e:  # noqa
@@ -70,7 +70,7 @@ def make_subprocess(cmdline, stdout=False, stderr=False, stdin=False,
                     universal_newlines=False, close_fds=True, env=None):
     """Make a subprocess according to the given command-line string
     """
-    LOG.info("Running cmd '%s'" % " ".join(cmdline))
+    LOG.info("Running cmd '{0!s}'".format(" ".join(cmdline)))
     kwargs = {}
     kwargs['stdout'] = stdout and subprocess.PIPE or None
     kwargs['stderr'] = stderr and subprocess.PIPE or None
@@ -132,11 +132,11 @@ def run_command(cmd, cmd_input=None, ok_exit_codes=None):
 def try_kill_process(proc):
     """Sends the given process the SIGKILL signal."""
     pid = proc.pid
-    LOG.info("Killing process %s" % pid)
+    LOG.info("Killing process {0!s}".format(pid))
     try:
         os.kill(pid, signal.SIGKILL)
     except Exception:
-        LOG.exception("Failed to kill %s" % pid)
+        LOG.exception("Failed to kill {0!s}".format(pid))
 
 
 def make_staging_area(sr_path):
@@ -204,7 +204,7 @@ def _handle_old_style_images(staging_path):
     for filename in ('snap.vhd', 'image.vhd', 'base.vhd'):
         path = os.path.join(staging_path, filename)
         if os.path.exists(path):
-            _rename(path, os.path.join(staging_path, "%d.vhd" % file_num))
+            _rename(path, os.path.join(staging_path, "{0:d}.vhd".format(file_num)))
             file_num += 1
 
     # Rename any format of name to 0.vhd when there is only single one
@@ -231,7 +231,7 @@ def _assert_vhd_not_hidden(path):
             value = line.split(':')[1].strip()
             if value == "1":
                 raise Exception(
-                    "VHD %s is marked as hidden without child" % path)
+                    "VHD {0!s} is marked as hidden without child".format(path))
 
 
 def _vhd_util_check(vdi_path):
@@ -279,14 +279,14 @@ def _validate_vhd(vdi_path):
             extra = (" ensure source and destination host machines have "
                      "time set correctly")
 
-        LOG.info("VDI Error details: %s" % out)
+        LOG.info("VDI Error details: {0!s}".format(out))
 
         raise Exception(
             "VDI '%(vdi_path)s' has an invalid %(part)s: '%(details)s'"
             "%(extra)s" % {'vdi_path': vdi_path, 'part': part,
                            'details': details, 'extra': extra})
 
-    LOG.info("VDI is valid: %s" % vdi_path)
+    LOG.info("VDI is valid: {0!s}".format(vdi_path))
 
 
 def _validate_vdi_chain(vdi_path):
@@ -308,7 +308,7 @@ def _validate_vdi_chain(vdi_path):
             raise Exception("VDI '%s' not present which breaks"
                             " the VDI chain, bailing out" % path)
         else:
-            raise Exception("Unexpected output '%s' from vhd-util" % out)
+            raise Exception("Unexpected output '{0!s}' from vhd-util".format(out))
 
     cur_path = vdi_path
     while cur_path:
@@ -330,10 +330,9 @@ def _validate_sequenced_vhds(staging_path):
         if filename == "swap.vhd":
             continue
 
-        vhd_path = os.path.join(staging_path, "%d.vhd" % seq_num)
+        vhd_path = os.path.join(staging_path, "{0:d}.vhd".format(seq_num))
         if not os.path.exists(vhd_path):
-            raise Exception("Corrupt image. Expected seq number: %d. Files: %s"
-                            % (seq_num, filenames))
+            raise Exception("Corrupt image. Expected seq number: {0:d}. Files: {1!s}".format(seq_num, filenames))
 
         seq_num += 1
 
@@ -358,13 +357,13 @@ def import_vhds(sr_path, staging_path, uuid_stack):
     # Collect sequenced VHDs and assign UUIDs to them
     seq_num = 0
     while True:
-        orig_vhd_path = os.path.join(staging_path, "%d.vhd" % seq_num)
+        orig_vhd_path = os.path.join(staging_path, "{0:d}.vhd".format(seq_num))
         if not os.path.exists(orig_vhd_path):
             break
 
         # Rename (0, 1 .. N).vhd -> aaaa-bbbb-cccc-dddd.vhd
         vhd_uuid = uuid_stack.pop()
-        vhd_path = os.path.join(staging_path, "%s.vhd" % vhd_uuid)
+        vhd_path = os.path.join(staging_path, "{0!s}.vhd".format(vhd_uuid))
         _rename(orig_vhd_path, vhd_path)
 
         if seq_num == 0:
@@ -401,8 +400,8 @@ def import_vhds(sr_path, staging_path, uuid_stack):
 def prepare_staging_area(sr_path, staging_path, vdi_uuids, seq_num=0):
     """Hard-link VHDs into staging area."""
     for vdi_uuid in vdi_uuids:
-        source = os.path.join(sr_path, "%s.vhd" % vdi_uuid)
-        link_name = os.path.join(staging_path, "%d.vhd" % seq_num)
+        source = os.path.join(sr_path, "{0!s}.vhd".format(vdi_uuid))
+        link_name = os.path.join(staging_path, "{0:d}.vhd".format(seq_num))
         _link(source, link_name)
         seq_num += 1
 
@@ -416,10 +415,10 @@ def create_tarball(fileobj, path, callback=None, compression_level=None):
     :param callback: optional callback to call on each chunk written
     :param compression_level: compression level, e.g., 9 for gzip -9.
     """
-    tar_cmd = ["tar", "-zc", "--directory=%s" % path, "."]
+    tar_cmd = ["tar", "-zc", "--directory={0!s}".format(path), "."]
     env = os.environ.copy()
     if compression_level and 1 <= compression_level <= 9:
-        env["GZIP"] = "-%d" % compression_level
+        env["GZIP"] = "-{0:d}".format(compression_level)
     tar_proc = make_subprocess(tar_cmd, stdout=True, stderr=True, env=env)
 
     try:
@@ -447,7 +446,7 @@ def extract_tarball(fileobj, path, callback=None):
     :param path: path to extract tarball into
     :param callback: optional callback to call on each chunk read
     """
-    tar_cmd = ["tar", "-zx", "--directory=%s" % path]
+    tar_cmd = ["tar", "-zx", "--directory={0!s}".format(path)]
     tar_proc = make_subprocess(tar_cmd, stderr=True, stdin=True)
 
     try:
@@ -479,7 +478,7 @@ def extract_tarball(fileobj, path, callback=None):
         # no need to kill already dead process
         raise
     except Exception:
-        LOG.exception("Failed while sending data to tar pid: %s" % tar_pid)
+        LOG.exception("Failed while sending data to tar pid: {0!s}".format(tar_pid))
         try_kill_process(tar_proc)
         raise
 

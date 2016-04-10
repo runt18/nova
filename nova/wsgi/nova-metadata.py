@@ -37,6 +37,6 @@ objects.register_all()
 conf = config_files[0]
 name = "metadata"
 
-options = deploy.appconfig('config:%s' % conf, name=name)
+options = deploy.appconfig('config:{0!s}'.format(conf), name=name)
 
-application = deploy.loadapp('config:%s' % conf, name=name)
+application = deploy.loadapp('config:{0!s}'.format(conf), name=name)

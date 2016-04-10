@@ -19,7 +19,7 @@ LOG = logging.getLogger(__name__)
 
 
 INDEX_COLUMNS = ['deleted', 'allocated', 'updated_at']
-INDEX_NAME = 'fixed_ips_%s_idx' % ('_'.join(INDEX_COLUMNS),)
+INDEX_NAME = 'fixed_ips_{0!s}_idx'.format('_'.join(INDEX_COLUMNS))
 
 
 def _get_table_index(migrate_engine):

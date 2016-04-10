@@ -43,7 +43,7 @@ class NbdMount(api.Mount):
     def _find_unused(self, devices):
         for device in devices:
             if not os.path.exists(os.path.join('/sys/block/', device, 'pid')):
-                if not os.path.exists('/var/lock/qemu-nbd-%s' % device):
+                if not os.path.exists('/var/lock/qemu-nbd-{0!s}'.format(device)):
                     return device
                 else:
                     LOG.error(_LE('NBD error - previous umount did not '
@@ -86,7 +86,7 @@ class NbdMount(api.Mount):
 
         # NOTE(vish): this forks into another process, so give it a chance
         # to set up before continuing
-        pidfile = "/sys/block/%s/pid" % os.path.basename(device)
+        pidfile = "/sys/block/{0!s}/pid".format(os.path.basename(device))
         for _i in range(CONF.timeout_nbd):
             if os.path.exists(pidfile):
                 self.device = device

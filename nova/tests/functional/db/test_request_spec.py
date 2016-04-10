@@ -52,7 +52,7 @@ class RequestSpecTestCase(test.NoDBTestCase):
         spec = self._create_spec()
 
         old_az = spec.availability_zone
-        spec.availability_zone = '%s-new' % old_az
+        spec.availability_zone = '{0!s}-new'.format(old_az)
         spec.save()
         db_spec = self.spec_obj.get_by_instance_uuid(self.context,
                 spec.instance_uuid)

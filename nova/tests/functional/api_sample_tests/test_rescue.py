@@ -47,12 +47,12 @@ class RescueJsonTest(test_servers.ServersSampleBase):
         req_subs = {
             'password': 'MySecretPass'
         }
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-rescue-req', req_subs)
         self._verify_response('server-rescue', req_subs, response, 200)
 
     def _unrescue(self, uuid):
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-unrescue-req', {})
         self.assertEqual(202, response.status_code)
 
@@ -62,7 +62,7 @@ class RescueJsonTest(test_servers.ServersSampleBase):
         self._rescue(uuid)
 
         # Do a server get to make sure that the 'RESCUE' state is set
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['id'] = uuid
@@ -78,12 +78,12 @@ class RescueJsonTest(test_servers.ServersSampleBase):
             'password': 'MySecretPass',
             'image_ref': '2341-Abc'
         }
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-rescue-req-with-image-ref', req_subs)
         self._verify_response('server-rescue', req_subs, response, 200)
 
         # Do a server get to make sure that the 'RESCUE' state is set
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['id'] = uuid
@@ -99,7 +99,7 @@ class RescueJsonTest(test_servers.ServersSampleBase):
         self._unrescue(uuid)
 
         # Do a server get to make sure that the 'ACTIVE' state is back
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['id'] = uuid

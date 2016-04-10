@@ -65,7 +65,7 @@ class MultiCreateExtensionTestV21(test.TestCase):
         def instance_create(context, inst):
             inst_type = flavors.get_flavor_by_flavor_id(3)
             image_uuid = '76fa36fc-c930-4bf3-8c8a-ea2a2420deb6'
-            def_image_ref = 'http://localhost/images/%s' % image_uuid
+            def_image_ref = 'http://localhost/images/{0!s}'.format(image_uuid)
             self.instance_cache_num += 1
             instance = fake_instance.fake_db_instance(**{
                 'id': self.instance_cache_num,
@@ -532,7 +532,7 @@ class MultiCreateExtensionTestV2(MultiCreateExtensionTestV21):
         def instance_create(context, inst):
             inst_type = flavors.get_flavor_by_flavor_id(3)
             image_uuid = '76fa36fc-c930-4bf3-8c8a-ea2a2420deb6'
-            def_image_ref = 'http://localhost/images/%s' % image_uuid
+            def_image_ref = 'http://localhost/images/{0!s}'.format(image_uuid)
             self.instance_cache_num += 1
             instance = fake_instance.fake_db_instance(**{
                 'id': self.instance_cache_num,

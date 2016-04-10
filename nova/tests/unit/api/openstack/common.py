@@ -23,7 +23,7 @@ def webob_factory(url):
     base_url = url
 
     def web_request(url, method=None, body=None):
-        req = webob.Request.blank("%s%s" % (base_url, url))
+        req = webob.Request.blank("{0!s}{1!s}".format(base_url, url))
         if method:
             req.content_type = "application/json"
             req.method = method

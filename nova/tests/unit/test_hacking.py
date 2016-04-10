@@ -255,20 +255,20 @@ class HackingTestCase(test.NoDBTestCase):
         self.assertEqual(
             0, len(list(checks.validate_log_translations(debug, debug, 'f'))))
         for log in logs:
-            bad = 'LOG.%s("Bad")' % log
+            bad = 'LOG.{0!s}("Bad")'.format(log)
             self.assertEqual(1,
                 len(list(
                     checks.validate_log_translations(bad, bad, 'f'))))
-            ok = "LOG.%s('OK')    # noqa" % log
+            ok = "LOG.{0!s}('OK')    # noqa".format(log)
             self.assertEqual(0,
                 len(list(
                     checks.validate_log_translations(ok, ok, 'f'))))
-            ok = "LOG.%s(variable)" % log
+            ok = "LOG.{0!s}(variable)".format(log)
             self.assertEqual(0,
                 len(list(
                     checks.validate_log_translations(ok, ok, 'f'))))
             for level in levels:
-                ok = "LOG.%s(%s('OK'))" % (log, level)
+                ok = "LOG.{0!s}({1!s}('OK'))".format(log, level)
                 self.assertEqual(0,
                     len(list(
                         checks.validate_log_translations(ok, ok, 'f'))))
@@ -321,13 +321,13 @@ class HackingTestCase(test.NoDBTestCase):
         for method in ('dump', 'dumps', 'load', 'loads'):
             self.assertEqual(
                 __get_msg(method),
-                list(checks.use_jsonutils("json.%s(" % method,
+                list(checks.use_jsonutils("json.{0!s}(".format(method),
                                      "./nova/virt/xenapi/driver.py")))
             self.assertEqual(0,
-                len(list(checks.use_jsonutils("json.%s(" % method,
+                len(list(checks.use_jsonutils("json.{0!s}(".format(method),
                                      "./plugins/xenserver/script.py"))))
             self.assertEqual(0,
-                len(list(checks.use_jsonutils("jsonx.%s(" % method,
+                len(list(checks.use_jsonutils("jsonx.{0!s}(".format(method),
                                      "./nova/virt/xenapi/driver.py"))))
         self.assertEqual(0,
             len(list(checks.use_jsonutils("json.dumb",

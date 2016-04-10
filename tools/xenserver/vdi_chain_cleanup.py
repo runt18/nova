@@ -40,7 +40,7 @@ class ExecutionFailed(Exception):
         self.max_stream_length = max_stream_length
 
     def __repr__(self):
-        return "<ExecutionFailed returncode=%s out='%s' stderr='%s'>" % (
+        return "<ExecutionFailed returncode={0!s} out='{1!s}' stderr='{2!s}'>".format(
             self.returncode, self.stdout, self.stderr)
 
     __str__ = __repr__
@@ -62,7 +62,7 @@ def execute(cmd, ok_exit_codes=None):
 
 
 def usage():
-    print "usage: %s <SR PATH> <print|delete|move>" % sys.argv[0]
+    print "usage: {0!s} <SR PATH> <print|delete|move>".format(sys.argv[0])
     sys.exit(1)
 
 
@@ -121,7 +121,7 @@ def main():
                                         os.path.basename(bad_vhd))
                 os.rename(bad_vhd, new_path)
             else:
-                raise Exception("invalid action %s" % action)
+                raise Exception("invalid action {0!s}".format(action))
 
 
 if __name__ == '__main__':

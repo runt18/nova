@@ -81,7 +81,7 @@ class ResetStateTestsV21(test.NoDBTestCase):
                              instance.obj_what_changed())
             for k, v in expected.items():
                 self.assertEqual(v, getattr(instance, k),
-                                 "Instance.%s doesn't match" % k)
+                                 "Instance.{0!s} doesn't match".format(k))
             instance.obj_reset_changes()
 
         self.compute_api.get(self.context, instance.uuid, expected_attrs=None,

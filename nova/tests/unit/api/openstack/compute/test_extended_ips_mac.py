@@ -88,7 +88,7 @@ for cache in NW_CACHE:
                 sanitized['mac_address'] = cache['address']
                 sanitized.pop('type')
                 ALL_IPS.append(sanitized)
-ALL_IPS.sort(key=lambda x: '%s-%s' % (x['address'], x['mac_address']))
+ALL_IPS.sort(key=lambda x: '{0!s}-{1!s}'.format(x['address'], x['mac_address']))
 
 
 def fake_compute_get(*args, **kwargs):
@@ -106,7 +106,7 @@ def fake_compute_get_all(*args, **kwargs):
 
 class ExtendedIpsMacTestV21(test.TestCase):
     content_type = 'application/json'
-    prefix = '%s:' % extended_ips_mac.Extended_ips_mac.alias
+    prefix = '{0!s}:'.format(extended_ips_mac.Extended_ips_mac.alias)
 
     def setUp(self):
         super(ExtendedIpsMacTestV21, self).setUp()
@@ -135,12 +135,12 @@ class ExtendedIpsMacTestV21(test.TestCase):
         results = []
         for ip in self._get_ips(server):
             results.append({'address': ip.get('addr'),
-                            'mac_address': ip.get('%smac_addr' % self.prefix)})
+                            'mac_address': ip.get('{0!s}mac_addr'.format(self.prefix))})
 
         self.assertEqual(ALL_IPS, sorted(results))
 
     def test_show(self):
-        url = '/v2/fake/servers/%s' % UUID3
+        url = '/v2/fake/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)
@@ -157,7 +157,7 @@ class ExtendedIpsMacTestV21(test.TestCase):
 
 class ExtendedIpsMacTestV2(ExtendedIpsMacTestV21):
     content_type = 'application/json'
-    prefix = '%s:' % extended_ips_mac.Extended_ips_mac.alias
+    prefix = '{0!s}:'.format(extended_ips_mac.Extended_ips_mac.alias)
 
     def setUp(self):
         super(ExtendedIpsMacTestV2, self).setUp()

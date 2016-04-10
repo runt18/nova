@@ -59,7 +59,7 @@ class Event(object):
         return self.timestamp
 
     def __repr__(self):
-        return "<%s: %s>" % (
+        return "<{0!s}: {1!s}>".format(
             self.__class__.__name__,
             self.timestamp)
 
@@ -82,7 +82,7 @@ class InstanceEvent(Event):
         return self.uuid
 
     def __repr__(self):
-        return "<%s: %s, %s>" % (
+        return "<{0!s}: {1!s}, {2!s}>".format(
             self.__class__.__name__,
             self.timestamp,
             self.uuid)
@@ -110,7 +110,7 @@ class LifecycleEvent(InstanceEvent):
         return NAMES.get(self.transition, _('Unknown'))
 
     def __repr__(self):
-        return "<%s: %s, %s => %s>" % (
+        return "<{0!s}: {1!s}, {2!s} => {3!s}>".format(
             self.__class__.__name__,
             self.timestamp,
             self.uuid,

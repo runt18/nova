@@ -42,7 +42,7 @@ class ExtendedAvailabilityZoneJsonTests(test_servers.ServersSampleBase):
 
     def test_show(self):
         uuid = self._post_server()
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = '1.2.3.4'

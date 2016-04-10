@@ -419,7 +419,7 @@ class SimpleDH(object):
 
     def _run_ssl(self, text, decrypt=False):
         cmd = ['openssl', 'aes-128-cbc', '-A', '-a', '-pass',
-               'pass:%s' % self._shared, '-nosalt']
+               'pass:{0!s}'.format(self._shared), '-nosalt']
         if decrypt:
             cmd.append('-d')
         out, err = utils.execute(*cmd, process_input=text)

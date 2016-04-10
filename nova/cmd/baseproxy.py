@@ -46,11 +46,11 @@ def exit_with_error(msg, errno=-1):
 def proxy(host, port):
 
     if CONF.ssl_only and not os.path.exists(CONF.cert):
-        exit_with_error("SSL only and %s not found" % CONF.cert)
+        exit_with_error("SSL only and {0!s} not found".format(CONF.cert))
 
     # Check to see if tty html/js/css files are present
     if CONF.web and not os.path.exists(CONF.web):
-        exit_with_error("Can not find html/js files at %s." % CONF.web)
+        exit_with_error("Can not find html/js files at {0!s}.".format(CONF.web))
 
     logging.setup(CONF, "nova")
 

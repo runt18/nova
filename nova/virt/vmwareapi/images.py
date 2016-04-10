@@ -314,7 +314,7 @@ def _build_shadow_vm_config_spec(session, name, size_kb, disk_type, ds_name):
         disk_device_bkng.eagerlyScrub = True
     elif disk_type == constants.DISK_TYPE_THIN:
         disk_device_bkng.thinProvisioned = True
-    disk_device_bkng.fileName = '[%s]' % ds_name
+    disk_device_bkng.fileName = '[{0!s}]'.format(ds_name)
     disk_device_bkng.diskMode = 'persistent'
     disk_device.backing = disk_device_bkng
     disk_spec = cf.create('ns0:VirtualDeviceConfigSpec')
@@ -323,7 +323,7 @@ def _build_shadow_vm_config_spec(session, name, size_kb, disk_type, ds_name):
     disk_spec.device = disk_device
 
     vm_file_info = cf.create('ns0:VirtualMachineFileInfo')
-    vm_file_info.vmPathName = '[%s]' % ds_name
+    vm_file_info.vmPathName = '[{0!s}]'.format(ds_name)
 
     create_spec = cf.create('ns0:VirtualMachineConfigSpec')
     create_spec.name = name
@@ -390,14 +390,14 @@ def get_vmdk_name_from_ovf(xmlstr):
     """Parse the OVA descriptor to extract the vmdk name."""
 
     ovf = etree.fromstring(xmlstr)
-    nsovf = "{%s}" % ovf.nsmap["ovf"]
+    nsovf = "{{{0!s}}}".format(ovf.nsmap["ovf"])
 
-    disk = ovf.find("./%sDiskSection/%sDisk" % (nsovf, nsovf))
-    file_id = disk.get("%sfileRef" % nsovf)
+    disk = ovf.find("./{0!s}DiskSection/{1!s}Disk".format(nsovf, nsovf))
+    file_id = disk.get("{0!s}fileRef".format(nsovf))
 
-    file = ovf.find('./%sReferences/%sFile[@%sid="%s"]' % (nsovf, nsovf,
+    file = ovf.find('./{0!s}References/{1!s}File[@{2!s}id="{3!s}"]'.format(nsovf, nsovf,
                                                            nsovf, file_id))
-    vmdk_name = file.get("%shref" % nsovf)
+    vmdk_name = file.get("{0!s}href".format(nsovf))
     return vmdk_name
 
 

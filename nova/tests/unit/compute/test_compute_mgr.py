@@ -178,7 +178,7 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
         self, get_db_nodes, get_avail_nodes, get_rt):
         db_nodes = []
 
-        db_nodes = [self._make_compute_node('node%s' % i, i)
+        db_nodes = [self._make_compute_node('node{0!s}'.format(i), i)
                     for i in range(1, 5)]
         avail_nodes = set(['node2', 'node3', 'node4', 'node5'])
         avail_nodes_l = list(avail_nodes)
@@ -213,7 +213,7 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
     @mock.patch.object(manager.ComputeManager, '_get_compute_nodes_in_db')
     def test_update_available_resource(self, get_db_nodes, get_avail_nodes,
                                        get_rt):
-        db_nodes = [self._make_compute_node('node%s' % i, i)
+        db_nodes = [self._make_compute_node('node{0!s}'.format(i), i)
                     for i in range(1, 5)]
         avail_nodes = set(['node2', 'node3', 'node4', 'node5'])
         avail_nodes_l = list(avail_nodes)
@@ -1346,7 +1346,7 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
         all_instances = []
         driver_instances = []
         for x in range(10):
-            instance = fake_instance.fake_db_instance(name='inst-%i' % x,
+            instance = fake_instance.fake_db_instance(name='inst-{0:d}'.format(x),
                                                       id=x)
             if x % 2:
                 driver_instances.append(instance)
@@ -1940,7 +1940,7 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
     def test_instance_events_lock_name(self):
         inst_obj = objects.Instance(uuid=uuids.instance)
         result = self.compute.instance_events._lock_name(inst_obj)
-        self.assertEqual(result, "%s-events" % uuids.instance)
+        self.assertEqual(result, "{0!s}-events".format(uuids.instance))
 
     def test_prepare_for_instance_event_again(self):
         inst_obj = objects.Instance(uuid=uuids.instance)

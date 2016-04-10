@@ -912,7 +912,7 @@ class ResourceTracker(object):
         """Get the instance type from instance."""
         stashed_flavors = migration.migration_type in ('resize',)
         if stashed_flavors:
-            return getattr(instance, '%sflavor' % prefix)
+            return getattr(instance, '{0!s}flavor'.format(prefix))
         else:
             # NOTE(ndipanov): Certain migration types (all but resize)
             # do not change flavors so there is no need to stash

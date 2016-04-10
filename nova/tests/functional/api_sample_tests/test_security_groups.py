@@ -101,7 +101,7 @@ class SecurityGroupsJsonTest(test_servers.ServersSampleBase):
 
     def test_server_get(self):
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = '1.2.3.4'
@@ -132,7 +132,7 @@ class SecurityGroupsJsonTest(test_servers.ServersSampleBase):
         subs = {
                 'group_name': 'test'
         }
-        return self._do_post('servers/%s/action' % uuid,
+        return self._do_post('servers/{0!s}/action'.format(uuid),
                              'security-group-add-post-req', subs)
 
     def test_security_group_create(self):
@@ -150,13 +150,13 @@ class SecurityGroupsJsonTest(test_servers.ServersSampleBase):
     def test_security_groups_get(self):
         # Get api sample of security groups get request.
         security_group_id = '11111111-1111-1111-1111-111111111111'
-        response = self._do_get('os-security-groups/%s' % security_group_id)
+        response = self._do_get('os-security-groups/{0!s}'.format(security_group_id))
         self._verify_response('security-groups-get-resp', {}, response, 200)
 
     def test_security_groups_list_server(self):
         # Get api sample of security groups for a specific server.
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_get('servers/%s/os-security-groups' % uuid)
+        response = self._do_get('servers/{0!s}/os-security-groups'.format(uuid))
         self._verify_response('server-security-groups-list-resp',
                               {}, response, 200)
 
@@ -174,7 +174,7 @@ class SecurityGroupsJsonTest(test_servers.ServersSampleBase):
         subs = {
                 'group_name': 'test'
         }
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'security-group-remove-post-req', subs)
         self.assertEqual(202, response.status_code)
         self.assertEqual('', response.content)

@@ -46,11 +46,11 @@ class ExtendedServerAttributesController(wsgi.Controller):
                            'root_device_name', 'user_data']
         for attr in properties:
             if attr == 'name':
-                key = "OS-EXT-SRV-ATTR:instance_%s" % attr
+                key = "OS-EXT-SRV-ATTR:instance_{0!s}".format(attr)
             else:
                 # NOTE(mriedem): Nothing after microversion 2.3 should use the
                 # OS-EXT-SRV-ATTR prefix for the attribute key name.
-                key = "OS-EXT-SRV-ATTR:%s" % attr
+                key = "OS-EXT-SRV-ATTR:{0!s}".format(attr)
             server[key] = instance[attr]
 
     def _server_host_status(self, context, server, instance, req):

@@ -79,7 +79,7 @@ class MetadataRequestHandler(wsgi.Application):
         if not address:
             raise exception.FixedIpNotFoundForAddress(address=address)
 
-        cache_key = 'metadata-%s' % address
+        cache_key = 'metadata-{0!s}'.format(address)
         data = self._cache.get(cache_key)
         if data:
             LOG.debug("Using cached metadata for %s", address)
@@ -96,7 +96,7 @@ class MetadataRequestHandler(wsgi.Application):
         return data
 
     def get_metadata_by_instance_id(self, instance_id, address):
-        cache_key = 'metadata-%s' % instance_id
+        cache_key = 'metadata-{0!s}'.format(instance_id)
         data = self._cache.get(cache_key)
         if data:
             LOG.debug("Using cached metadata for instance %s", instance_id)

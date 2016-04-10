@@ -29,7 +29,7 @@ FAKE_UUID = fakes.FAKE_UUID
 
 
 def execute(*cmd, **args):
-    return "".join(["%s is alive" % ip for ip in cmd[1:]])
+    return "".join(["{0!s} is alive".format(ip) for ip in cmd[1:]])
 
 
 class FpingTestV21(test.TestCase):
@@ -76,7 +76,7 @@ class FpingTestV21(test.TestCase):
         res_dict = self.controller.index(req)
         ids = [srv["id"] for srv in res_dict["servers"]]
         req = fakes.HTTPRequest.blank(self._get_url() +
-                                      "/os-fping?include=%s" % ids[0])
+                                      "/os-fping?include={0!s}".format(ids[0]))
         res_dict = self.controller.index(req)
         self.assertEqual(len(res_dict["servers"]), 1)
         self.assertEqual(res_dict["servers"][0]["id"], ids[0])
@@ -86,15 +86,15 @@ class FpingTestV21(test.TestCase):
         res_dict = self.controller.index(req)
         ids = [srv["id"] for srv in res_dict["servers"]]
         req = fakes.HTTPRequest.blank(self._get_url() +
-                                      "/os-fping?exclude=%s" %
-                                      ",".join(ids[1:]))
+                                      "/os-fping?exclude={0!s}".format(
+                                      ",".join(ids[1:])))
         res_dict = self.controller.index(req)
         self.assertEqual(len(res_dict["servers"]), 1)
         self.assertEqual(res_dict["servers"][0]["id"], ids[0])
 
     def test_fping_show(self):
         req = fakes.HTTPRequest.blank(self._get_url() +
-                                      "os-fping/%s" % FAKE_UUID)
+                                      "os-fping/{0!s}".format(FAKE_UUID))
         res_dict = self.controller.show(req, FAKE_UUID)
         self.assertIn("server", res_dict)
         srv = res_dict["server"]
@@ -106,7 +106,7 @@ class FpingTestV21(test.TestCase):
         mock_get_instance.side_effect = exception.InstanceNotFound(
             instance_id='')
         req = fakes.HTTPRequest.blank(self._get_url() +
-                                      "os-fping/%s" % FAKE_UUID)
+                                      "os-fping/{0!s}".format(FAKE_UUID))
         self.assertRaises(webob.exc.HTTPNotFound,
                           self.controller.show, req, FAKE_UUID)
 
@@ -127,8 +127,8 @@ class FpingPolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, func, *arg, **kwarg)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." %
-            rule.popitem()[0], exc.format_message())
+            "Policy doesn't allow {0!s} to be performed.".format(
+            rule.popitem()[0]), exc.format_message())
 
     def test_list_policy_failed(self):
         rule = {"os_compute_api:os-fping": "project:non_fake"}

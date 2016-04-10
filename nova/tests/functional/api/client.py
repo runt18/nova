@@ -64,7 +64,7 @@ class APIResponse(object):
     def __str__(self):
         # because __str__ falls back to __repr__ we can still use repr
         # on self but add in the other attributes.
-        return "<Response body:%r, status_code:%s>" % (self.body, self.status)
+        return "<Response body:{0!r}, status_code:{1!s}>".format(self.body, self.status)
 
 
 class OpenStackApiException(Exception):
@@ -167,7 +167,7 @@ class TestOpenStackClient(object):
             # NOTE(vish): cut out version number and tenant_id
             base_uri = '/'.join(base_uri.split('/', 3)[:-1])
 
-        full_uri = '%s/%s' % (base_uri, relative_uri)
+        full_uri = '{0!s}/{1!s}'.format(base_uri, relative_uri)
 
         headers = kwargs.setdefault('headers', {})
         headers['X-Auth-Token'] = auth_result['x-auth-token']
@@ -244,7 +244,7 @@ class TestOpenStackClient(object):
     #####################################
 
     def get_server(self, server_id):
-        return self.api_get('/servers/%s' % server_id).body['server']
+        return self.api_get('/servers/{0!s}'.format(server_id)).body['server']
 
     def get_servers(self, detail=True, search_opts=None):
         rel_url = '/servers/detail' if detail else '/servers'
@@ -254,7 +254,7 @@ class TestOpenStackClient(object):
             for opt, val in six.iteritems(search_opts):
                 qparams[opt] = val
             if qparams:
-                query_string = "?%s" % urllib.urlencode(qparams)
+                query_string = "?{0!s}".format(urllib.urlencode(qparams))
                 rel_url += query_string
         return self.api_get(rel_url).body['servers']
 
@@ -266,16 +266,16 @@ class TestOpenStackClient(object):
             return response['server']
 
     def put_server(self, server_id, server):
-        return self.api_put('/servers/%s' % server_id, server).body
+        return self.api_put('/servers/{0!s}'.format(server_id), server).body
 
     def post_server_action(self, server_id, data):
-        return self.api_post('/servers/%s/action' % server_id, data).body
+        return self.api_post('/servers/{0!s}/action'.format(server_id), data).body
 
     def delete_server(self, server_id):
-        return self.api_delete('/servers/%s' % server_id)
+        return self.api_delete('/servers/{0!s}'.format(server_id))
 
     def get_image(self, image_id):
-        return self.api_get('/images/%s' % image_id).body['image']
+        return self.api_get('/images/{0!s}'.format(image_id)).body['image']
 
     def get_images(self, detail=True):
         rel_url = '/images/detail' if detail else '/images'
@@ -285,10 +285,10 @@ class TestOpenStackClient(object):
         return self.api_post('/images', image).body['image']
 
     def delete_image(self, image_id):
-        return self.api_delete('/images/%s' % image_id)
+        return self.api_delete('/images/{0!s}'.format(image_id))
 
     def get_flavor(self, flavor_id):
-        return self.api_get('/flavors/%s' % flavor_id).body['flavor']
+        return self.api_get('/flavors/{0!s}'.format(flavor_id)).body['flavor']
 
     def get_flavors(self, detail=True):
         rel_url = '/flavors/detail' if detail else '/flavors'
@@ -298,14 +298,14 @@ class TestOpenStackClient(object):
         return self.api_post('/flavors', flavor).body['flavor']
 
     def delete_flavor(self, flavor_id):
-        return self.api_delete('/flavors/%s' % flavor_id)
+        return self.api_delete('/flavors/{0!s}'.format(flavor_id))
 
     def post_extra_spec(self, flavor_id, spec):
-        return self.api_post('/flavors/%s/os-extra_specs' %
-                             flavor_id, spec)
+        return self.api_post('/flavors/{0!s}/os-extra_specs'.format(
+                             flavor_id), spec)
 
     def get_volume(self, volume_id):
-        return self.api_get('/os-volumes/%s' % volume_id).body['volume']
+        return self.api_get('/os-volumes/{0!s}'.format(volume_id)).body['volume']
 
     def get_volumes(self, detail=True):
         rel_url = '/os-volumes/detail' if detail else '/os-volumes'
@@ -315,30 +315,28 @@ class TestOpenStackClient(object):
         return self.api_post('/os-volumes', volume).body['volume']
 
     def delete_volume(self, volume_id):
-        return self.api_delete('/os-volumes/%s' % volume_id)
+        return self.api_delete('/os-volumes/{0!s}'.format(volume_id))
 
     def get_server_volume(self, server_id, attachment_id):
-        return self.api_get('/servers/%s/os-volume_attachments/%s' %
-                            (server_id, attachment_id)
+        return self.api_get('/servers/{0!s}/os-volume_attachments/{1!s}'.format(server_id, attachment_id)
                         ).body['volumeAttachment']
 
     def get_server_volumes(self, server_id):
-        return self.api_get('/servers/%s/os-volume_attachments' %
-                            (server_id)).body['volumeAttachments']
+        return self.api_get('/servers/{0!s}/os-volume_attachments'.format(
+                            (server_id))).body['volumeAttachments']
 
     def post_server_volume(self, server_id, volume_attachment):
-        return self.api_post('/servers/%s/os-volume_attachments' %
-                             (server_id), volume_attachment
+        return self.api_post('/servers/{0!s}/os-volume_attachments'.format(
+                             (server_id)), volume_attachment
                             ).body['volumeAttachment']
 
     def delete_server_volume(self, server_id, attachment_id):
-        return self.api_delete('/servers/%s/os-volume_attachments/%s' %
-                            (server_id, attachment_id))
+        return self.api_delete('/servers/{0!s}/os-volume_attachments/{1!s}'.format(server_id, attachment_id))
 
     def post_server_metadata(self, server_id, metadata):
         post_body = {'metadata': {}}
         post_body['metadata'].update(metadata)
-        return self.api_post('/servers/%s/metadata' % server_id,
+        return self.api_post('/servers/{0!s}/metadata'.format(server_id),
                              post_body).body['metadata']
 
     def get_server_groups(self, all_projects=None):
@@ -349,16 +347,16 @@ class TestOpenStackClient(object):
             return self.api_get('/os-server-groups').body['server_groups']
 
     def get_server_group(self, group_id):
-        return self.api_get('/os-server-groups/%s' %
-                            group_id).body['server_group']
+        return self.api_get('/os-server-groups/{0!s}'.format(
+                            group_id)).body['server_group']
 
     def post_server_groups(self, group):
         response = self.api_post('/os-server-groups', {"server_group": group})
         return response.body['server_group']
 
     def delete_server_group(self, group_id):
-        self.api_delete('/os-server-groups/%s' % group_id)
+        self.api_delete('/os-server-groups/{0!s}'.format(group_id))
 
     def get_instance_actions(self, server_id):
-        return self.api_get('/servers/%s/os-instance-actions' %
-                            (server_id)).body['instanceActions']
+        return self.api_get('/servers/{0!s}/os-instance-actions'.format(
+                            (server_id))).body['instanceActions']

@@ -85,12 +85,12 @@ class BaseLoader(object):
             if relpath == '.':
                 relpkg = ''
             else:
-                relpkg = '.%s' % '.'.join(relpath.split(os.sep))
+                relpkg = '.{0!s}'.format('.'.join(relpath.split(os.sep)))
             for fname in filenames:
                 root, ext = os.path.splitext(fname)
                 if ext != '.py' or root == '__init__':
                     continue
-                module_name = "%s%s.%s" % (self.package, relpkg, root)
+                module_name = "{0!s}{1!s}.{2!s}".format(self.package, relpkg, root)
                 mod_classes = self._get_classes_from_module(module_name)
                 classes.extend(mod_classes)
         return classes

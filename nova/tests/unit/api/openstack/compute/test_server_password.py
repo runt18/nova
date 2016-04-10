@@ -95,7 +95,7 @@ class ServerPasswordPolicyEnforcementV21(test.NoDBTestCase):
             method, self.req, fakes.FAKE_UUID)
 
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_get_password_policy_failed(self):

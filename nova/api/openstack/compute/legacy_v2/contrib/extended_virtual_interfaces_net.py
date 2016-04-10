@@ -27,7 +27,7 @@ class ExtendedServerVIFNetController(wsgi.Controller):
 
     @wsgi.extends
     def index(self, req, resp_obj, server_id):
-        key = "%s:net_id" % Extended_virtual_interfaces_net.alias
+        key = "{0!s}:net_id".format(Extended_virtual_interfaces_net.alias)
         context = req.environ['nova.context']
         if authorize(context):
             for vif in resp_obj.obj['virtual_interfaces']:

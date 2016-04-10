@@ -25,7 +25,7 @@ authorize = extensions.soft_extension_authorizer('compute',
 
 class ExtendedAZController(wsgi.Controller):
     def _extend_server(self, context, server, instance):
-        key = "%s:availability_zone" % Extended_availability_zone.alias
+        key = "{0!s}:availability_zone".format(Extended_availability_zone.alias)
         az = avail_zone.get_instance_availability_zone(context, instance)
         server[key] = az or ''
 

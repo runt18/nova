@@ -43,7 +43,7 @@ def main(command, phys_dev_name):
         # allow all traffic from the physical NIC, as it is trusted (i.e.,
         # from a filtered vif, or from the physical infrastructure)
         ovs_ofctl('add-flow', bridge_name,
-                  "priority=2,in_port=%s,actions=normal" % pnic_ofport)
+                  "priority=2,in_port={0!s},actions=normal".format(pnic_ofport))
 
         # Allow traffic from dom0 if there is a management interface
         # present (its IP address is on the bridge itself)
@@ -63,8 +63,8 @@ if __name__ == "__main__":
         print(sys.argv)
         script_name = os.path.basename(sys.argv[0])
         print("This script configures base ovs flows.")
-        print("usage: %s [online|offline|reset] phys-dev-name" % script_name)
-        print("   ex: %s online eth0" % script_name)
+        print("usage: {0!s} [online|offline|reset] phys-dev-name".format(script_name))
+        print("   ex: {0!s} online eth0".format(script_name))
         sys.exit(1)
     else:
         command, phys_dev_name = sys.argv[1:3]

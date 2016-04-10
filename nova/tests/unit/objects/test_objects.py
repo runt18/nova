@@ -112,7 +112,7 @@ class MyObj(base.NovaPersistentObject, base.NovaObject,
         # NOTE(danms): Simulate an older version that had a different
         # format for the 'bar' attribute
         if target_version == '1.1' and 'bar' in primitive:
-            primitive['bar'] = 'old%s' % primitive['bar']
+            primitive['bar'] = 'old{0!s}'.format(primitive['bar'])
 
 
 class RandomMixInWithNoFields(object):
@@ -1254,9 +1254,8 @@ class TestObjectVersions(test.NoDBTestCase):
             obj_class = obj_classes[obj_name][0]
             version = versionutils.convert_version_to_tuple(obj_class.VERSION)
             for n in range(version[1]):
-                test_version = '%d.%d' % (version[0], n)
-                LOG.info('testing obj: %s version: %s' %
-                         (obj_name, test_version))
+                test_version = '{0:d}.{1:d}'.format(version[0], n)
+                LOG.info('testing obj: {0!s} version: {1!s}'.format(obj_name, test_version))
                 obj_class().obj_to_primitive(target_version=test_version,
                                              version_manifest=versions)
 

@@ -57,7 +57,7 @@ class CellsRPCDriver(driver.BaseCellsDriver):
         topic_base = CONF.cells.rpc_driver_queue_base
         proxy_manager = InterCellRPCDispatcher(msg_runner)
         for msg_type in msg_runner.get_message_types():
-            target = messaging.Target(topic='%s.%s' % (topic_base, msg_type),
+            target = messaging.Target(topic='{0!s}.{1!s}'.format(topic_base, msg_type),
                                       server=CONF.host)
             # NOTE(comstud): We do not need to use the object serializer
             # on this because object serialization is taken care for us in
@@ -136,7 +136,7 @@ class InterCellRPCAPI(object):
         'CONF.rpc_driver_queue_base.<message_type>'.
         """
         topic_base = CONF.cells.rpc_driver_queue_base
-        topic = '%s.%s' % (topic_base, message.message_type)
+        topic = '{0!s}.{1!s}'.format(topic_base, message.message_type)
         cctxt = self._get_client(cell_state, topic)
         if message.fanout:
             cctxt = cctxt.prepare(fanout=message.fanout)

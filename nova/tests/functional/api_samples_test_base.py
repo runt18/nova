@@ -158,13 +158,11 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
             elif result == u'':
                 pass  # TODO(auggy): known issue Bug#1544720
             else:
-                raise NoMatch('%(result_str)s: Expected None, got %(result)s.'
-                        % {'result_str': result_str, 'result': result})
+                raise NoMatch('{result_str!s}: Expected None, got {result!s}.'.format(**{'result_str': result_str, 'result': result}))
         # dictionary
         elif isinstance(expected, dict):
             if not isinstance(result, dict):
-                raise NoMatch('%(result_str)s: %(result)s is not a dict.'
-                        % {'result_str': result_str, 'result': result})
+                raise NoMatch('{result_str!s}: {result!s} is not a dict.'.format(**{'result_str': result_str, 'result': result}))
             ex_keys = sorted(expected.keys())
             res_keys = sorted(result.keys())
             if ex_keys != res_keys:
@@ -191,8 +189,8 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
         elif isinstance(expected, list):
             if not isinstance(result, list):
                 raise NoMatch(
-                        '%(result_str)s: %(result)s is not a list.' %
-                        {'result_str': result_str, 'result': result})
+                        '{result_str!s}: {result!s} is not a list.'.format(**
+                        {'result_str': result_str, 'result': result}))
 
             expected = expected[:]
             extra = []
@@ -215,8 +213,8 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
                 error.extend([repr(o) for o in expected])
 
             if extra:
-                error.append('Extra list items in %(result_str)s:' %
-                             {'result_str': result_str})
+                error.append('Extra list items in {result_str!s}:'.format(**
+                             {'result_str': result_str}))
                 error.extend([repr(o) for o in extra])
 
             if error:
@@ -225,7 +223,7 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
         elif isinstance(expected, six.string_types) and '%' in expected:
             # NOTE(vish): escape stuff for regex
             for char in '[]<>?':
-                expected = expected.replace(char, '\\%s' % char)
+                expected = expected.replace(char, '\\{0!s}'.format(char))
             # NOTE(vish): special handling of subs that are not quoted. We are
             #             expecting an int but we had to pass in a string
             #             so the json would parse properly.
@@ -234,7 +232,7 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
                 expected = expected.replace('int:', '')
 
             expected = expected % self.subs
-            expected = '^%s$' % expected
+            expected = '^{0!s}$'.format(expected)
             match = re.match(expected, result)
             if not match:
                 raise NoMatch(
@@ -287,8 +285,7 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
 
         else:
             raise ValueError(
-                'Unexpected type %(expected_type)s'
-                % {'expected_type': type(expected)})
+                'Unexpected type {expected_type!s}'.format(**{'expected_type': type(expected)}))
 
         return matched_value
 
@@ -394,7 +391,7 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
         return {
             'isotime': isotime_re,
             'strtime': strtime_re,
-            'strtime_or_none': r'None|%s' % strtime_re,
+            'strtime_or_none': r'None|{0!s}'.format(strtime_re),
             'xmltime': xmltime_re,
             'password': '[0-9a-zA-Z]{1,12}',
             'ip': '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}',
@@ -429,7 +426,7 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
         # NOTE(sdague): "openstack" is stand in for project_id, it
         # should be more generic in future.
         if self._project_id:
-            return '%s/%s' % (self._get_host(), PROJECT_ID)
+            return '{0!s}/{1!s}'.format(self._get_host(), PROJECT_ID)
         else:
             return self._get_host()
 
@@ -437,10 +434,10 @@ class ApiSampleTestBase(integrated_helpers._IntegratedTestBase):
         # NOTE(sdague): "openstack" is stand in for project_id, it
         # should be more generic in future.
         if self._project_id:
-            return '%s/%s/%s' % (self._get_host(), self.api_major_version,
+            return '{0!s}/{1!s}/{2!s}'.format(self._get_host(), self.api_major_version,
                                  PROJECT_ID)
         else:
-            return '%s/%s' % (self._get_host(), self.api_major_version)
+            return '{0!s}/{1!s}'.format(self._get_host(), self.api_major_version)
 
     def _get_response(self, url, method, body=None, strip_version=False,
                       headers=None):

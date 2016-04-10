@@ -31,9 +31,9 @@ class EventType(base.NovaObject):
 
     def to_notification_event_type_field(self):
         """Serialize the object to the wire format."""
-        s = '%s.%s' % (self.object, self.action)
+        s = '{0!s}.{1!s}'.format(self.object, self.action)
         if self.obj_attr_is_set('phase'):
-            s += '.%s' % self.phase
+            s += '.{0!s}'.format(self.phase)
         return s
 
 
@@ -130,8 +130,7 @@ class NotificationBase(base.NovaObject):
         self._emit(context,
                    event_type=
                    self.event_type.to_notification_event_type_field(),
-                   publisher_id='%s:%s' %
-                                (self.publisher.binary,
+                   publisher_id='{0!s}:{1!s}'.format(self.publisher.binary,
                                  self.publisher.host),
                    payload=self.payload.obj_to_primitive())
 

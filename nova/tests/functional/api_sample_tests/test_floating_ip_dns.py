@@ -42,7 +42,7 @@ class FloatingIpDNSTest(api_sample_base.ApiSampleTestBaseV21):
     def _create_or_update(self):
         subs = {'project': self.project,
                 'scope': self.scope}
-        response = self._do_put('os-floating-ip-dns/%s' % self.domain,
+        response = self._do_put('os-floating-ip-dns/{0!s}'.format(self.domain),
                                 'floating-ip-dns-create-or-update-req', subs)
         subs.update({'domain': self.domain})
         self._verify_response('floating-ip-dns-create-or-update-resp', subs,
@@ -50,8 +50,7 @@ class FloatingIpDNSTest(api_sample_base.ApiSampleTestBaseV21):
 
     def _create_or_update_entry(self):
         subs = {'ip': self.ip, 'dns_type': self.dns_type}
-        response = self._do_put('os-floating-ip-dns/%s/entries/%s'
-                                % (self.domain, self.name),
+        response = self._do_put('os-floating-ip-dns/{0!s}/entries/{1!s}'.format(self.domain, self.name),
                                 'floating-ip-dns-create-or-update-entry-req',
                                 subs)
         subs.update({'name': self.name, 'domain': self.domain})
@@ -72,7 +71,7 @@ class FloatingIpDNSTest(api_sample_base.ApiSampleTestBaseV21):
 
     def test_floating_ip_dns_delete(self):
         self._create_or_update()
-        response = self._do_delete('os-floating-ip-dns/%s' % self.domain)
+        response = self._do_delete('os-floating-ip-dns/{0!s}'.format(self.domain))
         self.assertEqual(202, response.status_code)
 
     def test_floating_ip_dns_create_or_update_entry(self):
@@ -80,8 +79,7 @@ class FloatingIpDNSTest(api_sample_base.ApiSampleTestBaseV21):
 
     def test_floating_ip_dns_entry_get(self):
         self._create_or_update_entry()
-        response = self._do_get('os-floating-ip-dns/%s/entries/%s'
-                                % (self.domain, self.name))
+        response = self._do_get('os-floating-ip-dns/{0!s}/entries/{1!s}'.format(self.domain, self.name))
         subs = {'domain': self.domain,
                 'ip': self.ip,
                 'name': self.name}
@@ -90,14 +88,12 @@ class FloatingIpDNSTest(api_sample_base.ApiSampleTestBaseV21):
 
     def test_floating_ip_dns_entry_delete(self):
         self._create_or_update_entry()
-        response = self._do_delete('os-floating-ip-dns/%s/entries/%s'
-                                   % (self.domain, self.name))
+        response = self._do_delete('os-floating-ip-dns/{0!s}/entries/{1!s}'.format(self.domain, self.name))
         self.assertEqual(202, response.status_code)
 
     def test_floating_ip_dns_entry_list(self):
         self._create_or_update_entry()
-        response = self._do_get('os-floating-ip-dns/%s/entries/%s'
-                                % (self.domain, self.ip))
+        response = self._do_get('os-floating-ip-dns/{0!s}/entries/{1!s}'.format(self.domain, self.ip))
         subs = {'domain': self.domain,
                 'ip': self.ip,
                 'name': self.name}

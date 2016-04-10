@@ -89,7 +89,7 @@ class RestMethodDirective(Directive):
 
         # We need to build a temporary target that we can replace
         # later in the processing to get the TOC to resolve correctly.
-        temp_target = "%s-selector" % node['target']
+        temp_target = "{0!s}-selector".format(node['target'])
         target = nodes.target(ids=[temp_target])
         self.state.add_target(temp_target, '', target, lineno)
         section += node
@@ -199,7 +199,7 @@ class RestParametersDirective(Table):
                 desc = values.get('description', '')
                 classes = []
                 if min_version:
-                    desc += ("\n\n**New in version %s**\n" % min_version)
+                    desc += ("\n\n**New in version {0!s}**\n".format(min_version))
                     min_ver_css_name = ("rp_min_ver_" +
                                         str(min_version).replace('.', '_'))
                     classes.append(min_ver_css_name)
@@ -213,8 +213,7 @@ class RestParametersDirective(Table):
                 trow += add_col(desc)
                 rows.append(trow)
         except AttributeError as exc:
-            self.app.warn("Failure on key: %s, values: %s. %s" %
-                          (key, values, exc))
+            self.app.warn("Failure on key: {0!s}, values: {1!s}. {2!s}".format(key, values, exc))
             raise
         return rows, groups
 
@@ -296,7 +295,7 @@ def resolve_rest_references(app, doctree):
             # until this point just to keep it from colliding with
             # it's parent.
             rest_section.attributes['ids'][0] = (
-                "%s-detail" % rest_section.attributes['ids'][0])
+                "{0!s}-detail".format(rest_section.attributes['ids'][0]))
             rest_method_section.attributes['ids'][0] = rest_node['target']
 
             # Pop the overall section into it's grand parent,

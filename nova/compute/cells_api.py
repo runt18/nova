@@ -104,7 +104,7 @@ class RPCClientCellsProxy(object):
         version = kwargs.pop('version', None)
 
         if kwargs:
-            raise ValueError("Unsupported kwargs: %s" % kwargs.keys())
+            raise ValueError("Unsupported kwargs: {0!s}".format(kwargs.keys()))
 
         if server:
             ret._server = server
@@ -131,7 +131,7 @@ class RPCClientCellsProxy(object):
 
     def _get_topic(self):
         if self._server is not None:
-            return '%s.%s' % (self.target.topic, self._server)
+            return '{0!s}.{1!s}'.format(self.target.topic, self._server)
         else:
             return self.target.topic
 

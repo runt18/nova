@@ -77,7 +77,7 @@ class InstanceActionsPolicyTestV21(test.NoDBTestCase):
         self.controller = self.instance_actions.InstanceActionsController()
 
     def _get_http_req(self, action):
-        fake_url = '/123/servers/12/%s' % action
+        fake_url = '/123/servers/12/{0!s}'.format(action)
         return fakes.HTTPRequest.blank(fake_url)
 
     def _set_policy_rules(self):
@@ -93,8 +93,8 @@ class InstanceActionsPolicyTestV21(test.NoDBTestCase):
                                       columns_to_join=None,
                                       use_slave=False):
             return fake_instance.fake_db_instance(
-                **{'name': 'fake', 'project_id': '%s_unequal' %
-                       context.project_id})
+                **{'name': 'fake', 'project_id': '{0!s}_unequal'.format(
+                       context.project_id)})
 
         self.stub_out('nova.db.instance_get_by_uuid',
                       fake_instance_get_by_uuid)
@@ -109,8 +109,8 @@ class InstanceActionsPolicyTestV21(test.NoDBTestCase):
                                       columns_to_join=None,
                                       use_slave=False):
             return fake_instance.fake_db_instance(
-                **{'name': 'fake', 'project_id': '%s_unequal' %
-                       context.project_id})
+                **{'name': 'fake', 'project_id': '{0!s}_unequal'.format(
+                       context.project_id)})
 
         self.stub_out('nova.db.instance_get_by_uuid',
                       fake_instance_get_by_uuid)
@@ -152,7 +152,7 @@ class InstanceActionsTestV21(test.NoDBTestCase):
                       fake_instance_get_by_uuid)
 
     def _get_http_req(self, action, use_admin_context=False):
-        fake_url = '/123/servers/12/%s' % action
+        fake_url = '/123/servers/12/{0!s}'.format(action)
         return fakes.HTTPRequest.blank(fake_url,
                                        use_admin_context=use_admin_context,
                                        version=self.wsgi_api_version)

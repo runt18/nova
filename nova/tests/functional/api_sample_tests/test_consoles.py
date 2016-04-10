@@ -28,7 +28,7 @@ class ConsolesSamplesJsonTest(test_servers.ServersSampleBase):
         self.console = self.start_service('console', host='fake')
 
     def _create_consoles(self, server_uuid):
-        response = self._do_post('servers/%s/consoles' % server_uuid,
+        response = self._do_post('servers/{0!s}/consoles'.format(server_uuid),
                                  'consoles-create-req', {})
         self.assertEqual(response.status_code, 200)
 
@@ -39,17 +39,17 @@ class ConsolesSamplesJsonTest(test_servers.ServersSampleBase):
     def test_list_consoles(self):
         uuid = self._post_server()
         self._create_consoles(uuid)
-        response = self._do_get('servers/%s/consoles' % uuid)
+        response = self._do_get('servers/{0!s}/consoles'.format(uuid))
         self._verify_response('consoles-list-get-resp', {}, response, 200)
 
     def test_console_get(self):
         uuid = self._post_server()
         self._create_consoles(uuid)
-        response = self._do_get('servers/%s/consoles/1' % uuid)
+        response = self._do_get('servers/{0!s}/consoles/1'.format(uuid))
         self._verify_response('consoles-get-resp', {}, response, 200)
 
     def test_console_delete(self):
         uuid = self._post_server()
         self._create_consoles(uuid)
-        response = self._do_delete('servers/%s/consoles/1' % uuid)
+        response = self._do_delete('servers/{0!s}/consoles/1'.format(uuid))
         self.assertEqual(202, response.status_code)

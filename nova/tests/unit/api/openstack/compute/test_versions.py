@@ -428,7 +428,7 @@ class VersionsViewBuilderTests(test.NoDBTestCase):
     def test_generate_href_with_path(self):
         path = "random/path"
         base_url = "http://example.org/app/"
-        expected = "http://example.org/app/v2/%s" % path
+        expected = "http://example.org/app/v2/{0!s}".format(path)
         builder = views.versions.ViewBuilder(base_url)
         actual = builder.generate_href("v2", path)
         self.assertEqual(actual, expected)

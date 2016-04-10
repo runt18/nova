@@ -63,8 +63,8 @@ class CellsSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
             our_id = self.cells_next_id
             self.cells_next_id += 1
             cell.update({'id': our_id,
-                         'name': 'cell%s' % our_id,
-                         'transport_url': 'rabbit://username%s@/' % our_id,
+                         'name': 'cell{0!s}'.format(our_id),
+                         'transport_url': 'rabbit://username{0!s}@/'.format(our_id),
                          'is_parent': our_id % 2 == 0})
             self.cell_list.append(cell)
 
@@ -89,8 +89,8 @@ class CellsSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         self._mock_cell_capacity()
         state_manager = state.CellStateManager()
         my_state = state_manager.get_my_state()
-        response = self._do_get('os-cells/%s/capacities' %
-                my_state.name)
+        response = self._do_get('os-cells/{0!s}/capacities'.format(
+                my_state.name))
         return self._verify_response('cells-capacities-resp',
                                         {}, response, 200)
 

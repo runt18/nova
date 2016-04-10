@@ -103,7 +103,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
             csum_output = imagecache.read_stored_checksum(fname,
                                                           timestamped=False)
             self.assertEqual(csum_input.rstrip(),
-                             '{"sha1": "%s"}' % csum_output)
+                             '{{"sha1": "{0!s}"}}'.format(csum_output))
 
     def test_read_stored_checksum_legacy_essex(self):
         with utils.tempdir() as tmpdir:
@@ -281,7 +281,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
     def test_find_base_file_small(self):
         fingerprint = '968dd6cc49e01aaa044ed11c0cce733e0fa44a6a'
         self.stub_out('os.path.exists',
-                       lambda x: x.endswith('%s_sm' % fingerprint))
+                       lambda x: x.endswith('{0!s}_sm'.format(fingerprint)))
 
         base_dir = '/var/lib/nova/instances/_base'
         image_cache_manager = imagecache.ImageCacheManager()
@@ -299,7 +299,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
 
         self.stub_out('os.listdir', lambda x: listing)
         self.stub_out('os.path.exists',
-                       lambda x: x.endswith('%s_10737418240' % fingerprint))
+                       lambda x: x.endswith('{0!s}_10737418240'.format(fingerprint)))
         self.stub_out('os.path.isfile', lambda x: True)
 
         base_dir = '/var/lib/nova/instances/_base'
@@ -537,7 +537,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
                 f.write('banana')
 
             d = {'sha1': '21323454'}
-            with open('%s.info' % fname, 'w') as f:
+            with open('{0!s}.info'.format(fname), 'w') as f:
                 f.write(jsonutils.dumps(d))
 
             image_cache_manager = imagecache.ImageCacheManager()
@@ -570,8 +570,8 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
                           hashed_1,
                           hashed_21,
                           hashed_22,
-                          '%s_5368709120' % hashed_1,
-                          '%s_10737418240' % hashed_1,
+                          '{0!s}_5368709120'.format(hashed_1),
+                          '{0!s}_10737418240'.format(hashed_1),
                           '00000004']
 
         def fq_path(path):
@@ -590,7 +590,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
                         '/instance_path/instance-1/disk',
                         '/instance_path/instance-2/disk',
                         '/instance_path/instance-3/disk',
-                        '/instance_path/_base/%s.info' % hashed_42]:
+                        '/instance_path/_base/{0!s}.info'.format(hashed_42)]:
                 return True
 
             for p in base_file_list:
@@ -599,13 +599,13 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
                 if path == fq_path(p) + '.info':
                     return False
 
-            if path in ['/instance_path/_base/%s_sm' % i for i in [hashed_1,
+            if path in ['/instance_path/_base/{0!s}_sm'.format(i) for i in [hashed_1,
                                                                    hashed_21,
                                                                    hashed_22,
                                                                    hashed_42]]:
                 return False
 
-            self.fail('Unexpected path existence check: %s' % path)
+            self.fail('Unexpected path existence check: {0!s}'.format(path))
 
         self.stub_out('os.path.exists', lambda x: exists(x))
 
@@ -623,7 +623,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
             if path == '/instance_path/_base':
                 return base_file_list
 
-            self.fail('Unexpected directory listed: %s' % path)
+            self.fail('Unexpected directory listed: {0!s}'.format(path))
 
         self.stub_out('os.listdir', lambda x: listdir(x))
 
@@ -639,7 +639,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
                 if path == fq_path(p):
                     return True
 
-            self.fail('Unexpected isfile call: %s' % path)
+            self.fail('Unexpected isfile call: {0!s}'.format(path))
 
         self.stub_out('os.path.isfile', lambda x: isfile(x))
 
@@ -666,8 +666,8 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
         def get_disk_backing_file(path):
             if path in ['/instance_path/instance-1/disk',
                         '/instance_path/instance-2/disk']:
-                return fq_path('%s_5368709120' % hashed_1)
-            self.fail('Unexpected backing file lookup: %s' % path)
+                return fq_path('{0!s}_5368709120'.format(hashed_1))
+            self.fail('Unexpected backing file lookup: {0!s}'.format(path))
 
         self.stubs.Set(libvirt_utils, 'get_disk_backing_file',
                        lambda x: get_disk_backing_file(x))
@@ -712,7 +712,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
         image_cache_manager.update(ctxt, all_instances)
 
         # Verify
-        active = [fq_path(hashed_1), fq_path('%s_5368709120' % hashed_1),
+        active = [fq_path(hashed_1), fq_path('{0!s}_5368709120'.format(hashed_1)),
                   fq_path(hashed_21), fq_path(hashed_22)]
         for act in active:
             self.assertIn(act, image_cache_manager.active_base_files)
@@ -722,7 +722,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
         for rem in [fq_path('e97222e91fc4241f49a7f520d1dcf446751129b3_sm'),
                     fq_path('e09c675c2d1cfac32dae3c2d83689c8c94bc693b_sm'),
                     fq_path(hashed_42),
-                    fq_path('%s_10737418240' % hashed_1)]:
+                    fq_path('{0!s}_10737418240'.format(hashed_1))]:
             self.assertIn(rem, image_cache_manager.removable_base_files)
 
         # Ensure there are no "corrupt" images as well
@@ -926,7 +926,7 @@ class VerifyChecksumTestCase(test.NoDBTestCase):
         if info_attr == "csum valid":
             csum = hashlib.sha1()
             csum.update(testdata)
-            f.write('{"sha1": "%s"}\n' % csum.hexdigest())
+            f.write('{{"sha1": "{0!s}"}}\n'.format(csum.hexdigest()))
         elif info_attr == "csum invalid, not json":
             f.write('banana')
         else:

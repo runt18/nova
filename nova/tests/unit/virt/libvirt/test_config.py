@@ -1263,15 +1263,15 @@ class LibvirtConfigGuestChannelTest(LibvirtConfigBaseTest):
         obj = config.LibvirtConfigGuestChannel()
         obj.type = "unix"
         obj.target_name = "org.qemu.guest_agent.0"
-        obj.source_path = "/var/lib/libvirt/qemu/%s.%s.sock" % (
+        obj.source_path = "/var/lib/libvirt/qemu/{0!s}.{1!s}.sock".format(
                             obj.target_name, "instance-name")
 
         xml = obj.to_xml()
         self.assertXmlEqual(xml, """
             <channel type="unix">
-              <source path="%s" mode="bind"/>
+              <source path="{0!s}" mode="bind"/>
               <target type="virtio" name="org.qemu.guest_agent.0"/>
-            </channel>""" % obj.source_path)
+            </channel>""".format(obj.source_path))
 
 
 class LibvirtConfigGuestInterfaceTest(LibvirtConfigBaseTest):

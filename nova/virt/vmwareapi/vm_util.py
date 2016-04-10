@@ -170,7 +170,7 @@ VmdkInfo = collections.namedtuple('VmdkInfo', ['path', 'adapter_type',
 
 def _iface_id_option_value(client_factory, iface_id, port_index):
     opt = client_factory.create('ns0:OptionValue')
-    opt.key = "nvp.iface-id.%d" % port_index
+    opt.key = "nvp.iface-id.{0:d}".format(port_index)
     opt.value = iface_id
     return opt
 
@@ -644,7 +644,7 @@ def get_vmdk_info(session, vm_ref, uuid=None):
     root_disk = None
     root_device = None
     if uuid:
-        root_disk = '%s.vmdk' % uuid
+        root_disk = '{0!s}.vmdk'.format(uuid)
     vmdk_device = None
 
     adapter_type_dict = {}
@@ -1518,7 +1518,7 @@ def find_rescue_device(hardware_devices, instance):
 
 
 def get_ephemeral_name(id):
-    return 'ephemeral_%d.vmdk' % id
+    return 'ephemeral_{0:d}.vmdk'.format(id)
 
 
 def _detach_and_delete_devices_config_spec(client_factory, devices):
@@ -1629,7 +1629,7 @@ def folder_ref_cache_get(path):
 
 def _get_vm_name(display_name, id):
     if display_name:
-        return '%s (%s)' % (display_name[:41], id[:36])
+        return '{0!s} ({1!s})'.format(display_name[:41], id[:36])
     else:
         return id[:36]
 

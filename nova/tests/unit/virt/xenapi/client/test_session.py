@@ -36,7 +36,7 @@ class SessionTestCase(stubs.XenAPITestBaseNoDB):
 
         session.XenAPISession('http://someserver', 'username', 'password')
 
-        expected_version = '%s %s %s' % (version.vendor_string(),
+        expected_version = '{0!s} {1!s} {2!s}'.format(version.vendor_string(),
                                          version.product_string(),
                                          version.version_string_with_package())
         sess.login_with_password.assert_called_with('username', 'password',

@@ -103,14 +103,14 @@ class ExtendedServerAttributesTestV21(test.TestCase):
         return jsonutils.loads(body).get('servers')
 
     def assertServerAttributes(self, server, host, node, instance_name):
-        self.assertEqual(server.get('%shost' % self.prefix), host)
-        self.assertEqual(server.get('%sinstance_name' % self.prefix),
+        self.assertEqual(server.get('{0!s}host'.format(self.prefix)), host)
+        self.assertEqual(server.get('{0!s}instance_name'.format(self.prefix)),
                          instance_name)
-        self.assertEqual(server.get('%shypervisor_hostname' % self.prefix),
+        self.assertEqual(server.get('{0!s}hypervisor_hostname'.format(self.prefix)),
                          node)
 
     def test_show(self):
-        url = self.fake_url + '/servers/%s' % UUID3
+        url = self.fake_url + '/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)
@@ -126,8 +126,8 @@ class ExtendedServerAttributesTestV21(test.TestCase):
         self.assertEqual(res.status_int, 200)
         for i, server in enumerate(self._get_servers(res.body)):
             self.assertServerAttributes(server,
-                                    host='host-%s' % (i + 1),
-                                    node='node-%s' % (i + 1),
+                                    host='host-{0!s}'.format((i + 1)),
+                                    node='node-{0!s}'.format((i + 1)),
                                     instance_name=NAME_FMT % (i + 1))
 
     def test_no_instance_passthrough_404(self):
@@ -167,23 +167,23 @@ class ExtendedServerAttributesTestV23(ExtendedServerAttributesTestV21):
                                user_data):
         super(ExtendedServerAttributesTestV23, self).assertServerAttributes(
             server, host, node, instance_name)
-        self.assertEqual(server.get('%sreservation_id' % self.prefix),
+        self.assertEqual(server.get('{0!s}reservation_id'.format(self.prefix)),
                          reservation_id)
-        self.assertEqual(server.get('%slaunch_index' % self.prefix),
+        self.assertEqual(server.get('{0!s}launch_index'.format(self.prefix)),
                          launch_index)
-        self.assertEqual(server.get('%skernel_id' % self.prefix),
+        self.assertEqual(server.get('{0!s}kernel_id'.format(self.prefix)),
                          kernel_id)
-        self.assertEqual(server.get('%sramdisk_id' % self.prefix),
+        self.assertEqual(server.get('{0!s}ramdisk_id'.format(self.prefix)),
                          ramdisk_id)
-        self.assertEqual(server.get('%shostname' % self.prefix),
+        self.assertEqual(server.get('{0!s}hostname'.format(self.prefix)),
                          hostname)
-        self.assertEqual(server.get('%sroot_device_name' % self.prefix),
+        self.assertEqual(server.get('{0!s}root_device_name'.format(self.prefix)),
                          root_device_name)
-        self.assertEqual(server.get('%suser_data' % self.prefix),
+        self.assertEqual(server.get('{0!s}user_data'.format(self.prefix)),
                          user_data)
 
     def test_show(self):
-        url = self.fake_url + '/servers/%s' % UUID3
+        url = self.fake_url + '/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)
@@ -206,14 +206,14 @@ class ExtendedServerAttributesTestV23(ExtendedServerAttributesTestV21):
         self.assertEqual(res.status_int, 200)
         for i, server in enumerate(self._get_servers(res.body)):
             self.assertServerAttributes(server,
-                                    host='host-%s' % (i + 1),
-                                    node='node-%s' % (i + 1),
+                                    host='host-{0!s}'.format((i + 1)),
+                                    node='node-{0!s}'.format((i + 1)),
                                     instance_name=NAME_FMT % (i + 1),
-                                    reservation_id="r-%s" % (i + 1),
+                                    reservation_id="r-{0!s}".format((i + 1)),
                                     launch_index=i,
                                     kernel_id=UUID4,
                                     ramdisk_id=UUID5,
-                                    hostname="hostname-%s" % (i + 1),
+                                    hostname="hostname-{0!s}".format((i + 1)),
                                     root_device_name="/dev/vda",
                                     user_data="userdata")
 
@@ -228,7 +228,7 @@ class ExtendedServerAttributesTestV216(ExtendedServerAttributesTestV21):
         self.assertEqual(server.get('host_status'), host_status)
 
     def test_show(self):
-        url = self.fake_url + '/servers/%s' % UUID3
+        url = self.fake_url + '/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)
@@ -245,7 +245,7 @@ class ExtendedServerAttributesTestV216(ExtendedServerAttributesTestV21):
         self.assertEqual(res.status_int, 200)
         for i, server in enumerate(self._get_servers(res.body)):
             self.assertServerAttributes(server,
-                                    host='host-%s' % (i + 1),
-                                    node='node-%s' % (i + 1),
+                                    host='host-{0!s}'.format((i + 1)),
+                                    node='node-{0!s}'.format((i + 1)),
                                     instance_name=NAME_FMT % (i + 1),
                                     host_status="DOWN")

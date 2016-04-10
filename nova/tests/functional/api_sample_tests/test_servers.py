@@ -91,7 +91,7 @@ class ServersSampleJsonTest(ServersSampleBase):
 
     def test_servers_get(self):
         uuid = self.test_servers_post()
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['id'] = uuid
@@ -138,7 +138,7 @@ class ServersSampleJson219Test(ServersSampleJsonTest):
 
     def test_servers_put(self):
         uuid = self.test_servers_post()
-        response = self._do_put('servers/%s' % uuid, 'server-put-req', {})
+        response = self._do_put('servers/{0!s}'.format(uuid), 'server-put-req', {})
         subs = {
             'image_id': fake.get_valid_image_id(),
             'hostid': '[a-f0-9]+',
@@ -162,7 +162,7 @@ class ServersUpdateSampleJsonTest(ServersSampleBase):
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = '1.2.3.4'
         subs['access_ip_v6'] = '80fe::'
-        response = self._do_put('servers/%s' % uuid,
+        response = self._do_put('servers/{0!s}'.format(uuid),
                                 'server-update-req', subs)
         self._verify_response('server-update-resp', subs, response, 200)
 
@@ -198,7 +198,7 @@ class ServersActionsJsonTest(ServersSampleBase):
         subs = subs or {}
         subs.update({'action': action,
                      'glance_host': self._get_glance_host()})
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  req_tpl,
                                  subs)
         if resp_tpl:
@@ -231,7 +231,7 @@ class ServersActionsJsonTest(ServersSampleBase):
             'access_ip_v6': '80fe::',
         }
 
-        resp = self._do_post('servers/%s/action' % uuid,
+        resp = self._do_post('servers/{0!s}/action'.format(uuid),
                              'server-action-rebuild', params)
         subs = params.copy()
         del subs['uuid']
@@ -282,7 +282,7 @@ class ServersActionsJson219Test(ServersSampleBase):
             'access_ip_v6': '80fe::',
         }
 
-        resp = self._do_post('servers/%s/action' % uuid,
+        resp = self._do_post('servers/{0!s}/action'.format(uuid),
                              'server-action-rebuild', params)
         subs = params.copy()
         del subs['uuid']
@@ -306,7 +306,7 @@ class ServerStartStopJsonTest(ServersSampleBase):
         return f
 
     def _test_server_action(self, uuid, action, req_tpl):
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  req_tpl,
                                  {'action': action})
         self.assertEqual(202, response.status_code)
@@ -349,7 +349,7 @@ class ServerTriggerCrashDumpJsonTest(ServersSampleBase):
     def test_trigger_crash_dump(self):
         uuid = self._post_server()
 
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-action-trigger-crash-dump',
                                  {})
         self.assertEqual(response.status_code, 202)

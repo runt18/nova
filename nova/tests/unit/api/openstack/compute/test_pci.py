@@ -239,14 +239,14 @@ class PciControllerPolicyEnforcementV21(test.NoDBTestCase):
         self.req = fakes.HTTPRequest.blank('')
 
     def _test_policy_failed(self, action, *args):
-        rule_name = "os_compute_api:os-pci:%s" % action
+        rule_name = "os_compute_api:os-pci:{0!s}".format(action)
         rule = {rule_name: "project:non_fake"}
         self.policy.set_rules(rule)
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, getattr(self.controller, action),
             self.req, *args)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_index_policy_failed(self):

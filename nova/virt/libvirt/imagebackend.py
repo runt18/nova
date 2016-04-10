@@ -343,7 +343,7 @@ class Image(object):
             tmp_path = self.disk_info_path + ".tmp"
             fd = os.open(tmp_path, os.O_WRONLY | os.O_CREAT, 0o644)
             with os.fdopen(fd, "w") as tmp_file:
-                tmp_file.write('%s\n' % jsonutils.dumps(dct))
+                tmp_file.write('{0!s}\n'.format(jsonutils.dumps(dct)))
             os.rename(tmp_path, self.disk_info_path)
 
         try:
@@ -602,7 +602,7 @@ class Qcow2(Image):
                 if backing_file != backing_parts[-1] and \
                         backing_parts[-1].isdigit():
                     legacy_backing_size = int(backing_parts[-1])
-                    legacy_base += '_%d' % legacy_backing_size
+                    legacy_base += '_{0:d}'.format(legacy_backing_size)
                     legacy_backing_size *= units.Gi
 
         # Create the legacy backing file if necessary.
@@ -665,7 +665,7 @@ class Lvm(Image):
                                      ' images_volume_group'
                                      ' flag to use LVM images.'))
             self.vg = CONF.libvirt.images_volume_group
-            self.lv = '%s_%s' % (instance.uuid,
+            self.lv = '{0!s}_{1!s}'.format(instance.uuid,
                                  self.escape(disk_name))
             if self.ephemeral_key_uuid is None:
                 self.path = os.path.join('/dev', self.vg, self.lv)
@@ -787,7 +787,7 @@ class Rbd(Image):
             except IndexError:
                 raise exception.InvalidDevicePath(path=path)
         else:
-            self.rbd_name = '%s_%s' % (instance.uuid, disk_name)
+            self.rbd_name = '{0!s}_{1!s}'.format(instance.uuid, disk_name)
 
         if not CONF.libvirt.images_rbd_pool:
             raise RuntimeError(_('You should specify'
@@ -803,7 +803,7 @@ class Rbd(Image):
             ceph_conf=self.ceph_conf,
             rbd_user=self.rbd_user)
 
-        self.path = 'rbd:%s/%s' % (self.pool, self.rbd_name)
+        self.path = 'rbd:{0!s}/{1!s}'.format(self.pool, self.rbd_name)
         if self.rbd_user:
             self.path += ':id=' + self.rbd_user
         if self.ceph_conf:
@@ -830,7 +830,7 @@ class Rbd(Image):
         info.target_dev = disk_dev
         info.source_type = 'network'
         info.source_protocol = 'rbd'
-        info.source_name = '%s/%s' % (self.pool, self.rbd_name)
+        info.source_name = '{0!s}/{1!s}'.format(self.pool, self.rbd_name)
         info.source_hosts = hosts
         info.source_ports = ports
         auth_enabled = (CONF.libvirt.rbd_user is not None)
@@ -890,7 +890,7 @@ class Rbd(Image):
                                    include_locations=True)
         locations = image_meta['locations']
 
-        LOG.debug('Image locations are: %(locs)s' % {'locs': locations})
+        LOG.debug('Image locations are: {locs!s}'.format(**{'locs': locations}))
 
         if image_meta.get('disk_format') not in ['raw', 'iso']:
             reason = _('Image is not raw format')
@@ -922,7 +922,7 @@ class Rbd(Image):
                                  servers)
 
     def import_file(self, instance, local_file, remote_name):
-        name = '%s_%s' % (instance.uuid, remote_name)
+        name = '{0!s}_{1!s}'.format(instance.uuid, remote_name)
         if self.check_image_exists():
             self.driver.remove_image(name)
         self.driver.import_image(local_file, name)
@@ -989,11 +989,11 @@ class Rbd(Image):
         # Snapshot the disk and clone it into Glance's storage pool.  librbd
         # requires that snapshots be set to "protected" in order to clone them
         self.driver.create_snap(self.rbd_name, snapshot_name, protect=True)
-        location = {'url': 'rbd://%(fsid)s/%(pool)s/%(image)s/%(snap)s' %
+        location = {'url': 'rbd://{fsid!s}/{pool!s}/{image!s}/{snap!s}'.format(**
                            dict(fsid=fsid,
                                 pool=self.pool,
                                 image=self.rbd_name,
-                                snap=snapshot_name)}
+                                snap=snapshot_name))}
         try:
             self.driver.clone(location, image_id, dest_pool=parent_pool)
             # Flatten the image, which detaches it from the source snapshot
@@ -1008,8 +1008,8 @@ class Rbd(Image):
         # glance-store rbd backend sets (which is not configurable).
         self.driver.create_snap(image_id, 'snap', pool=parent_pool,
                                 protect=True)
-        return ('rbd://%(fsid)s/%(pool)s/%(image)s/snap' %
-                dict(fsid=fsid, pool=parent_pool, image=image_id))
+        return ('rbd://{fsid!s}/{pool!s}/{image!s}/snap'.format(**
+                dict(fsid=fsid, pool=parent_pool, image=image_id)))
 
     def cleanup_direct_snapshot(self, location, also_destroy_volume=False,
                                 ignore_errors=False):
@@ -1047,7 +1047,7 @@ class Ploop(Image):
                           target, image_path)
             if size:
                 dd_path = os.path.join(self.path, "DiskDescriptor.xml")
-                utils.execute('ploop', 'grow', '-s', '%dK' % (size >> 10),
+                utils.execute('ploop', 'grow', '-s', '{0:d}K'.format((size >> 10)),
                               dd_path, run_as_root=True)
 
         if not os.path.exists(self.path):
@@ -1086,7 +1086,7 @@ class Ploop(Image):
 
     def resize_image(self, size):
         dd_path = os.path.join(self.path, "DiskDescriptor.xml")
-        utils.execute('ploop', 'grow', '-s', '%dK' % (size >> 10), dd_path,
+        utils.execute('ploop', 'grow', '-s', '{0:d}K'.format((size >> 10)), dd_path,
                       run_as_root=True)
 
     def snapshot_extract(self, target, out_format):

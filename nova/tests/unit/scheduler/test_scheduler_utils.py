@@ -79,7 +79,7 @@ class SchedulerUtilsTestCase(test.NoDBTestCase):
                        state='fake-vm-state',
                        method=method,
                        reason=exc_info)
-        event_type = '%s.%s' % (service, method)
+        event_type = '{0!s}.{1!s}'.format(service, method)
 
         scheduler_utils.set_vm_state_and_notify(self.context,
                                                 expected_uuid,

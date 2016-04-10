@@ -148,7 +148,7 @@ def format_cpu_spec(cpuset, allow_ranges=True):
             if len(entry) == 1:
                 parts.append(str(entry[0]))
             else:
-                parts.append("%d-%d" % (entry[0], entry[len(entry) - 1]))
+                parts.append("{0:d}-{1:d}".format(entry[0], entry[len(entry) - 1]))
         return ",".join(parts)
     else:
         return ",".join(str(id) for id in sorted(cpuset))
@@ -943,7 +943,7 @@ def _numa_get_flavor_cpu_map_list(flavor):
     hw_numa_cpus_set = False
     extra_specs = flavor.get("extra_specs", {})
     for cellid in range(objects.ImageMetaProps.NUMA_NODES_MAX):
-        cpuprop = "hw:numa_cpus.%d" % cellid
+        cpuprop = "hw:numa_cpus.{0:d}".format(cellid)
         if cpuprop not in extra_specs:
             break
         hw_numa_cpus.append(
@@ -972,7 +972,7 @@ def _numa_get_flavor_mem_map_list(flavor):
     hw_numa_mem_set = False
     extra_specs = flavor.get("extra_specs", {})
     for cellid in range(objects.ImageMetaProps.NUMA_NODES_MAX):
-        memprop = "hw:numa_mem.%d" % cellid
+        memprop = "hw:numa_mem.{0:d}".format(cellid)
         if memprop not in extra_specs:
             break
         hw_numa_mem.append(int(extra_specs[memprop]))

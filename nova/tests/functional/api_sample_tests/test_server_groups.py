@@ -68,13 +68,13 @@ class ServerGroupsSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         subs = {'name': 'test'}
         uuid = self._post_server_group()
         subs['id'] = uuid
-        response = self._do_get('os-server-groups/%s' % uuid)
+        response = self._do_get('os-server-groups/{0!s}'.format(uuid))
 
         self._verify_response('server-groups-get-resp', subs, response, 200)
 
     def test_server_groups_delete(self):
         uuid = self._post_server_group()
-        response = self._do_delete('os-server-groups/%s' % uuid)
+        response = self._do_delete('os-server-groups/{0!s}'.format(uuid))
         self.assertEqual(204, response.status_code)
 
 

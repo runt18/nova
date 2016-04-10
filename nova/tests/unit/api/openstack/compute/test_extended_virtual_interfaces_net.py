@@ -63,8 +63,8 @@ def get_vif_by_mac_address(self, context, mac_address):
 
 class ExtendedServerVIFNetTest(test.NoDBTestCase):
     content_type = 'application/json'
-    prefix = "%s:" % extended_virtual_interfaces_net. \
-                        Extended_virtual_interfaces_net.alias
+    prefix = "{0!s}:".format(extended_virtual_interfaces_net. \
+                        Extended_virtual_interfaces_net.alias)
 
     def setUp(self):
         super(ExtendedServerVIFNetTest, self).setUp()
@@ -92,7 +92,7 @@ class ExtendedServerVIFNetTest(test.NoDBTestCase):
 
     def _get_net_id(self, vifs):
         for vif in vifs:
-            yield vif['%snet_id' % self.prefix]
+            yield vif['{0!s}net_id'.format(self.prefix)]
 
     def assertVIFs(self, vifs):
         result = []

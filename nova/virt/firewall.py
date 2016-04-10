@@ -162,7 +162,7 @@ class IptablesFirewallDriver(FirewallDriver):
         self.iptables.apply()
 
     def _create_filter(self, ips, chain_name):
-        return ['-d %s -j $%s' % (ip, chain_name) for ip in ips]
+        return ['-d {0!s} -j ${1!s}'.format(ip, chain_name) for ip in ips]
 
     def _get_subnets(self, network_info, version):
         subnets = []
@@ -220,7 +220,7 @@ class IptablesFirewallDriver(FirewallDriver):
             self.iptables.ipv6['filter'].remove_chain(chain_name)
 
     def _instance_chain_name(self, instance):
-        return 'inst-%s' % (instance.id,)
+        return 'inst-{0!s}'.format(instance.id)
 
     def _do_basic_rules(self, ipv4_rules, ipv6_rules, network_info):
         # Always drop invalid packets
@@ -247,11 +247,11 @@ class IptablesFirewallDriver(FirewallDriver):
         v6_subnets = self._get_subnets(network_info, 6)
         cidrs = [subnet['cidr'] for subnet in v4_subnets]
         for cidr in cidrs:
-            ipv4_rules.append('-s %s -j ACCEPT' % (cidr,))
+            ipv4_rules.append('-s {0!s} -j ACCEPT'.format(cidr))
         if CONF.use_ipv6:
             cidrv6s = [subnet['cidr'] for subnet in v6_subnets]
             for cidrv6 in cidrv6s:
-                ipv6_rules.append('-s %s -j ACCEPT' % (cidrv6,))
+                ipv6_rules.append('-s {0!s} -j ACCEPT'.format(cidrv6))
 
     def _do_ra_rules(self, ipv6_rules, network_info):
         v6_subnets = self._get_subnets(network_info, 6)
@@ -259,7 +259,7 @@ class IptablesFirewallDriver(FirewallDriver):
 
         for gateway_v6 in gateways_v6:
             ipv6_rules.append(
-                    '-s %s/128 -p icmpv6 -j ACCEPT' % (gateway_v6,))
+                    '-s {0!s}/128 -p icmpv6 -j ACCEPT'.format(gateway_v6))
 
     def _build_icmp_rule(self, rule, version):
         icmp_type = rule.from_port
@@ -268,9 +268,9 @@ class IptablesFirewallDriver(FirewallDriver):
         if icmp_type == -1:
             icmp_type_arg = None
         else:
-            icmp_type_arg = '%s' % icmp_type
+            icmp_type_arg = '{0!s}'.format(icmp_type)
             if not icmp_code == -1:
-                icmp_type_arg += '/%s' % icmp_code
+                icmp_type_arg += '/{0!s}'.format(icmp_code)
 
         if icmp_type_arg:
             if version == 4:
@@ -282,10 +282,10 @@ class IptablesFirewallDriver(FirewallDriver):
 
     def _build_tcp_udp_rule(self, rule, version):
         if rule.from_port == rule.to_port:
-            return ['--dport', '%s' % (rule.from_port,)]
+            return ['--dport', '{0!s}'.format(rule.from_port)]
         else:
             return ['-m', 'multiport',
-                    '--dports', '%s:%s' % (rule.from_port,
+                    '--dports', '{0!s}:{1!s}'.format(rule.from_port,
                                            rule.to_port)]
 
     def instance_rules(self, instance, network_info):
@@ -364,7 +364,7 @@ class IptablesFirewallDriver(FirewallDriver):
 
                         LOG.debug('ips: %r', ips, instance=inst)
                         for ip in ips:
-                            subrule = args + ['-s %s' % ip]
+                            subrule = args + ['-s {0!s}'.format(ip)]
                             fw_rules += [' '.join(subrule)]
 
         ipv4_rules += ['-j $sg-fallback']

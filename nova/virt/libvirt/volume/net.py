@@ -55,8 +55,8 @@ class LibvirtNetVolumeDriver(libvirt_volume.LibvirtBaseVolumeDriver):
             return
         elif source_protocol == 'iscsi':
             usage_type = 'iscsi'
-            usage_name = ("%(target_iqn)s/%(target_lun)s" %
-                          netdisk_properties)
+            usage_name = ("{target_iqn!s}/{target_lun!s}".format(**
+                          netdisk_properties))
             self.connection._host.delete_secret(usage_type, usage_name)
 
     def get_config(self, connection_info, disk_info):
@@ -79,8 +79,8 @@ class LibvirtNetVolumeDriver(libvirt_volume.LibvirtBaseVolumeDriver):
                 conf.auth_username = CONF.libvirt.rbd_user
         if conf.source_protocol == 'iscsi':
             try:
-                conf.source_name = ("%(target_iqn)s/%(target_lun)s" %
-                                    netdisk_properties)
+                conf.source_name = ("{target_iqn!s}/{target_lun!s}".format(**
+                                    netdisk_properties))
                 target_portal = netdisk_properties['target_portal']
             except KeyError:
                 raise exception.NovaException(_("Invalid volume source data"))

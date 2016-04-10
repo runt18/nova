@@ -122,7 +122,7 @@ class VFSGuestFS(vfs.VFS):
                   {'image': self.image, 'part': str(self.partition)})
 
         if self.partition:
-            self.handle.mount_options("", "/dev/sda%d" % self.partition, "/")
+            self.handle.mount_options("", "/dev/sda{0:d}".format(self.partition), "/")
         else:
             self.handle.mount_options("", "/dev/sda", "/")
 
@@ -206,7 +206,7 @@ class VFSGuestFS(vfs.VFS):
                 self.handle.add_drive_opts(self.image.path,
                                            format=self.image.format)
             elif isinstance(self.image, imgmodel.RBDImage):
-                self.handle.add_drive_opts("%s/%s" % (self.image.pool,
+                self.handle.add_drive_opts("{0!s}/{1!s}".format(self.image.pool,
                                                       self.image.name),
                                            protocol="rbd",
                                            format=imgmodel.FORMAT_RAW,

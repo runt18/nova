@@ -49,7 +49,7 @@ class ConfigDriveSampleJsonTest(test_servers.ServersSampleBase):
 
     def test_config_drive_show(self):
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         # config drive can be a string for True or empty value for False

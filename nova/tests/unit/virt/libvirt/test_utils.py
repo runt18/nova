@@ -82,7 +82,7 @@ class LibvirtUtilsTestCase(test.NoDBTestCase):
         path = '/some/path'
         d_type = libvirt_utils.get_disk_type_from_path(path)
         mock_isdir.assert_called_once_with(path)
-        mock_exists.assert_called_once_with("%s/DiskDescriptor.xml" % path)
+        mock_exists.assert_called_once_with("{0!s}/DiskDescriptor.xml".format(path))
         self.assertEqual('ploop', d_type)
 
     @mock.patch('os.path.exists', return_value=True)
@@ -125,7 +125,7 @@ disk size: 96K
             kbytes = bytes / 1024
             mbytes = kbytes / 1024
             output = template_output % ({
-                'v_size': "%sM" % (mbytes),
+                'v_size': "{0!s}M".format((mbytes)),
                 'vsize_b': i,
                 'path': path,
             })
@@ -133,7 +133,7 @@ disk size: 96K
                 return_value=(output, '')) as mock_execute:
                 self._test_disk_size(mock_execute, path, i)
             output = template_output % ({
-                'v_size': "%sK" % (kbytes),
+                'v_size': "{0!s}K".format((kbytes)),
                 'vsize_b': i,
                 'path': path,
             })

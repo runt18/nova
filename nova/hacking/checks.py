@@ -178,7 +178,7 @@ def use_timeutils_utcnow(logical_line, filename):
 
     datetime_funcs = ['now', 'utcnow']
     for f in datetime_funcs:
-        pos = logical_line.find('datetime.%s' % f)
+        pos = logical_line.find('datetime.{0!s}'.format(f))
         if pos != -1:
             yield (pos, msg % f)
 
@@ -396,7 +396,7 @@ def use_jsonutils(logical_line, filename):
     if "json." in logical_line:
         json_funcs = ['dumps(', 'dump(', 'loads(', 'load(']
         for f in json_funcs:
-            pos = logical_line.find('json.%s' % f)
+            pos = logical_line.find('json.{0!s}'.format(f))
             if pos != -1:
                 yield (pos, msg % {'fun': f[:-1]})
 

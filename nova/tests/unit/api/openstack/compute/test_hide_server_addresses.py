@@ -83,7 +83,7 @@ class HideServerAddressesTestV21(test.TestCase):
         self.stubs.Set(compute.api.API, 'get',
                        fake_compute_get(instance_id, uuid=uuid,
                                         vm_state=vm_states.BUILDING))
-        res = self._make_request(self.base_url + '/%s' % uuid)
+        res = self._make_request(self.base_url + '/{0!s}'.format(uuid))
         self.assertEqual(res.status_int, 200)
 
         server = self._get_server(res.body)
@@ -96,7 +96,7 @@ class HideServerAddressesTestV21(test.TestCase):
         self.stubs.Set(compute.api.API, 'get',
                        fake_compute_get(instance_id, uuid=uuid,
                                         vm_state=vm_states.ACTIVE))
-        res = self._make_request(self.base_url + '/%s' % uuid)
+        res = self._make_request(self.base_url + '/{0!s}'.format(uuid))
         self.assertEqual(res.status_int, 200)
 
         server = self._get_server(res.body)

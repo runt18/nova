@@ -445,7 +445,7 @@ class CellsManager(manager.Manager):
         target_cell = None
         if "cell_name" in filters:
             _path_cell_sep = cells_utils.PATH_CELL_SEP
-            target_cell = '%s%s%s' % (CONF.cells.name, _path_cell_sep,
+            target_cell = '{0!s}{1!s}{2!s}'.format(CONF.cells.name, _path_cell_sep,
                                       filters['cell_name'])
 
         responses = self.msg_runner.get_migrations(ctxt, target_cell,

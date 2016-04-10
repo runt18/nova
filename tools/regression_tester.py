@@ -39,7 +39,7 @@ import sys
 
 
 def run(cmd, fail_ok=False):
-    print("running: %s" % cmd)
+    print("running: {0!s}".format(cmd))
     obj = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                            shell=True)
     obj.wait()
@@ -60,7 +60,7 @@ def main():
     (options, args) = parser.parse_args()
     if options.review:
         original_branch = run("git rev-parse --abbrev-ref HEAD")
-        run("git review -d %s" % options.review)
+        run("git review -d {0!s}".format(options.review))
     else:
         print ("no gerrit review number specified, running on latest commit"
                "on current branch.")
@@ -83,7 +83,7 @@ def main():
         expect_failure = ""
     else:
         # run new tests, expect them to fail
-        expect_failure = run(("tox -epy27 %s 2>&1" % string.join(test_list)),
+        expect_failure = run(("tox -epy27 {0!s} 2>&1".format(string.join(test_list))),
                              fail_ok=True)
         if "FAILED (id=" in expect_failure:
             test_works = True
@@ -92,8 +92,8 @@ def main():
     run("git checkout HEAD nova")
     if options.review:
         new_branch = run("git status | head -1 | cut -d ' ' -f 4")
-        run("git checkout %s" % original_branch)
-        run("git branch -D %s" % new_branch)
+        run("git checkout {0!s}".format(original_branch))
+        run("git branch -D {0!s}".format(new_branch))
 
     print(expect_failure)
     print("")

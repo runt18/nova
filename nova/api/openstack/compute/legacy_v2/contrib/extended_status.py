@@ -26,7 +26,7 @@ class ExtendedStatusController(wsgi.Controller):
 
     def _extend_server(self, server, instance):
         for state in ['task_state', 'vm_state', 'power_state']:
-            key = "%s:%s" % (Extended_status.alias, state)
+            key = "{0!s}:{1!s}".format(Extended_status.alias, state)
             server[key] = instance[state]
 
     @wsgi.extends

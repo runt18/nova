@@ -104,7 +104,7 @@ def _quota_reserve(context, project_id, user_id):
     resources = {}
     deltas = {}
     for i in range(3):
-        resource = 'resource%d' % i
+        resource = 'resource{0:d}'.format(i)
         if i == 2:
             # test for project level resources
             resource = 'fixed_ips'
@@ -119,9 +119,9 @@ def _quota_reserve(context, project_id, user_id):
             user_quotas[resource] = db.quota_create(context, project_id,
                                                     resource, i + 1,
                                                     user_id=user_id).hard_limit
-        sync_name = '_sync_%s' % resource
+        sync_name = '_sync_{0!s}'.format(resource)
         resources[resource] = quota.ReservableResource(
-            resource, sync_name, 'quota_res_%d' % i)
+            resource, sync_name, 'quota_res_{0:d}'.format(i))
         deltas[resource] = i
         setattr(sqlalchemy_api, sync_name, get_sync(resource, i))
         sqlalchemy_api.QUOTA_SYNC_FUNCTIONS[sync_name] = getattr(
@@ -153,7 +153,7 @@ class DbTestCase(test.TestCase):
     def fake_metadata(self, content):
         meta = {}
         for i in range(0, 10):
-            meta["foo%i" % i] = "this is %s item %i" % (content, i)
+            meta["foo{0:d}".format(i)] = "this is {0!s} item {1:d}".format(content, i)
         return meta
 
     def create_metadata_for_instance(self, instance_uuid):
@@ -823,7 +823,7 @@ class AggregateDBApiTestCase(test.TestCase):
         counter = 3
         for c in range(counter):
             _create_aggregate(context=ctxt,
-                              values={'name': 'fake_aggregate_%d' % c},
+                              values={'name': 'fake_aggregate_{0:d}'.format(c)},
                               metadata=None)
         results = db.aggregate_get_all(ctxt)
         self.assertEqual(len(results), counter)
@@ -834,7 +834,7 @@ class AggregateDBApiTestCase(test.TestCase):
         remove_counter = 2
         aggregates = []
         for c in range(1, add_counter):
-            values = {'name': 'fake_aggregate_%d' % c}
+            values = {'name': 'fake_aggregate_{0:d}'.format(c)}
             aggregates.append(_create_aggregate(context=ctxt,
                                                 values=values, metadata=None))
         for c in range(1, remove_counter):
@@ -1539,8 +1539,8 @@ class ModelsObjectComparatorMixin(object):
 
         self.assertEqual(len(obj1),
                          len(obj2),
-                         "Keys mismatch: %s" %
-                          str(set(obj1.keys()) ^ set(obj2.keys())))
+                         "Keys mismatch: {0!s}".format(
+                          str(set(obj1.keys()) ^ set(obj2.keys()))))
         for key, value in obj1.items():
             self.assertEqual(value, obj2[key])
 
@@ -4865,7 +4865,7 @@ class FixedIPTestCase(BaseInstanceTypeTestCase):
             timeutils.set_time_override(now)
             address = self.create_fixed_ip(
                 updated_at=now,
-                address='10.1.0.%d' % i,
+                address='10.1.0.{0:d}'.format(i),
                 network_id=network['id'])
         db.fixed_ip_associate_pool(self.ctxt, network['id'], instance_uuid)
         fixed_ip = db.fixed_ip_get_by_address(self.ctxt, address)
@@ -5323,7 +5323,7 @@ class FloatingIpTestCase(test.TestCase, ModelsObjectComparatorMixin):
         ips_for_non_delete = []
 
         def create_ips(i, j):
-            return [{'address': '1.1.%s.%s' % (i, k)} for k in range(1, j + 1)]
+            return [{'address': '1.1.{0!s}.{1!s}'.format(i, k)} for k in range(1, j + 1)]
 
         # NOTE(boris-42): Create more than 256 ip to check that
         #                 _ip_range_splitter works properly.
@@ -6112,11 +6112,11 @@ class BlockDeviceMappingTestCase(test.TestCase):
         with_device_name = [b for b in bdms if b['device_name'] is not None]
         without_device_name = [b for b in bdms if b['device_name'] is None]
         self.assertEqual(len(with_device_name), 1,
-                         'expected 1 bdm with device_name, found %d' %
-                         len(with_device_name))
+                         'expected 1 bdm with device_name, found {0:d}'.format(
+                         len(with_device_name)))
         self.assertEqual(len(without_device_name), 1,
-                         'expected 1 bdm without device_name, found %d' %
-                         len(without_device_name))
+                         'expected 1 bdm without device_name, found {0:d}'.format(
+                         len(without_device_name)))
 
         # check create multiple devices without device_name
         bdm2 = dict(values)
@@ -6126,11 +6126,11 @@ class BlockDeviceMappingTestCase(test.TestCase):
         with_device_name = [b for b in bdms if b['device_name'] is not None]
         without_device_name = [b for b in bdms if b['device_name'] is None]
         self.assertEqual(len(with_device_name), 1,
-                         'expected 1 bdm with device_name, found %d' %
-                         len(with_device_name))
+                         'expected 1 bdm with device_name, found {0:d}'.format(
+                         len(with_device_name)))
         self.assertEqual(len(without_device_name), 2,
-                         'expected 2 bdms without device_name, found %d' %
-                         len(without_device_name))
+                         'expected 2 bdms without device_name, found {0:d}'.format(
+                         len(without_device_name)))
 
     def test_block_device_mapping_update_or_create_multiple_ephemeral(self):
         uuid = self.instance['uuid']
@@ -6945,10 +6945,10 @@ class QuotaTestCase(test.TestCase, ModelsObjectComparatorMixin):
     def test_quota_get_all_by_project(self):
         for i in range(3):
             for j in range(3):
-                db.quota_create(self.ctxt, 'proj%d' % i, 'resource%d' % j, j)
+                db.quota_create(self.ctxt, 'proj{0:d}'.format(i), 'resource{0:d}'.format(j), j)
         for i in range(3):
-            quotas_db = db.quota_get_all_by_project(self.ctxt, 'proj%d' % i)
-            self.assertEqual(quotas_db, {'project_id': 'proj%d' % i,
+            quotas_db = db.quota_get_all_by_project(self.ctxt, 'proj{0:d}'.format(i))
+            self.assertEqual(quotas_db, {'project_id': 'proj{0:d}'.format(i),
                                                         'resource0': 0,
                                                         'resource1': 1,
                                                         'resource2': 2})
@@ -6956,14 +6956,14 @@ class QuotaTestCase(test.TestCase, ModelsObjectComparatorMixin):
     def test_quota_get_all_by_project_and_user(self):
         for i in range(3):
             for j in range(3):
-                db.quota_create(self.ctxt, 'proj%d' % i, 'resource%d' % j,
-                                j - 1, user_id='user%d' % i)
+                db.quota_create(self.ctxt, 'proj{0:d}'.format(i), 'resource{0:d}'.format(j),
+                                j - 1, user_id='user{0:d}'.format(i))
         for i in range(3):
             quotas_db = db.quota_get_all_by_project_and_user(self.ctxt,
-                                                             'proj%d' % i,
-                                                             'user%d' % i)
-            self.assertEqual(quotas_db, {'project_id': 'proj%d' % i,
-                                         'user_id': 'user%d' % i,
+                                                             'proj{0:d}'.format(i),
+                                                             'user{0:d}'.format(i))
+            self.assertEqual(quotas_db, {'project_id': 'proj{0:d}'.format(i),
+                                         'user_id': 'user{0:d}'.format(i),
                                                         'resource0': -1,
                                                         'resource1': 0,
                                                         'resource2': 1})
@@ -7006,7 +7006,7 @@ class QuotaTestCase(test.TestCase, ModelsObjectComparatorMixin):
         usages['fixed_ips'] = 2
         network = db.network_create_safe(self.ctxt, {})
         for i in range(2):
-            address = '192.168.0.%d' % i
+            address = '192.168.0.{0:d}'.format(i)
             db.fixed_ip_create(self.ctxt, {'project_id': 'project1',
                                            'address': address,
                                            'network_id': network['id']})
@@ -7035,7 +7035,7 @@ class QuotaTestCase(test.TestCase, ModelsObjectComparatorMixin):
             usage = db.quota_usage_get(self.ctxt, 'project1',
                                        reservation.resource)
             self.assertEqual(usage.in_use, usages[reservation.resource],
-                             'Resource: %s' % reservation.resource)
+                             'Resource: {0!s}'.format(reservation.resource))
             self.assertEqual(usage.reserved, deltas[reservation.resource])
             self.assertIn(reservation.resource, resources_names)
             resources_names.remove(reservation.resource)
@@ -7309,11 +7309,11 @@ class QuotaClassTestCase(test.TestCase, ModelsObjectComparatorMixin):
     def test_quota_class_get_all_by_name(self):
         for i in range(3):
             for j in range(3):
-                db.quota_class_create(self.ctxt, 'class%d' % i,
-                                                'resource%d' % j, j)
+                db.quota_class_create(self.ctxt, 'class{0:d}'.format(i),
+                                                'resource{0:d}'.format(j), j)
         for i in range(3):
-            classes = db.quota_class_get_all_by_name(self.ctxt, 'class%d' % i)
-            self.assertEqual(classes, {'class_name': 'class%d' % i,
+            classes = db.quota_class_get_all_by_name(self.ctxt, 'class{0:d}'.format(i))
+            self.assertEqual(classes, {'class_name': 'class{0:d}'.format(i),
                             'resource0': 0, 'resource1': 1, 'resource2': 2})
 
     def test_quota_class_update(self):
@@ -7546,14 +7546,14 @@ class ComputeNodeTestCase(test.TestCase, ModelsObjectComparatorMixin):
         for x in range(2, 5):
             # Create a service
             service_data = self.service_dict.copy()
-            service_data['host'] = 'host-%s' % x
+            service_data['host'] = 'host-{0!s}'.format(x)
             service = db.service_create(self.ctxt, service_data)
 
             # Create a compute node
             compute_node_data = self.compute_node_dict.copy()
             compute_node_data['service_id'] = service['id']
             compute_node_data['stats'] = jsonutils.dumps(self.stats.copy())
-            compute_node_data['hypervisor_hostname'] = 'hypervisor-%s' % x
+            compute_node_data['hypervisor_hostname'] = 'hypervisor-{0!s}'.format(x)
             node = db.compute_node_create(self.ctxt, compute_node_data)
 
             # Ensure the "new" compute node is found
@@ -8558,8 +8558,8 @@ class ArchiveTestCase(test.TestCase, ModelsObjectComparatorMixin):
         metadata.reflect()
         for table in metadata.tables:
             if table.startswith("shadow_") and table not in exceptions:
-                rows = self.conn.execute("select * from %s" % table).fetchall()
-                self.assertEqual(rows, [], "Table %s not empty" % table)
+                rows = self.conn.execute("select * from {0!s}".format(table)).fetchall()
+                self.assertEqual(rows, [], "Table {0!s} not empty".format(table))
 
     def test_shadow_tables(self):
         metadata = MetaData(bind=self.engine)

@@ -86,16 +86,16 @@ class KeypairAPITestCase(test_compute.BaseTestCase):
 
         n1 = fake_notifier.NOTIFICATIONS[0]
         self.assertEqual('INFO', n1.priority)
-        self.assertEqual('keypair.%s.start' % action, n1.event_type)
-        self.assertEqual('api.%s' % CONF.host, n1.publisher_id)
+        self.assertEqual('keypair.{0!s}.start'.format(action), n1.event_type)
+        self.assertEqual('api.{0!s}'.format(CONF.host), n1.publisher_id)
         self.assertEqual('fake', n1.payload['user_id'])
         self.assertEqual('fake', n1.payload['tenant_id'])
         self.assertEqual(key_name, n1.payload['key_name'])
 
         n2 = fake_notifier.NOTIFICATIONS[1]
         self.assertEqual('INFO', n2.priority)
-        self.assertEqual('keypair.%s.end' % action, n2.event_type)
-        self.assertEqual('api.%s' % CONF.host, n2.publisher_id)
+        self.assertEqual('keypair.{0!s}.end'.format(action), n2.event_type)
+        self.assertEqual('api.{0!s}'.format(CONF.host), n2.publisher_id)
         self.assertEqual('fake', n2.payload['user_id'])
         self.assertEqual('fake', n2.payload['tenant_id'])
         self.assertEqual(key_name, n2.payload['key_name'])
@@ -121,7 +121,7 @@ class CreateImportSharedTestMixIn(object):
         self.assertEqual(expected_message, six.text_type(exc))
 
     def assertInvalidKeypair(self, expected_message, name):
-        msg = 'Keypair data is invalid: %s' % expected_message
+        msg = 'Keypair data is invalid: {0!s}'.format(expected_message)
         self.assertKeypairRaises(exception.InvalidKeypair, msg, name)
 
     def test_name_too_short(self):
@@ -144,8 +144,8 @@ class CreateImportSharedTestMixIn(object):
 
         self.stub_out("nova.db.key_pair_create", db_key_pair_create_duplicate)
 
-        msg = ("Key pair '%(key_name)s' already exists." %
-               {'key_name': self.existing_key_name})
+        msg = ("Key pair '{key_name!s}' already exists.".format(**
+               {'key_name': self.existing_key_name}))
         self.assertKeypairRaises(exception.KeyPairExists, msg,
                                  self.existing_key_name)
 

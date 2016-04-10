@@ -60,14 +60,14 @@ class SimpleTenantUsageSampleJsonTest(test_servers.ServersSampleBase):
 
     def test_get_tenants_usage(self):
         # Get api sample to get all tenants usage request.
-        response = self._do_get('os-simple-tenant-usage?%s' % (
-                                                urllib.urlencode(self.query)))
+        response = self._do_get('os-simple-tenant-usage?{0!s}'.format((
+                                                urllib.urlencode(self.query))))
         self._verify_response('simple-tenant-usage-get', {}, response, 200)
 
     def test_get_tenant_usage_details(self):
         # Get api sample to get specific tenant usage request.
         tenant_id = astb.PROJECT_ID
-        response = self._do_get('os-simple-tenant-usage/%s?%s' % (tenant_id,
+        response = self._do_get('os-simple-tenant-usage/{0!s}?{1!s}'.format(tenant_id,
                                                 urllib.urlencode(self.query)))
         self._verify_response('simple-tenant-usage-get-specific', {},
                               response, 200)

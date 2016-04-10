@@ -1115,7 +1115,7 @@ class RateLimitFault(webob.exc.HTTPException):
     def _retry_after(retry_time):
         delay = int(math.ceil(retry_time - time.time()))
         retry_after = delay if delay > 0 else 0
-        headers = {'Retry-After': '%d' % retry_after}
+        headers = {'Retry-After': '{0:d}'.format(retry_after)}
         return headers
 
     @webob.dec.wsgify(RequestClass=Request)

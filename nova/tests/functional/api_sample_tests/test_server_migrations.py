@@ -48,10 +48,9 @@ class ServerMigrationsSampleJsonTest(test_servers.ServersSampleBase):
         migration.id = 1
         migration.status = 'running'
         get_by_id_and_instance.return_value = migration
-        self._do_post('servers/%s/action' % self.uuid, 'live-migrate-server',
+        self._do_post('servers/{0!s}/action'.format(self.uuid), 'live-migrate-server',
                       {'hostname': self.compute.host})
-        response = self._do_post('servers/%s/migrations/%s/action'
-                                 % (self.uuid, '3'), 'force_complete', {})
+        response = self._do_post('servers/{0!s}/migrations/{1!s}/action'.format(self.uuid, '3'), 'force_complete', {})
         self.assertEqual(202, response.status_code)
 
     def test_get_migration(self):
@@ -141,8 +140,7 @@ class ServerMigrationsSamplesJsonTestV2_23(test_servers.ServersSampleBase):
         self.instance.create()
 
     def test_get_migration(self):
-        response = self._do_get('servers/%s/migrations/%s' %
-                                (self.fake_migrations[0]["instance_uuid"],
+        response = self._do_get('servers/{0!s}/migrations/{1!s}'.format(self.fake_migrations[0]["instance_uuid"],
                                  self.mig1.id))
         self.assertEqual(200, response.status_code)
 
@@ -151,8 +149,8 @@ class ServerMigrationsSamplesJsonTestV2_23(test_servers.ServersSampleBase):
                               response, 200)
 
     def test_list_migrations(self):
-        response = self._do_get('servers/%s/migrations' %
-                                self.fake_migrations[0]["instance_uuid"])
+        response = self._do_get('servers/{0!s}/migrations'.format(
+                                self.fake_migrations[0]["instance_uuid"]))
         self.assertEqual(200, response.status_code)
 
         self._verify_response('migrations-index',
@@ -187,17 +185,17 @@ class ServerMigrationsSampleJsonTestV2_24(test_servers.ServersSampleBase):
 
     @mock.patch.object(conductor_manager.ComputeTaskManager, '_live_migrate')
     def test_live_migrate_abort(self, _live_migrate):
-        self._do_post('servers/%s/action' % self.uuid, 'live-migrate-server',
+        self._do_post('servers/{0!s}/action'.format(self.uuid), 'live-migrate-server',
                       {'hostname': self.compute.host})
-        uri = 'servers/%s/migrations/%s' % (self.uuid, self.migration.id)
+        uri = 'servers/{0!s}/migrations/{1!s}'.format(self.uuid, self.migration.id)
         response = self._do_delete(uri)
         self.assertEqual(202, response.status_code)
 
     @mock.patch.object(conductor_manager.ComputeTaskManager, '_live_migrate')
     def test_live_migrate_abort_migration_not_found(self, _live_migrate):
-        self._do_post('servers/%s/action' % self.uuid, 'live-migrate-server',
+        self._do_post('servers/{0!s}/action'.format(self.uuid), 'live-migrate-server',
                       {'hostname': self.compute.host})
-        uri = 'servers/%s/migrations/%s' % (self.uuid, '45')
+        uri = 'servers/{0!s}/migrations/{1!s}'.format(self.uuid, '45')
         response = self._do_delete(uri)
         self.assertEqual(404, response.status_code)
 
@@ -205,8 +203,8 @@ class ServerMigrationsSampleJsonTestV2_24(test_servers.ServersSampleBase):
     def test_live_migrate_abort_migration_not_running(self, _live_migrate):
         self.migration.status = 'completed'
         self.migration.save()
-        self._do_post('servers/%s/action' % self.uuid, 'live-migrate-server',
+        self._do_post('servers/{0!s}/action'.format(self.uuid), 'live-migrate-server',
                       {'hostname': self.compute.host})
-        uri = 'servers/%s/migrations/%s' % (self.uuid, self.migration.id)
+        uri = 'servers/{0!s}/migrations/{1!s}'.format(self.uuid, self.migration.id)
         response = self._do_delete(uri)
         self.assertEqual(400, response.status_code)

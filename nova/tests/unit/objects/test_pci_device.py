@@ -496,9 +496,9 @@ class _TestSRIOVPciDeviceObject(object):
         self.sriov_pf_devices = []
         for dev in range(num_pfs):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:81:00.%d' % dev,
+                       'address': '0000:81:00.{0:d}'.format(dev),
                        'vendor_id': '8086',
-                       'product_id': '%d' % pf_product_id,
+                       'product_id': '{0:d}'.format(pf_product_id),
                        'status': 'available',
                        'request_id': None,
                        'dev_type': fields.PciDeviceType.SRIOV_PF,
@@ -511,13 +511,13 @@ class _TestSRIOVPciDeviceObject(object):
         self.sriov_vf_devices = []
         for dev in range(num_vfs):
             pci_dev = {'compute_node_id': 1,
-                       'address': '0000:81:10.%d' % dev,
+                       'address': '0000:81:10.{0:d}'.format(dev),
                        'vendor_id': '8086',
-                       'product_id': '%d' % vf_product_id,
+                       'product_id': '{0:d}'.format(vf_product_id),
                        'status': 'available',
                        'request_id': None,
                        'dev_type': fields.PciDeviceType.SRIOV_VF,
-                       'parent_addr': '0000:81:00.%d' % int(dev / 4),
+                       'parent_addr': '0000:81:00.{0:d}'.format(int(dev / 4)),
                        'numa_node': 0}
             pci_dev_obj = objects.PciDevice.create(None, pci_dev)
             pci_dev_obj.id = num_vfs + 1

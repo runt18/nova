@@ -125,7 +125,7 @@ class UsedLimitsTestCaseV21(test.NoDBTestCase):
                 self.include_server_group_quotas)
         self.authorize(self.fake_context, target=target)
         self.mox.StubOutWithMock(quota.QUOTAS, 'get_project_quotas')
-        quota.QUOTAS.get_project_quotas(self.fake_context, '%s' % tenant_id,
+        quota.QUOTAS.get_project_quotas(self.fake_context, '{0!s}'.format(tenant_id),
                                         usages=True).AndReturn({})
         self.mox.ReplayAll()
         res = wsgi.ResponseObject(obj)
@@ -150,7 +150,7 @@ class UsedLimitsTestCaseV21(test.NoDBTestCase):
                 self.include_server_group_quotas)
         self.mox.StubOutWithMock(extensions, 'extension_authorizer')
         self.mox.StubOutWithMock(quota.QUOTAS, 'get_project_quotas')
-        quota.QUOTAS.get_project_quotas(self.fake_context, '%s' % project_id,
+        quota.QUOTAS.get_project_quotas(self.fake_context, '{0!s}'.format(project_id),
                                         usages=True).AndReturn({})
         self.mox.ReplayAll()
         res = wsgi.ResponseObject(obj)

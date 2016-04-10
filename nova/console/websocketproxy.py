@@ -143,8 +143,8 @@ class NovaProxyRequestHandlerBase(object):
 
         # Handshake as necessary
         if connect_info.get('internal_access_path'):
-            tsock.send("CONNECT %s HTTP/1.1\r\n\r\n" %
-                        connect_info['internal_access_path'])
+            tsock.send("CONNECT {0!s} HTTP/1.1\r\n\r\n".format(
+                        connect_info['internal_access_path']))
             while True:
                 data = tsock.recv(4096, socket.MSG_PEEK)
                 if data.find("\r\n\r\n") != -1:

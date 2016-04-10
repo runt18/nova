@@ -72,7 +72,7 @@ class FlavorActionController(wsgi.Controller):
             raise webob.exc.HTTPBadRequest(explanation=_("No request body"))
 
     def _extend_flavor(self, flavor_rval, flavor_ref):
-        key = "%s:is_public" % (Flavor_access.alias)
+        key = "{0!s}:is_public".format((Flavor_access.alias))
         flavor_rval[key] = flavor_ref['is_public']
 
     @wsgi.extends

@@ -42,18 +42,18 @@ class AdminActionsSamplesJsonTest(test_servers.ServersSampleBase):
 
     def test_post_reset_network(self):
         # Get api samples to reset server network request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'admin-actions-reset-network', {})
         self.assertEqual(202, response.status_code)
 
     def test_post_inject_network_info(self):
         # Get api samples to inject network info request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'admin-actions-inject-network-info', {})
         self.assertEqual(202, response.status_code)
 
     def test_post_reset_state(self):
         # get api samples to server reset state request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'admin-actions-reset-server-state', {})
         self.assertEqual(202, response.status_code)

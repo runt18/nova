@@ -38,9 +38,9 @@ class LibvirtISCSIVolumeDriverTestCase(
         sample_input = """Loading iscsi modules: done
 Starting iSCSI initiator service: done
 Setting up iSCSI targets: unused
-%s %s
-%s %s
-""" % (targets[0][0], targets[0][1], targets[1][0], targets[1][1])
+{0!s} {1!s}
+{2!s} {3!s}
+""".format(targets[0][0], targets[0][1], targets[1][0], targets[1][1])
         driver = iscsi.LibvirtISCSIVolumeDriver("none")
         out = driver.connector._get_target_portals_from_iscsiadm_output(
             sample_input)

@@ -165,13 +165,13 @@ class TestWSGIServer(test.NoDBTestCase):
             host="127.0.0.1", max_url_len=16384)
         server.start()
 
-        uri = "http://127.0.0.1:%d/%s" % (server.port, 10000 * 'x')
+        uri = "http://127.0.0.1:{0:d}/{1!s}".format(server.port, 10000 * 'x')
         resp = requests.get(uri, proxies={"http": ""})
         eventlet.sleep(0)
         self.assertNotEqual(resp.status_code,
                             requests.codes.REQUEST_URI_TOO_LARGE)
 
-        uri = "http://127.0.0.1:%d/%s" % (server.port, 20000 * 'x')
+        uri = "http://127.0.0.1:{0:d}/{1!s}".format(server.port, 20000 * 'x')
         resp = requests.get(uri, proxies={"http": ""})
         eventlet.sleep(0)
         self.assertEqual(resp.status_code,
@@ -248,7 +248,7 @@ class TestWSGIServerWithSSL(test.NoDBTestCase):
         self.assertNotEqual(0, fake_ssl_server.port)
 
         response = requests.post(
-            'https://127.0.0.1:%s/' % fake_ssl_server.port,
+            'https://127.0.0.1:{0!s}/'.format(fake_ssl_server.port),
             verify=os.path.join(SSL_CERT_DIR, 'ca.crt'), data='PING')
         self.assertEqual(response.text, 'PONG')
 
@@ -272,11 +272,11 @@ class TestWSGIServerWithSSL(test.NoDBTestCase):
         self.assertNotEqual(0, fake_server.port)
 
         response = requests.post(
-            'https://127.0.0.1:%s/' % fake_ssl_server.port,
+            'https://127.0.0.1:{0!s}/'.format(fake_ssl_server.port),
             verify=os.path.join(SSL_CERT_DIR, 'ca.crt'), data='PING')
         self.assertEqual(response.text, 'PONG')
 
-        response = requests.post('http://127.0.0.1:%s/' % fake_server.port,
+        response = requests.post('http://127.0.0.1:{0!s}/'.format(fake_server.port),
                                  data='PING')
         self.assertEqual(response.text, 'PONG')
 
@@ -323,7 +323,7 @@ class TestWSGIServerWithSSL(test.NoDBTestCase):
 
         server.start()
 
-        response = requests.get('https://[::1]:%d/' % server.port,
+        response = requests.get('https://[::1]:{0:d}/'.format(server.port),
                                 verify=os.path.join(SSL_CERT_DIR, 'ca.crt'))
         self.assertEqual(greetings, response.text)
 

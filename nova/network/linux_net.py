@@ -184,11 +184,11 @@ class IptablesRule(object):
 
     def __repr__(self):
         if self.wrap:
-            chain = '%s-%s' % (binary_name, self.chain)
+            chain = '{0!s}-{1!s}'.format(binary_name, self.chain)
         else:
             chain = self.chain
         # new rules should have a zero [packet: byte] count
-        return '[0:0] -A %s %s' % (chain, self.rule)
+        return '[0:0] -A {0!s} {1!s}'.format(chain, self.rule)
 
 
 class IptablesTable(object):
@@ -256,9 +256,9 @@ class IptablesTable(object):
         self.rules = [r for r in self.rules if r.chain != name]
 
         if wrap:
-            jump_snippet = '-j %s-%s' % (binary_name, name)
+            jump_snippet = '-j {0!s}-{1!s}'.format(binary_name, name)
         else:
-            jump_snippet = '-j %s' % (name,)
+            jump_snippet = '-j {0!s}'.format(name)
 
         if not wrap:
             self.remove_rules += [r for r in self.rules
@@ -293,7 +293,7 @@ class IptablesTable(object):
 
     def _wrap_target_chain(self, s):
         if s.startswith('$'):
-            return '%s-%s' % (binary_name, s[1:])
+            return '{0!s}-{1!s}'.format(binary_name, s[1:])
         return s
 
     def remove_rule(self, chain, rule, wrap=True, top=False):
@@ -401,7 +401,7 @@ class IptablesManager(object):
             for table, chains in six.iteritems(builtin_chains[ip_version]):
                 for chain in chains:
                     tables[table].add_chain(chain)
-                    tables[table].add_rule(chain, '-j $%s' % (chain,),
+                    tables[table].add_rule(chain, '-j ${0!s}'.format(chain),
                                            wrap=False)
 
         # Add a nova-postrouting-bottom chain. It's intended to be shared
@@ -461,7 +461,7 @@ class IptablesManager(object):
             s += [('ip6tables', self.ipv6)]
 
         for cmd, tables in s:
-            all_tables, _err = self.execute('%s-save' % (cmd,), '-c',
+            all_tables, _err = self.execute('{0!s}-save'.format(cmd), '-c',
                                                 run_as_root=True,
                                                 attempts=5)
             all_lines = all_tables.split('\n')
@@ -470,7 +470,7 @@ class IptablesManager(object):
                 all_lines[start:end] = self._modify_rules(
                         all_lines[start:end], table, table_name)
                 table.dirty = False
-            self.execute('%s-restore' % (cmd,), '-c', run_as_root=True,
+            self.execute('{0!s}-restore'.format(cmd), '-c', run_as_root=True,
                          process_input='\n'.join(all_lines),
                          attempts=5)
         LOG.debug("IPTablesManager.apply completed with success")
@@ -480,7 +480,7 @@ class IptablesManager(object):
             # length only <2 when fake iptables
             return (0, 0)
         try:
-            start = lines.index('*%s' % table_name) - 1
+            start = lines.index('*{0!s}'.format(table_name)) - 1
         except ValueError:
             # Couldn't find table_name
             return (0, 0)
@@ -576,10 +576,9 @@ class IptablesManager(object):
         new_filter = list(new_filter)
         new_filter[rules_index:rules_index] = our_rules
 
-        new_filter[rules_index:rules_index] = [':%s - [0:0]' % (name,)
+        new_filter[rules_index:rules_index] = [':{0!s} - [0:0]'.format(name)
                                                for name in unwrapped_chains]
-        new_filter[rules_index:rules_index] = [':%s-%s - [0:0]' %
-                                               (binary_name, name,)
+        new_filter[rules_index:rules_index] = [':{0!s}-{1!s} - [0:0]'.format(binary_name, name)
                                                for name in chains]
 
         commit_index = new_filter.index('COMMIT')
@@ -659,7 +658,7 @@ def is_pid_cmdline_correct(pid, match):
     expected in the cmdline as a safety check.
     """
     try:
-        with open('/proc/%d/cmdline' % pid) as f:
+        with open('/proc/{0:d}/cmdline'.format(pid)) as f:
             cmdline = f.read()
             return match in cmdline
     except EnvironmentError:
@@ -689,14 +688,13 @@ def _iptables_dest(ip):
         or ip == '::1'):
         return '-m addrtype --dst-type LOCAL'
     else:
-        return '-d %s' % ip
+        return '-d {0!s}'.format(ip)
 
 
 def metadata_accept():
     """Create the filter accept rule for metadata."""
 
-    rule = ('-p tcp -m tcp --dport %s %s -j ACCEPT' %
-            (CONF.metadata_port, _iptables_dest(CONF.metadata_host)))
+    rule = ('-p tcp -m tcp --dport {0!s} {1!s} -j ACCEPT'.format(CONF.metadata_port, _iptables_dest(CONF.metadata_host)))
 
     if netaddr.IPAddress(CONF.metadata_host).version == 4:
         iptables_manager.ipv4['filter'].add_rule('INPUT', rule)
@@ -716,10 +714,9 @@ def add_snat_rule(ip_range, is_external=False):
         else:
             snat_range = ['0.0.0.0/0']
         for dest_range in snat_range:
-            rule = ('-s %s -d %s -j SNAT --to-source %s'
-                    % (ip_range, dest_range, CONF.routing_source_ip))
+            rule = ('-s {0!s} -d {1!s} -j SNAT --to-source {2!s}'.format(ip_range, dest_range, CONF.routing_source_ip))
             if not is_external and CONF.public_interface:
-                rule += ' -o %s' % CONF.public_interface
+                rule += ' -o {0!s}'.format(CONF.public_interface)
             iptables_manager.ipv4['nat'].add_rule('snat', rule)
         iptables_manager.apply()
 
@@ -741,13 +738,11 @@ def init_host(ip_range, is_external=False):
         ensure_ebtables_rules(rules, 'nat')
 
     iptables_manager.ipv4['nat'].add_rule('POSTROUTING',
-                                          '-s %s -d %s/32 -j ACCEPT' %
-                                          (ip_range, CONF.metadata_host))
+                                          '-s {0!s} -d {1!s}/32 -j ACCEPT'.format(ip_range, CONF.metadata_host))
 
     for dmz in CONF.dmz_cidr:
         iptables_manager.ipv4['nat'].add_rule('POSTROUTING',
-                                              '-s %s -d %s -j ACCEPT' %
-                                              (ip_range, dmz))
+                                              '-s {0!s} -d {1!s} -j ACCEPT'.format(ip_range, dmz))
 
     iptables_manager.ipv4['nat'].add_rule('POSTROUTING',
                                           '-s %(range)s -d %(range)s '
@@ -811,7 +806,7 @@ def ensure_vpn_forward(public_ip, port, private_ip):
 def ensure_floating_forward(floating_ip, fixed_ip, device, network):
     """Ensure floating IP forwarding rule."""
     # NOTE(vish): Make sure we never have duplicate rules for the same ip
-    regex = '.*\s+%s(/32|\s+|$)' % floating_ip
+    regex = '.*\s+{0!s}(/32|\s+|$)'.format(floating_ip)
     num_rules = iptables_manager.ipv4['nat'].remove_rules_regex(regex)
     if num_rules:
         msg = _LW('Removed %(num)d duplicate rules for floating IP %(float)s')
@@ -841,16 +836,16 @@ def floating_ebtables_rules(fixed_ip, network):
 
 def floating_forward_rules(floating_ip, fixed_ip, device):
     rules = []
-    rule = '-s %s -j SNAT --to %s' % (fixed_ip, floating_ip)
+    rule = '-s {0!s} -j SNAT --to {1!s}'.format(fixed_ip, floating_ip)
     if device:
-        rules.append(('float-snat', rule + ' -d %s' % fixed_ip))
-        rules.append(('float-snat', rule + ' -o %s' % device))
+        rules.append(('float-snat', rule + ' -d {0!s}'.format(fixed_ip)))
+        rules.append(('float-snat', rule + ' -o {0!s}'.format(device)))
     else:
         rules.append(('float-snat', rule))
     rules.append(
-            ('PREROUTING', '-d %s -j DNAT --to %s' % (floating_ip, fixed_ip)))
+            ('PREROUTING', '-d {0!s} -j DNAT --to {1!s}'.format(floating_ip, fixed_ip)))
     rules.append(
-            ('OUTPUT', '-d %s -j DNAT --to %s' % (floating_ip, fixed_ip)))
+            ('OUTPUT', '-d {0!s} -j DNAT --to {1!s}'.format(floating_ip, fixed_ip)))
     rules.append(('POSTROUTING', '-s %s -m conntrack --ctstate DNAT -j SNAT '
                   '--to-source %s' %
                   (fixed_ip, floating_ip)))
@@ -869,7 +864,7 @@ def _enable_ipv4_forwarding():
     sysctl_key = 'net.ipv4.ip_forward'
     stdout, stderr = _execute('sysctl', '-n', sysctl_key)
     if stdout.strip() is not '1':
-        _execute('sysctl', '-w', '%s=1' % sysctl_key, run_as_root=True)
+        _execute('sysctl', '-w', '{0!s}=1'.format(sysctl_key), run_as_root=True)
 
 
 @utils.synchronized('lock_gateway', external=True)
@@ -886,7 +881,7 @@ def initialize_gateway_device(dev, network_ref):
     except AttributeError:
         prefix = network_ref['cidr'].rpartition('/')[2]
 
-    full_ip = '%s/%s' % (network_ref['dhcp_server'], prefix)
+    full_ip = '{0!s}/{1!s}'.format(network_ref['dhcp_server'], prefix)
     new_ip_params = [[full_ip, 'brd', network_ref['broadcast']]]
     old_ip_params = []
     out, err = _execute('ip', 'addr', 'show', 'dev', dev,
@@ -1118,31 +1113,30 @@ def restart_dhcp(context, dev, network_ref, fixedips):
             LOG.debug('Pid %d is stale, relaunching dnsmasq', pid)
 
     cmd = ['env',
-           'CONFIG_FILE=%s' % jsonutils.dumps(CONF.dhcpbridge_flagfile),
-           'NETWORK_ID=%s' % str(network_ref['id']),
+           'CONFIG_FILE={0!s}'.format(jsonutils.dumps(CONF.dhcpbridge_flagfile)),
+           'NETWORK_ID={0!s}'.format(str(network_ref['id'])),
            'dnsmasq',
            '--strict-order',
            '--bind-interfaces',
-           '--conf-file=%s' % CONF.dnsmasq_config_file,
-           '--pid-file=%s' % _dhcp_file(dev, 'pid'),
-           '--dhcp-optsfile=%s' % _dhcp_file(dev, 'opts'),
-           '--listen-address=%s' % network_ref['dhcp_server'],
+           '--conf-file={0!s}'.format(CONF.dnsmasq_config_file),
+           '--pid-file={0!s}'.format(_dhcp_file(dev, 'pid')),
+           '--dhcp-optsfile={0!s}'.format(_dhcp_file(dev, 'opts')),
+           '--listen-address={0!s}'.format(network_ref['dhcp_server']),
            '--except-interface=lo',
-           '--dhcp-range=set:%s,%s,static,%s,%ss' %
-                         (network_ref['label'],
+           '--dhcp-range=set:{0!s},{1!s},static,{2!s},{3!s}s'.format(network_ref['label'],
                           network_ref['dhcp_start'],
                           network_ref['netmask'],
                           CONF.dhcp_lease_time),
-           '--dhcp-lease-max=%s' % len(netaddr.IPNetwork(network_ref['cidr'])),
-           '--dhcp-hostsfile=%s' % _dhcp_file(dev, 'conf'),
-           '--dhcp-script=%s' % CONF.dhcpbridge,
+           '--dhcp-lease-max={0!s}'.format(len(netaddr.IPNetwork(network_ref['cidr']))),
+           '--dhcp-hostsfile={0!s}'.format(_dhcp_file(dev, 'conf')),
+           '--dhcp-script={0!s}'.format(CONF.dhcpbridge),
            '--no-hosts',
            '--leasefile-ro']
 
     # dnsmasq currently gives an error for an empty domain,
     # rather than ignoring.  So only specify it if defined.
     if CONF.dhcp_domain:
-        cmd.append('--domain=%s' % CONF.dhcp_domain)
+        cmd.append('--domain={0!s}'.format(CONF.dhcp_domain))
 
     dns_servers = CONF.dns_server
     if CONF.use_network_dns_servers:
@@ -1151,11 +1145,11 @@ def restart_dhcp(context, dev, network_ref, fixedips):
         if network_ref.get('dns2'):
             dns_servers.append(network_ref.get('dns2'))
     if network_ref['multi_host']:
-        cmd.append('--addn-hosts=%s' % _dhcp_file(dev, 'hosts'))
+        cmd.append('--addn-hosts={0!s}'.format(_dhcp_file(dev, 'hosts')))
     if dns_servers:
         cmd.append('--no-resolv')
     for dns_server in dns_servers:
-        cmd.append('--server=%s' % dns_server)
+        cmd.append('--server={0!s}'.format(dns_server))
 
     _execute(*cmd, run_as_root=True)
 
@@ -1166,18 +1160,18 @@ def restart_dhcp(context, dev, network_ref, fixedips):
 def update_ra(context, dev, network_ref):
     conffile = _ra_file(dev, 'conf')
     conf_str = """
-interface %s
-{
+interface {0!s}
+{{
    AdvSendAdvert on;
    MinRtrAdvInterval 3;
    MaxRtrAdvInterval 10;
-   prefix %s
-   {
+   prefix {1!s}
+   {{
         AdvOnLink on;
         AdvAutonomous on;
-   };
-};
-""" % (dev, network_ref['cidr_v6'])
+   }};
+}};
+""".format(dev, network_ref['cidr_v6'])
     write_to_file(conffile, conf_str)
 
     # Make sure radvd can actually read it (it setuid()s to "nobody")
@@ -1196,8 +1190,8 @@ interface %s
             LOG.debug('Pid %d is stale, relaunching radvd', pid)
 
     cmd = ['radvd',
-           '-C', '%s' % _ra_file(dev, 'conf'),
-           '-p', '%s' % _ra_file(dev, 'pid')]
+           '-C', '{0!s}'.format(_ra_file(dev, 'conf')),
+           '-p', '{0!s}'.format(_ra_file(dev, 'pid'))]
 
     _execute(*cmd, run_as_root=True)
 
@@ -1206,14 +1200,14 @@ def _host_lease(fixedip):
     """Return a host string for an address in leasefile format."""
     timestamp = timeutils.utcnow()
     seconds_since_epoch = calendar.timegm(timestamp.utctimetuple())
-    return '%d %s %s %s *' % (seconds_since_epoch + CONF.dhcp_lease_time,
+    return '{0:d} {1!s} {2!s} {3!s} *'.format(seconds_since_epoch + CONF.dhcp_lease_time,
                               fixedip.virtual_interface.address,
                               fixedip.address,
                               fixedip.instance.hostname or '*')
 
 
 def _host_dhcp_network(vif_id):
-    return 'NW-%s' % vif_id
+    return 'NW-{0!s}'.format(vif_id)
 
 
 def _host_dhcp(fixedip):
@@ -1228,20 +1222,20 @@ def _host_dhcp(fixedip):
                    fixedip.instance.hostname[-60:]
     if CONF.use_single_default_gateway:
         net = _host_dhcp_network(fixedip.virtual_interface_id)
-        return '%s,%s.%s,%s,net:%s' % (fixedip.virtual_interface.address,
+        return '{0!s},{1!s}.{2!s},{3!s},net:{4!s}'.format(fixedip.virtual_interface.address,
                                hostname,
                                CONF.dhcp_domain,
                                fixedip.address,
                                net)
     else:
-        return '%s,%s.%s,%s' % (fixedip.virtual_interface.address,
+        return '{0!s},{1!s}.{2!s},{3!s}'.format(fixedip.virtual_interface.address,
                                hostname,
                                CONF.dhcp_domain,
                                fixedip.address)
 
 
 def _host_dns(fixedip):
-    return '%s\t%s.%s' % (fixedip.address,
+    return '{0!s}\t{1!s}.{2!s}'.format(fixedip.address,
                           fixedip.instance.hostname,
                           CONF.dhcp_domain)
 
@@ -1254,7 +1248,7 @@ def _host_dhcp_opts(vif_id=None, gateway=None):
     # NOTE(vish): 3 is the dhcp option for gateway.
     values.append('3')
     if gateway:
-        values.append('%s' % gateway)
+        values.append('{0!s}'.format(gateway))
     return ','.join(values)
 
 
@@ -1269,13 +1263,13 @@ def _execute(*cmd, **kwargs):
 
 def device_exists(device):
     """Check if ethernet device exists."""
-    return os.path.exists('/sys/class/net/%s' % device)
+    return os.path.exists('/sys/class/net/{0!s}'.format(device))
 
 
 def _dhcp_file(dev, kind):
     """Return path to a pid, leases, hosts or conf file for a bridge/device."""
     fileutils.ensure_tree(CONF.networks_path)
-    return os.path.abspath('%s/nova-%s.%s' % (CONF.networks_path,
+    return os.path.abspath('{0!s}/nova-{1!s}.{2!s}'.format(CONF.networks_path,
                                               dev,
                                               kind))
 
@@ -1283,7 +1277,7 @@ def _dhcp_file(dev, kind):
 def _ra_file(dev, kind):
     """Return path to a pid or conf file for a bridge/device."""
     fileutils.ensure_tree(CONF.networks_path)
-    return os.path.abspath('%s/nova-ra-%s.%s' % (CONF.networks_path,
+    return os.path.abspath('{0!s}/nova-ra-{1!s}.{2!s}'.format(CONF.networks_path,
                                               dev,
                                               kind))
 
@@ -1357,7 +1351,7 @@ def _create_veth_pair(dev1_name, dev2_name, mtu=None):
 
 
 def _ovs_vsctl(args):
-    full_args = ['ovs-vsctl', '--timeout=%s' % CONF.ovs_vsctl_timeout] + args
+    full_args = ['ovs-vsctl', '--timeout={0!s}'.format(CONF.ovs_vsctl_timeout)] + args
     try:
         return utils.execute(*full_args, run_as_root=True)
     except Exception as e:
@@ -1371,12 +1365,12 @@ def _create_ovs_vif_cmd(bridge, dev, iface_id, mac,
     cmd = ['--', '--if-exists', 'del-port', dev, '--',
             'add-port', bridge, dev,
             '--', 'set', 'Interface', dev,
-            'external-ids:iface-id=%s' % iface_id,
+            'external-ids:iface-id={0!s}'.format(iface_id),
             'external-ids:iface-status=active',
-            'external-ids:attached-mac=%s' % mac,
-            'external-ids:vm-uuid=%s' % instance_id]
+            'external-ids:attached-mac={0!s}'.format(mac),
+            'external-ids:vm-uuid={0!s}'.format(instance_id)]
     if interface_type:
-        cmd += ['type=%s' % interface_type]
+        cmd += ['type={0!s}'.format(interface_type)]
     return cmd
 
 
@@ -1527,7 +1521,7 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
                            network,
                            mac_address,
                            network.get('mtu'))
-            iface = 'vlan%s' % vlan
+            iface = 'vlan{0!s}'.format(vlan)
         else:
             iface = CONF.flat_interface or network['bridge_interface']
             LinuxBridgeInterfaceDriver.ensure_bridge(
@@ -1544,7 +1538,7 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
     def unplug(self, network, gateway=True):
         vlan = network.get('vlan')
         if vlan is not None:
-            iface = 'vlan%s' % vlan
+            iface = 'vlan{0!s}'.format(vlan)
             LinuxBridgeInterfaceDriver.remove_vlan_bridge(vlan,
                                                           network['bridge'])
         else:
@@ -1584,7 +1578,7 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
                     interface=None):
         """Create a vlan unless it already exists."""
         if interface is None:
-            interface = 'vlan%s' % vlan_num
+            interface = 'vlan{0!s}'.format(vlan_num)
         if not device_exists(interface):
             LOG.debug('Starting VLAN interface %s', interface)
             _execute('ip', 'link', 'add', 'link', bridge_interface,
@@ -1608,7 +1602,7 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
     @utils.synchronized('lock_vlan', external=True)
     def remove_vlan(vlan_num):
         """Delete a vlan."""
-        vlan_interface = 'vlan%s' % vlan_num
+        vlan_interface = 'vlan{0!s}'.format(vlan_num)
         delete_net_dev(vlan_interface)
 
     @staticmethod
@@ -1706,11 +1700,9 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
                     ipv4_filter.add_rule(*rule)
             else:
                 ipv4_filter.add_rule('FORWARD',
-                                     ('--in-interface %s -j %s'
-                                      % (bridge, CONF.iptables_drop_action)))
+                                     ('--in-interface {0!s} -j {1!s}'.format(bridge, CONF.iptables_drop_action)))
                 ipv4_filter.add_rule('FORWARD',
-                                     ('--out-interface %s -j %s'
-                                      % (bridge, CONF.iptables_drop_action)))
+                                     ('--out-interface {0!s} -j {1!s}'.format(bridge, CONF.iptables_drop_action)))
 
     @staticmethod
     @utils.synchronized('lock_bridge', external=True)
@@ -1731,11 +1723,9 @@ class LinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
 
                     for drop_action in drop_actions:
                         ipv4_filter.remove_rule('FORWARD',
-                                                ('--in-interface %s -j %s'
-                                                 % (bridge, drop_action)))
+                                                ('--in-interface {0!s} -j {1!s}'.format(bridge, drop_action)))
                         ipv4_filter.remove_rule('FORWARD',
-                                                ('--out-interface %s -j %s'
-                                                 % (bridge, drop_action)))
+                                                ('--out-interface {0!s} -j {1!s}'.format(bridge, drop_action)))
             delete_bridge_dev(bridge)
 
 
@@ -1816,10 +1806,8 @@ def remove_ebtables_rules(rules, table='filter'):
 def isolate_dhcp_address(interface, address):
     # block arp traffic to address across the interface
     rules = []
-    rules.append('INPUT -p ARP -i %s --arp-ip-dst %s -j DROP'
-                 % (interface, address))
-    rules.append('OUTPUT -p ARP -o %s --arp-ip-src %s -j DROP'
-                 % (interface, address))
+    rules.append('INPUT -p ARP -i {0!s} --arp-ip-dst {1!s} -j DROP'.format(interface, address))
+    rules.append('OUTPUT -p ARP -o {0!s} --arp-ip-src {1!s} -j DROP'.format(interface, address))
     rules.append('FORWARD -p IPv4 -i %s --ip-protocol udp '
                  '--ip-destination-port 67:68 -j DROP'
                  % interface)
@@ -1833,10 +1821,8 @@ def isolate_dhcp_address(interface, address):
 def remove_isolate_dhcp_address(interface, address):
     # block arp traffic to address across the interface
     rules = []
-    rules.append('INPUT -p ARP -i %s --arp-ip-dst %s -j DROP'
-                 % (interface, address))
-    rules.append('OUTPUT -p ARP -o %s --arp-ip-src %s -j DROP'
-                 % (interface, address))
+    rules.append('INPUT -p ARP -i {0!s} --arp-ip-dst {1!s} -j DROP'.format(interface, address))
+    rules.append('OUTPUT -p ARP -o {0!s} --arp-ip-src {1!s} -j DROP'.format(interface, address))
     rules.append('FORWARD -p IPv4 -i %s --ip-protocol udp '
                  '--ip-destination-port 67:68 -j DROP'
                  % interface)
@@ -1850,19 +1836,19 @@ def remove_isolate_dhcp_address(interface, address):
 def get_gateway_rules(bridge):
     interfaces = CONF.forward_bridge_interface
     if 'all' in interfaces:
-        return [('FORWARD', '-i %s -j ACCEPT' % bridge),
-                ('FORWARD', '-o %s -j ACCEPT' % bridge)]
+        return [('FORWARD', '-i {0!s} -j ACCEPT'.format(bridge)),
+                ('FORWARD', '-o {0!s} -j ACCEPT'.format(bridge))]
     rules = []
     for iface in CONF.forward_bridge_interface:
         if iface:
-            rules.append(('FORWARD', '-i %s -o %s -j ACCEPT' % (bridge,
+            rules.append(('FORWARD', '-i {0!s} -o {1!s} -j ACCEPT'.format(bridge,
                                                                 iface)))
-            rules.append(('FORWARD', '-i %s -o %s -j ACCEPT' % (iface,
+            rules.append(('FORWARD', '-i {0!s} -o {1!s} -j ACCEPT'.format(iface,
                                                                 bridge)))
-    rules.append(('FORWARD', '-i %s -o %s -j ACCEPT' % (bridge, bridge)))
-    rules.append(('FORWARD', '-i %s -j %s' % (bridge,
+    rules.append(('FORWARD', '-i {0!s} -o {1!s} -j ACCEPT'.format(bridge, bridge)))
+    rules.append(('FORWARD', '-i {0!s} -j {1!s}'.format(bridge,
                                               CONF.iptables_drop_action)))
-    rules.append(('FORWARD', '-o %s -j %s' % (bridge,
+    rules.append(('FORWARD', '-o {0!s} -j {1!s}'.format(bridge,
                                               CONF.iptables_drop_action)))
     return rules
 
@@ -1877,11 +1863,11 @@ class LinuxOVSInterfaceDriver(LinuxNetInterfaceDriver):
             _ovs_vsctl(['--', '--may-exist', 'add-port', bridge, dev,
                         '--', 'set', 'Interface', dev, 'type=internal',
                         '--', 'set', 'Interface', dev,
-                        'external-ids:iface-id=%s' % dev,
+                        'external-ids:iface-id={0!s}'.format(dev),
                         '--', 'set', 'Interface', dev,
                         'external-ids:iface-status=active',
                         '--', 'set', 'Interface', dev,
-                        'external-ids:attached-mac=%s' % mac_address])
+                        'external-ids:attached-mac={0!s}'.format(mac_address)])
             _execute('ip', 'link', 'set', dev, 'address', mac_address,
                      run_as_root=True)
             _set_device_mtu(dev, network.get('mtu'))
@@ -1893,14 +1879,14 @@ class LinuxOVSInterfaceDriver(LinuxNetInterfaceDriver):
                          'add-flow', bridge, 'priority=1,actions=drop',
                          run_as_root=True)
                 _execute('ovs-ofctl', 'add-flow', bridge,
-                         'udp,tp_dst=67,dl_dst=%s,priority=2,actions=normal' %
-                         mac_address, run_as_root=True)
+                         'udp,tp_dst=67,dl_dst={0!s},priority=2,actions=normal'.format(
+                         mac_address), run_as_root=True)
                 # .. and make sure iptbles won't forward it as well.
                 iptables_manager.ipv4['filter'].add_rule('FORWARD',
-                    '--in-interface %s -j %s' % (bridge,
+                    '--in-interface {0!s} -j {1!s}'.format(bridge,
                                                  CONF.iptables_drop_action))
                 iptables_manager.ipv4['filter'].add_rule('FORWARD',
-                    '--out-interface %s -j %s' % (bridge,
+                    '--out-interface {0!s} -j {1!s}'.format(bridge,
                                                   CONF.iptables_drop_action))
             else:
                 for rule in get_gateway_rules(bridge):
@@ -1933,11 +1919,9 @@ class NeutronLinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
             # appropriate flows to block all non-dhcp traffic.
             # .. and make sure iptbles won't forward it as well.
             iptables_manager.ipv4['filter'].add_rule('FORWARD',
-                    ('--in-interface %s -j %s'
-                     % (bridge, CONF.iptables_drop_action)))
+                    ('--in-interface {0!s} -j {1!s}'.format(bridge, CONF.iptables_drop_action)))
             iptables_manager.ipv4['filter'].add_rule('FORWARD',
-                    ('--out-interface %s -j %s'
-                     % (bridge, CONF.iptables_drop_action)))
+                    ('--out-interface {0!s} -j {1!s}'.format(bridge, CONF.iptables_drop_action)))
             return bridge
         else:
             for rule in get_gateway_rules(bridge):
@@ -1956,7 +1940,7 @@ class NeutronLinuxBridgeInterfaceDriver(LinuxNetInterfaceDriver):
                           check_exit_code=[0, 2, 254])
             LOG.debug("Done starting bridge %s", bridge)
 
-            full_ip = '%s/%s' % (network['dhcp_server'],
+            full_ip = '{0!s}/{1!s}'.format(network['dhcp_server'],
                                  network['cidr'].rpartition('/')[2])
             utils.execute('ip', 'address', 'add', full_ip, 'dev', bridge,
                           run_as_root=True, check_exit_code=[0, 2, 254])

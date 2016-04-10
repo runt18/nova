@@ -59,15 +59,15 @@ class ImagesControllerTestV21(test.NoDBTestCase):
         fakes.stub_out_compute_api_backup(self.stubs)
 
         self.controller = self.image_controller_class()
-        self.url_prefix = "http://localhost%s/images" % self.url_base
-        self.bookmark_prefix = "http://localhost%s/images" % self.bookmark_base
+        self.url_prefix = "http://localhost{0!s}/images".format(self.url_base)
+        self.bookmark_prefix = "http://localhost{0!s}/images".format(self.bookmark_base)
         self.uuid = 'fa95aaf5-ab3b-4cd8-88c0-2be7dd051aaf'
         self.server_uuid = "aa640691-d1a7-4a67-9d3c-d35ee6b3cc74"
         self.server_href = (
-            "http://localhost%s/servers/%s" % (self.url_base,
+            "http://localhost{0!s}/servers/{1!s}".format(self.url_base,
                                                self.server_uuid))
         self.server_bookmark = (
-             "http://localhost%s/servers/%s" % (self.bookmark_base,
+             "http://localhost{0!s}/servers/{1!s}".format(self.bookmark_base,
                                                 self.server_uuid))
         self.alternate = "%s/images/%s"
 
@@ -83,12 +83,12 @@ class ImagesControllerTestV21(test.NoDBTestCase):
                       'minRam': 128,
                       "links": [{
                                     "rel": "self",
-                                    "href": "%s/123" % self.url_prefix
+                                    "href": "{0!s}/123".format(self.url_prefix)
                                 },
                                 {
                                     "rel": "bookmark",
                                     "href":
-                                        "%s/123" % self.bookmark_prefix
+                                        "{0!s}/123".format(self.bookmark_prefix)
                                 },
                                 {
                                     "rel": "alternate",
@@ -126,12 +126,12 @@ class ImagesControllerTestV21(test.NoDBTestCase):
                       },
                       "links": [{
                                     "rel": "self",
-                                    "href": "%s/124" % self.url_prefix
+                                    "href": "{0!s}/124".format(self.url_prefix)
                                 },
                                 {
                                     "rel": "bookmark",
                                     "href":
-                                        "%s/124" % self.bookmark_prefix
+                                        "{0!s}/124".format(self.bookmark_prefix)
                                 },
                                 {
                                     "rel": "alternate",
@@ -161,16 +161,16 @@ class ImagesControllerTestV21(test.NoDBTestCase):
 
         expected_image = self.expected_image_124
         expected_image["image"]["links"][0]["href"] = (
-            "https://zoo.com:42%s/images/124" % self.url_base)
+            "https://zoo.com:42{0!s}/images/124".format(self.url_base))
         expected_image["image"]["links"][1]["href"] = (
-            "https://zoo.com:42%s/images/124" % self.bookmark_base)
+            "https://zoo.com:42{0!s}/images/124".format(self.bookmark_base))
         expected_image["image"]["links"][2]["href"] = (
             "http://circus.com:34/images/124")
         expected_image["image"]["server"]["links"][0]["href"] = (
-            "https://zoo.com:42%s/servers/%s" % (self.url_base,
+            "https://zoo.com:42{0!s}/servers/{1!s}".format(self.url_base,
                                                  self.server_uuid))
         expected_image["image"]["server"]["links"][1]["href"] = (
-            "https://zoo.com:42%s/servers/%s" % (self.bookmark_base,
+            "https://zoo.com:42{0!s}/servers/{1!s}".format(self.bookmark_base,
                                                  self.server_uuid))
 
         self.assertThat(actual_image, matchers.DictMatches(expected_image))
@@ -194,50 +194,50 @@ class ImagesControllerTestV21(test.NoDBTestCase):
         image_125['id'] = '125'
         image_125['name'] = 'saving snapshot'
         image_125['progress'] = 50
-        image_125["links"][0]["href"] = "%s/125" % self.url_prefix
-        image_125["links"][1]["href"] = "%s/125" % self.bookmark_prefix
+        image_125["links"][0]["href"] = "{0!s}/125".format(self.url_prefix)
+        image_125["links"][1]["href"] = "{0!s}/125".format(self.bookmark_prefix)
         image_125["links"][2]["href"] = (
-            "%s/images/125" % glance.generate_glance_url())
+            "{0!s}/images/125".format(glance.generate_glance_url()))
 
         image_126 = copy.deepcopy(self.expected_image_124["image"])
         image_126['id'] = '126'
         image_126['name'] = 'active snapshot'
         image_126['status'] = 'ACTIVE'
         image_126['progress'] = 100
-        image_126["links"][0]["href"] = "%s/126" % self.url_prefix
-        image_126["links"][1]["href"] = "%s/126" % self.bookmark_prefix
+        image_126["links"][0]["href"] = "{0!s}/126".format(self.url_prefix)
+        image_126["links"][1]["href"] = "{0!s}/126".format(self.bookmark_prefix)
         image_126["links"][2]["href"] = (
-            "%s/images/126" % glance.generate_glance_url())
+            "{0!s}/images/126".format(glance.generate_glance_url()))
 
         image_127 = copy.deepcopy(self.expected_image_124["image"])
         image_127['id'] = '127'
         image_127['name'] = 'killed snapshot'
         image_127['status'] = 'ERROR'
         image_127['progress'] = 0
-        image_127["links"][0]["href"] = "%s/127" % self.url_prefix
-        image_127["links"][1]["href"] = "%s/127" % self.bookmark_prefix
+        image_127["links"][0]["href"] = "{0!s}/127".format(self.url_prefix)
+        image_127["links"][1]["href"] = "{0!s}/127".format(self.bookmark_prefix)
         image_127["links"][2]["href"] = (
-            "%s/images/127" % glance.generate_glance_url())
+            "{0!s}/images/127".format(glance.generate_glance_url()))
 
         image_128 = copy.deepcopy(self.expected_image_124["image"])
         image_128['id'] = '128'
         image_128['name'] = 'deleted snapshot'
         image_128['status'] = 'DELETED'
         image_128['progress'] = 0
-        image_128["links"][0]["href"] = "%s/128" % self.url_prefix
-        image_128["links"][1]["href"] = "%s/128" % self.bookmark_prefix
+        image_128["links"][0]["href"] = "{0!s}/128".format(self.url_prefix)
+        image_128["links"][1]["href"] = "{0!s}/128".format(self.bookmark_prefix)
         image_128["links"][2]["href"] = (
-            "%s/images/128" % glance.generate_glance_url())
+            "{0!s}/images/128".format(glance.generate_glance_url()))
 
         image_129 = copy.deepcopy(self.expected_image_124["image"])
         image_129['id'] = '129'
         image_129['name'] = 'pending_delete snapshot'
         image_129['status'] = 'DELETED'
         image_129['progress'] = 0
-        image_129["links"][0]["href"] = "%s/129" % self.url_prefix
-        image_129["links"][1]["href"] = "%s/129" % self.bookmark_prefix
+        image_129["links"][0]["href"] = "{0!s}/129".format(self.url_prefix)
+        image_129["links"][1]["href"] = "{0!s}/129".format(self.bookmark_prefix)
         image_129["links"][2]["href"] = (
-            "%s/images/129" % glance.generate_glance_url())
+            "{0!s}/images/129".format(glance.generate_glance_url()))
 
         image_130 = copy.deepcopy(self.expected_image_123["image"])
         image_130['id'] = '130'
@@ -245,10 +245,10 @@ class ImagesControllerTestV21(test.NoDBTestCase):
         image_130['metadata'] = {}
         image_130['minDisk'] = 0
         image_130['minRam'] = 0
-        image_130["links"][0]["href"] = "%s/130" % self.url_prefix
-        image_130["links"][1]["href"] = "%s/130" % self.bookmark_prefix
+        image_130["links"][0]["href"] = "{0!s}/130".format(self.url_prefix)
+        image_130["links"][1]["href"] = "{0!s}/130".format(self.bookmark_prefix)
         image_130["links"][2]["href"] = (
-            "%s/images/130" % glance.generate_glance_url())
+            "{0!s}/images/130".format(glance.generate_glance_url()))
 
         image_131 = copy.deepcopy(self.expected_image_123["image"])
         image_131['id'] = '131'
@@ -256,10 +256,10 @@ class ImagesControllerTestV21(test.NoDBTestCase):
         image_131['metadata'] = {}
         image_131['minDisk'] = 0
         image_131['minRam'] = 0
-        image_131["links"][0]["href"] = "%s/131" % self.url_prefix
-        image_131["links"][1]["href"] = "%s/131" % self.bookmark_prefix
+        image_131["links"][0]["href"] = "{0!s}/131".format(self.url_prefix)
+        image_131["links"][1]["href"] = "{0!s}/131".format(self.bookmark_prefix)
         image_131["links"][2]["href"] = (
-            "%s/images/131" % glance.generate_glance_url())
+            "{0!s}/images/131".format(glance.generate_glance_url()))
 
         expected = [self.expected_image_123["image"],
                     self.expected_image_124["image"],
@@ -353,7 +353,7 @@ class ImagesControllerTestV21(test.NoDBTestCase):
         view = images_view.ViewBuilder()
         request = self.http_request.blank(self.url_base + 'images/1')
         generated_url = view._get_alternate_link(request, 1)
-        actual_url = "%s/images/1" % glance.generate_glance_url()
+        actual_url = "{0!s}/images/1".format(glance.generate_glance_url())
         self.assertEqual(generated_url, actual_url)
 
     def _check_response(self, controller_method, response, expected_code):

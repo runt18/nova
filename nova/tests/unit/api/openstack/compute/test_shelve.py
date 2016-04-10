@@ -30,7 +30,7 @@ from nova.tests.unit import fake_instance
 def fake_instance_get_by_uuid(context, instance_id,
                               columns_to_join=None, use_slave=False):
     return fake_instance.fake_db_instance(
-        **{'name': 'fake', 'project_id': '%s_unequal' % context.project_id})
+        **{'name': 'fake', 'project_id': '{0!s}_unequal'.format(context.project_id)})
 
 
 class ShelvePolicyTestV21(test.NoDBTestCase):
@@ -44,7 +44,7 @@ class ShelvePolicyTestV21(test.NoDBTestCase):
         self.req = fakes.HTTPRequest.blank('')
 
     def test_shelve_restricted_by_role(self):
-        rules = {'compute_extension:%sshelve' % self.prefix: 'role:admin'}
+        rules = {'compute_extension:{0!s}shelve'.format(self.prefix): 'role:admin'}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
 
         self.assertRaises(exception.Forbidden, self.controller._shelve,
@@ -59,7 +59,7 @@ class ShelvePolicyTestV21(test.NoDBTestCase):
                           self.req, str(uuid.uuid4()), {})
 
     def test_unshelve_restricted_by_role(self):
-        rules = {'compute_extension:%sunshelve' % self.prefix: 'role:admin'}
+        rules = {'compute_extension:{0!s}unshelve'.format(self.prefix): 'role:admin'}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
 
         self.assertRaises(exception.Forbidden, self.controller._unshelve,
@@ -74,7 +74,7 @@ class ShelvePolicyTestV21(test.NoDBTestCase):
                           self.req, str(uuid.uuid4()), {})
 
     def test_shelve_offload_restricted_by_role(self):
-        rules = {'compute_extension:%s%s' % (self.prefix, self.offload):
+        rules = {'compute_extension:{0!s}{1!s}'.format(self.prefix, self.offload):
                      'role:admin'}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
 
@@ -100,7 +100,7 @@ class ShelvePolicyTestV2(ShelvePolicyTestV21):
     # These 3 cases are covered in ShelvePolicyEnforcementV21
     def test_shelve_allowed(self):
         rules = {'compute:get': '',
-                 'compute_extension:%sshelve' % self.prefix: ''}
+                 'compute_extension:{0!s}shelve'.format(self.prefix): ''}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
         self.stub_out('nova.db.instance_get_by_uuid',
                       fake_instance_get_by_uuid)
@@ -109,7 +109,7 @@ class ShelvePolicyTestV2(ShelvePolicyTestV21):
 
     def test_unshelve_allowed(self):
         rules = {'compute:get': '',
-                 'compute_extension:%sunshelve' % self.prefix: ''}
+                 'compute_extension:{0!s}unshelve'.format(self.prefix): ''}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
 
         self.stub_out('nova.db.instance_get_by_uuid',
@@ -119,7 +119,7 @@ class ShelvePolicyTestV2(ShelvePolicyTestV21):
 
     def test_shelve_offload_allowed(self):
         rules = {'compute:get': '',
-                 'compute_extension:%s%s' % (self.prefix, self.offload): ''}
+                 'compute_extension:{0!s}{1!s}'.format(self.prefix, self.offload): ''}
         policy.set_rules(oslo_policy.Rules.from_dict(rules))
 
         self.stub_out('nova.db.instance_get_by_uuid',
@@ -145,7 +145,7 @@ class ShelvePolicyEnforcementV21(test.NoDBTestCase):
             self.controller._shelve, self.req, fakes.FAKE_UUID,
             body={'shelve': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_shelve_offload_policy_failed(self):
@@ -156,7 +156,7 @@ class ShelvePolicyEnforcementV21(test.NoDBTestCase):
             self.controller._shelve_offload, self.req, fakes.FAKE_UUID,
             body={'shelve_offload': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_unshelve_policy_failed(self):
@@ -167,5 +167,5 @@ class ShelvePolicyEnforcementV21(test.NoDBTestCase):
             self.controller._unshelve, self.req, fakes.FAKE_UUID,
             body={'unshelve': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

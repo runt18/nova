@@ -62,7 +62,7 @@ class DictMatches(object):
         self.tolerance = tolerance
 
     def __str__(self):
-        return 'DictMatches(%s)' % (pprint.pformat(self.d1))
+        return 'DictMatches({0!s})'.format((pprint.pformat(self.d1)))
 
     # Useful assertions
     def match(self, d2):
@@ -132,7 +132,7 @@ class DictListMatches(object):
         self.tolerance = tolerance
 
     def __str__(self):
-        return 'DictListMatches(%s)' % (pprint.pformat(self.l1))
+        return 'DictListMatches({0!s})'.format((pprint.pformat(self.l1)))
 
     # Useful assertions
     def match(self, l2):
@@ -167,8 +167,7 @@ class SubDictMismatch(object):
         if self.keys:
             return "Keys between dictionaries did not match"
         else:
-            return("Dictionaries do not match at %s. d1: %s d2: %s"
-                   % (self.key,
+            return("Dictionaries do not match at {0!s}. d1: {1!s} d2: {2!s}".format(self.key,
                       self.super_value,
                       self.sub_value))
 
@@ -182,7 +181,7 @@ class IsSubDictOf(object):
         self.super_dict = super_dict
 
     def __str__(self):
-        return 'IsSubDictOf(%s)' % (self.super_dict)
+        return 'IsSubDictOf({0!s})'.format((self.super_dict))
 
     def match(self, sub_dict):
         """Assert a sub_dict is subset of super_dict."""
@@ -226,7 +225,7 @@ class XMLMismatch(object):
         self.actual = state.actual
 
     def describe(self):
-        return "%(path)s: XML does not match" % {'path': self.path}
+        return "{path!s}: XML does not match".format(**{'path': self.path})
 
     def get_details(self):
         return {
@@ -385,7 +384,7 @@ class XMLMatchState(object):
         """
 
         if idx is not None:
-            self.path.append("%s[%d]" % (tag, idx))
+            self.path.append("{0!s}[{1:d}]".format(tag, idx))
         else:
             self.path.append(tag)
         return self
@@ -405,7 +404,7 @@ class XMLMatches(object):
         self.skip_values = set(skip_values)
 
     def __str__(self):
-        return 'XMLMatches(%r)' % self.expected_xml
+        return 'XMLMatches({0!r})'.format(self.expected_xml)
 
     def match(self, actual_xml):
         actual = etree.parse(six.StringIO(actual_xml))
@@ -539,7 +538,7 @@ class EncodedByUTF8(object):
                     obj.decode("utf-8")
                 except UnicodeDecodeError:
                     return testtools.matchers.Mismatch(
-                        "%s is not encoded in UTF-8." % obj)
+                        "{0!s} is not encoded in UTF-8.".format(obj))
         else:
             reason = ("Type of '%(obj)s' is '%(obj_type)s', "
                       "should be '%(correct_type)s'."

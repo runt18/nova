@@ -110,7 +110,7 @@ def get_info(context, image_href):
 
 
 def fetch_to_raw(context, image_href, path, user_id, project_id, max_size=0):
-    path_tmp = "%s.part" % path
+    path_tmp = "{0!s}.part".format(path)
     fetch(context, image_href, path_tmp, user_id, project_id,
           max_size=max_size)
 
@@ -148,7 +148,7 @@ def fetch_to_raw(context, image_href, path, user_id, project_id, max_size=0):
                 flavor_size=max_size, image_size=disk_size)
 
         if fmt != "raw" and CONF.force_raw_images:
-            staged = "%s.converted" % path
+            staged = "{0!s}.converted".format(path)
             LOG.debug("%s was %s, converting to raw", image_href, fmt)
             with fileutils.remove_path_on_error(staged):
                 try:

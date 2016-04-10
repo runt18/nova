@@ -91,7 +91,7 @@ class LimitsControllerTestV21(BaseLimitTestSuite):
         """Helper to set routing arguments."""
         request = webob.Request.blank("/")
         if tenant_id:
-            request = webob.Request.blank("/?tenant_id=%s" % tenant_id)
+            request = webob.Request.blank("/?tenant_id={0!s}".format(tenant_id))
 
         request.accept = accept_header
         request.environ["wsgiorg.routing_args"] = (None, {
@@ -360,8 +360,8 @@ class LimitMiddlewareTest(BaseLimitTestSuite):
         super(LimitMiddlewareTest, self).setUp()
         _limits = '(GET, *, .*, 1, MINUTE)'
         self.app = limits.RateLimitingMiddleware(self._empty_app, _limits,
-                                                 "%s.MockLimiter" %
-                                                 self.__class__.__module__)
+                                                 "{0!s}.MockLimiter".format(
+                                                 self.__class__.__module__))
 
     def test_limit_class(self):
         # Test that middleware selected correct limiter class.
@@ -673,7 +673,7 @@ class WsgiLimiterTest(BaseLimitTestSuite):
         delay and make sure that the WSGI app returns the correct response.
         """
         if username:
-            request = webob.Request.blank("/%s" % username)
+            request = webob.Request.blank("/{0!s}".format(username))
         else:
             request = webob.Request.blank("/")
 
@@ -758,7 +758,7 @@ class FakeHttplibConnection(object):
         req.body = encodeutils.safe_encode(body)
 
         resp = str(req.get_response(self.app))
-        resp = "HTTP/1.0 %s" % resp
+        resp = "HTTP/1.0 {0!s}".format(resp)
         sock = FakeHttplibSocket(resp)
         self.http_response = httplib.HTTPResponse(sock)
         self.http_response.begin()
@@ -915,5 +915,5 @@ class LimitsPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, req=req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

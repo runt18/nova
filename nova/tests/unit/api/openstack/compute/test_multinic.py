@@ -189,7 +189,7 @@ class MultinicPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._add_fixed_ip, self.req, fakes.FAKE_UUID,
             body={'addFixedIp': {'networkId': fakes.FAKE_UUID}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_remove_fixed_ip_policy_failed(self):
@@ -200,5 +200,5 @@ class MultinicPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._remove_fixed_ip, self.req, fakes.FAKE_UUID,
             body={'removeFixedIp': {'address': "10.0.0.1"}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

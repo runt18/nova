@@ -66,7 +66,7 @@ class FlavorAccessController(wsgi.Controller):
 class FlavorActionController(wsgi.Controller):
     """The flavor access API controller for the OpenStack API."""
     def _extend_flavor(self, flavor_rval, flavor_ref):
-        key = "%s:is_public" % (FlavorAccess.alias)
+        key = "{0!s}:is_public".format((FlavorAccess.alias))
         flavor_rval[key] = flavor_ref['is_public']
 
     @wsgi.extends

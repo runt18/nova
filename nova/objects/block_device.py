@@ -268,7 +268,7 @@ class BlockDeviceMapping(base.NovaPersistentObject, base.NovaObject,
         if attrname not in BLOCK_DEVICE_OPTIONAL_ATTRS:
             raise exception.ObjectActionError(
                 action='obj_load_attr',
-                reason='attribute %s not lazy-loadable' % attrname)
+                reason='attribute {0!s} not lazy-loadable'.format(attrname))
         if not self._context:
             raise exception.OrphanedObjectError(method='obj_load_attr',
                                                 objtype=self.obj_name())

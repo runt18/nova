@@ -44,7 +44,7 @@ def convert_password(context, password):
     password = password or ''
     meta = {}
     for i in range(CHUNKS):
-        meta['password_%d' % i] = password[:CHUNK_LENGTH]
+        meta['password_{0:d}'.format(i)] = password[:CHUNK_LENGTH]
         password = password[CHUNK_LENGTH:]
     return meta
 

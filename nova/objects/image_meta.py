@@ -188,7 +188,7 @@ class ImageMetaProps(base.NovaObject):
             if bus in ('lxc', 'uml'):
                 raise exception.ObjectActionError(
                     action='obj_make_compatible',
-                    reason='hw_disk_bus=%s not supported in version %s' % (
+                    reason='hw_disk_bus={0!s} not supported in version {1!s}'.format(
                         bus, target_version))
 
     # Maximum number of NUMA nodes permitted for the guest topology
@@ -466,7 +466,7 @@ class ImageMetaProps(base.NovaObject):
         hw_numa_mem = []
         hw_numa_mem_set = False
         for cellid in range(ImageMetaProps.NUMA_NODES_MAX):
-            memprop = "hw_numa_mem.%d" % cellid
+            memprop = "hw_numa_mem.{0:d}".format(cellid)
             if memprop not in image_props:
                 break
             hw_numa_mem.append(int(image_props[memprop]))
@@ -480,7 +480,7 @@ class ImageMetaProps(base.NovaObject):
         hw_numa_cpus = []
         hw_numa_cpus_set = False
         for cellid in range(ImageMetaProps.NUMA_NODES_MAX):
-            cpuprop = "hw_numa_cpus.%d" % cellid
+            cpuprop = "hw_numa_cpus.{0:d}".format(cellid)
             if cpuprop not in image_props:
                 break
             hw_numa_cpus.append(

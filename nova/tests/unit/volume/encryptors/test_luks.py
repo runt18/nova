@@ -38,7 +38,7 @@ class LuksEncryptorTestCase(test_cryptsetup.CryptsetupEncryptorTestCase):
     @mock.patch('nova.volume.encryptors.luks.LOG')
     @mock.patch('nova.utils.execute')
     def test_is_luks_with_error(self, mock_execute, mock_log):
-        error_msg = "Device %s is not a valid LUKS device." % self.dev_path
+        error_msg = "Device {0!s} is not a valid LUKS device.".format(self.dev_path)
         mock_execute.side_effect = \
                 processutils.ProcessExecutionError(exit_code=1,
                                                    stderr=error_msg)
@@ -89,7 +89,7 @@ class LuksEncryptorTestCase(test_cryptsetup.CryptsetupEncryptorTestCase):
                       self.dev_name, process_input='0' * 32,
                       run_as_root=True, check_exit_code=True),
             mock.call('ln', '--symbolic', '--force',
-                      '/dev/mapper/%s' % self.dev_name, self.symlink_path,
+                      '/dev/mapper/{0!s}'.format(self.dev_name), self.symlink_path,
                       run_as_root=True, check_exit_code=True),
         ])
         self.assertEqual(2, mock_execute.call_count)
@@ -123,7 +123,7 @@ class LuksEncryptorTestCase(test_cryptsetup.CryptsetupEncryptorTestCase):
                       self.dev_name, process_input='0' * 32,
                       run_as_root=True, check_exit_code=True),
             mock.call('ln', '--symbolic', '--force',
-                      '/dev/mapper/%s' % self.dev_name, self.symlink_path,
+                      '/dev/mapper/{0!s}'.format(self.dev_name), self.symlink_path,
                       run_as_root=True, check_exit_code=True),
         ], any_order=False)
         self.assertEqual(5, mock_execute.call_count)

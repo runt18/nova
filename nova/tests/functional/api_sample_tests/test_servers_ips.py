@@ -28,11 +28,11 @@ class ServersIpsJsonTest(test_servers.ServersSampleBase):
     def test_get(self):
         # Test getting a server's IP information.
         uuid = self._post_server()
-        response = self._do_get('servers/%s/ips' % uuid)
+        response = self._do_get('servers/{0!s}/ips'.format(uuid))
         self._verify_response('server-ips-resp', {}, response, 200)
 
     def test_get_by_network(self):
         # Test getting a server's IP information by network id.
         uuid = self._post_server()
-        response = self._do_get('servers/%s/ips/private' % uuid)
+        response = self._do_get('servers/{0!s}/ips/private'.format(uuid))
         self._verify_response('server-ips-network-resp', {}, response, 200)

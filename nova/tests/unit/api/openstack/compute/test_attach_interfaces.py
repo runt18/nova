@@ -492,7 +492,7 @@ class AttachInterfacesPolicyEnforcementv21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
     def test_show_attach_interfaces_policy_failed(self):
@@ -500,7 +500,7 @@ class AttachInterfacesPolicyEnforcementv21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, fakes.FAKE_UUID, FAKE_PORT_ID1)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
     def test_create_attach_interfaces_policy_failed(self):
@@ -508,7 +508,7 @@ class AttachInterfacesPolicyEnforcementv21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.create, self.req, fakes.FAKE_UUID, body={})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
     def test_delete_attach_interfaces_policy_failed(self):
@@ -516,5 +516,5 @@ class AttachInterfacesPolicyEnforcementv21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.delete, self.req, fakes.FAKE_UUID, FAKE_PORT_ID1)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())

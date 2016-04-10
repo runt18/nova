@@ -30,7 +30,7 @@ class ExtendedIpsController(wsgi.Controller):
         self.compute_api = compute.API()
 
     def _extend_server(self, context, server, instance):
-        key = "%s:type" % Extended_ips.alias
+        key = "{0!s}:type".format(Extended_ips.alias)
         networks = common.get_networks_for_instance(context, instance)
         for label, network in networks.items():
             # NOTE(vish): ips are hidden in some states via the

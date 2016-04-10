@@ -96,12 +96,12 @@ class AgentsJsonTest(api_sample_base.ApiSampleTestBaseV21):
         subs = {'version': '7.0',
                 'url': 'http://example.com/path/to/resource',
                 'md5hash': 'add6bb58e139be103324d04d82d8f545'}
-        response = self._do_put('os-agents/%s' % agent_id,
+        response = self._do_put('os-agents/{0!s}'.format(agent_id),
                                 'agent-update-put-req', subs)
         self._verify_response('agent-update-put-resp', subs, response, 200)
 
     def test_agent_delete(self):
         # Deletes an existing agent build.
         agent_id = 1
-        response = self._do_delete('os-agents/%s' % agent_id)
+        response = self._do_delete('os-agents/{0!s}'.format(agent_id))
         self.assertEqual(200, response.status_code)

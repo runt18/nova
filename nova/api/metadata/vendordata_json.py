@@ -37,7 +37,7 @@ class JsonFileVendorData(base.VendorDataDriver):
         super(JsonFileVendorData, self).__init__(*args, **kwargs)
         data = {}
         fpath = CONF.vendordata_jsonfile_path
-        logprefix = "%s[%s]:" % (file_opt.name, fpath)
+        logprefix = "{0!s}[{1!s}]:".format(file_opt.name, fpath)
         if fpath:
             try:
                 with open(fpath, "r") as fp:

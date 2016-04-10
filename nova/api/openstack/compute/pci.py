@@ -37,7 +37,7 @@ class PciServerController(wsgi.Controller):
         dev_id = []
         for dev in instance.pci_devices:
             dev_id.append({'id': dev.id})
-        server['%s:pci_devices' % Pci.alias] = dev_id
+        server['{0!s}:pci_devices'.format(Pci.alias)] = dev_id
 
     @wsgi.extends
     def show(self, req, resp_obj, id):
@@ -64,7 +64,7 @@ class PciHypervisorController(wsgi.Controller):
                          for pci_pool in compute_node.pci_device_pools]
         else:
             pci_pools = []
-        hypervisor['%s:pci_stats' % Pci.alias] = pci_pools
+        hypervisor['{0!s}:pci_stats'.format(Pci.alias)] = pci_pools
 
     @wsgi.extends
     def show(self, req, resp_obj, id):

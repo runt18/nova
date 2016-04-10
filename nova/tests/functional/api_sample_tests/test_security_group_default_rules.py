@@ -50,6 +50,6 @@ class SecurityGroupDefaultRulesSampleJsonTest(
     def test_security_group_default_rules_show(self):
         self.test_security_group_default_rules_create()
         rule_id = '1'
-        response = self._do_get('os-security-group-default-rules/%s' % rule_id)
+        response = self._do_get('os-security-group-default-rules/{0!s}'.format(rule_id))
         self._verify_response('security-group-default-rules-show-resp',
                               {}, response, 200)

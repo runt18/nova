@@ -43,7 +43,7 @@ class ConsolesSampleJsonTests(test_servers.ServersSampleBase):
 
     def test_get_vnc_console(self):
         uuid = self._post_server()
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'get-vnc-console-post-req',
                                 {'action': 'os-getVNCConsole'})
         subs = {"url":
@@ -52,7 +52,7 @@ class ConsolesSampleJsonTests(test_servers.ServersSampleBase):
 
     def test_get_spice_console(self):
         uuid = self._post_server()
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'get-spice-console-post-req',
                                 {'action': 'os-getSPICEConsole'})
         subs = {"url":
@@ -62,7 +62,7 @@ class ConsolesSampleJsonTests(test_servers.ServersSampleBase):
 
     def test_get_rdp_console(self):
         uuid = self._post_server()
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'get-rdp-console-post-req',
                                 {'action': 'os-getRDPConsole'})
         subs = {"url":
@@ -72,7 +72,7 @@ class ConsolesSampleJsonTests(test_servers.ServersSampleBase):
 
     def test_get_serial_console(self):
         uuid = self._post_server()
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'get-serial-console-post-req',
                                 {'action': 'os-getSerialConsole'})
         subs = {"url":
@@ -97,7 +97,7 @@ class ConsolesV26SampleJsonTests(test_servers.ServersSampleBase):
         uuid = self._post_server()
 
         body = {'protocol': 'vnc', 'type': 'novnc'}
-        response = self._do_post('servers/%s/remote-consoles' % uuid,
+        response = self._do_post('servers/{0!s}/remote-consoles'.format(uuid),
                                  'create-vnc-console-req', body)
         subs = {"url": self.http_regex}
         self._verify_response('create-vnc-console-resp', subs, response, 200)
@@ -117,7 +117,7 @@ class ConsolesV28SampleJsonTests(test_servers.ServersSampleBase):
         uuid = self._post_server()
 
         body = {'protocol': 'mks', 'type': 'webmks'}
-        response = self._do_post('servers/%s/remote-consoles' % uuid,
+        response = self._do_post('servers/{0!s}/remote-consoles'.format(uuid),
                                  'create-mks-console-req', body)
         subs = {"url": self.http_regex}
         self._verify_response('create-mks-console-resp', subs, response, 200)

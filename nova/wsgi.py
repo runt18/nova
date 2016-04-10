@@ -74,7 +74,7 @@ class Server(service.ServiceBase):
         self._protocol = protocol
         self.pool_size = pool_size or self.default_pool_size
         self._pool = eventlet.GreenPool(self.pool_size)
-        self._logger = logging.getLogger("nova.%s.wsgi.server" % self.name)
+        self._logger = logging.getLogger("nova.{0!s}.wsgi.server".format(self.name))
         self._use_ssl = use_ssl
         self._max_url_len = max_url_len
         self.client_socket_timeout = CONF.wsgi.client_socket_timeout or None
@@ -494,7 +494,7 @@ class Loader(object):
         try:
             LOG.debug("Loading app %(name)s from %(path)s",
                       {'name': name, 'path': self.config_path})
-            return deploy.loadapp("config:%s" % self.config_path, name=name)
+            return deploy.loadapp("config:{0!s}".format(self.config_path), name=name)
         except LookupError:
             LOG.exception(_LE("Couldn't lookup app: %s"), name)
             raise exception.PasteAppNotFound(name=name, path=self.config_path)

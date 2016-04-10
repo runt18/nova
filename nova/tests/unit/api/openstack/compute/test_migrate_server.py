@@ -342,7 +342,7 @@ class MigrateServerPolicyEnforcementV21(test.NoDBTestCase):
                                 fakes.FAKE_UUID,
                                 body={'migrate': {}})
         self.assertEqual(
-                      "Policy doesn't allow %s to be performed." % rule_name,
+                      "Policy doesn't allow {0!s} to be performed.".format(rule_name),
                       exc.format_message())
 
     def test_migrate_live_policy_failed(self):
@@ -357,5 +357,5 @@ class MigrateServerPolicyEnforcementV21(test.NoDBTestCase):
                                 fakes.FAKE_UUID,
                                 body=body_args)
         self.assertEqual(
-                      "Policy doesn't allow %s to be performed." % rule_name,
+                      "Policy doesn't allow {0!s} to be performed.".format(rule_name),
                       exc.format_message())

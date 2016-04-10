@@ -167,7 +167,7 @@ class GetMacByPciAddressTestCase(test.NoDBTestCase):
         mock_join.return_value = self.fake_file
         mac = utils.get_mac_by_pci_address(self.pci_address)
         mock_join.assert_called_once_with(
-            "/sys/bus/pci/devices/%s/net" % self.pci_address, self.if_name,
+            "/sys/bus/pci/devices/{0!s}/net".format(self.pci_address), self.if_name,
             "address")
         self.assertEqual("a0:36:9f:72:00:00", mac)
 
@@ -199,7 +199,7 @@ class GetMacByPciAddressTestCase(test.NoDBTestCase):
         mock_join.return_value = self.fake_file
         mac = utils.get_mac_by_pci_address(self.pci_address, pf_interface=True)
         mock_join.assert_called_once_with(
-            "/sys/bus/pci/devices/%s/physfn/net" % self.pci_address,
+            "/sys/bus/pci/devices/{0!s}/physfn/net".format(self.pci_address),
             self.if_name, "address")
         self.assertEqual("a0:36:9f:72:00:00", mac)
 

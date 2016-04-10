@@ -40,7 +40,7 @@ def fake_db_flavor(**updates):
         elif field.default != fields.UnspecifiedDefault:
             db_flavor[name] = field.default
         else:
-            raise Exception('fake_db_flavor needs help with %s' % name)
+            raise Exception('fake_db_flavor needs help with {0!s}'.format(name))
 
     if updates:
         db_flavor.update(updates)

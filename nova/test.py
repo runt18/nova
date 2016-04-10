@@ -150,8 +150,7 @@ def _patch_mock_to_raise_for_invalid_assert_calls():
                 'assert_any_calls']
 
             if name.startswith('assert') and name not in valid_asserts:
-                raise AttributeError('%s is not a valid mock assert method'
-                                     % name)
+                raise AttributeError('{0!s} is not a valid mock assert method'.format(name))
 
             return wrapped(_self, name)
         return wrapper
@@ -379,16 +378,15 @@ class TestCase(testtools.TestCase):
                 extranames.append(name)
 
         self.assertEqual([], extranames,
-                         "public APIs not listed in base class %s" %
-                         baseclass)
+                         "public APIs not listed in base class {0!s}".format(
+                         baseclass))
 
         for name in sorted(implmethods.keys()):
             baseargs = inspect.getargspec(basemethods[name])
             implargs = inspect.getargspec(implmethods[name])
 
             self.assertEqual(baseargs, implargs,
-                             "%s args don't match base class %s" %
-                             (name, baseclass))
+                             "{0!s} args don't match base class {1!s}".format(name, baseclass))
 
 
 class APICoverage(object):

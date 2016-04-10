@@ -254,7 +254,7 @@ def extract_flavor(instance, prefix=''):
         return None
 
     for key in system_metadata_flavor_props.keys():
-        type_key = '%sinstance_type_%s' % (prefix, key)
+        type_key = '{0!s}instance_type_{1!s}'.format(prefix, key)
         setattr(flavor, key, sys_meta[type_key])
 
     # NOTE(danms): We do NOT save all of extra_specs, but only the
@@ -262,11 +262,11 @@ def extract_flavor(instance, prefix=''):
     # should be replaced by a general split-out of flavor information from
     # system_metadata very soon.
     extra_specs = [(k, v) for k, v in sys_meta.items()
-                   if k.startswith('%sinstance_type_extra_' % prefix)]
+                   if k.startswith('{0!s}instance_type_extra_'.format(prefix))]
     if extra_specs:
         flavor.extra_specs = {}
         for key, value in extra_specs:
-            extra_key = key[len('%sinstance_type_extra_' % prefix):]
+            extra_key = key[len('{0!s}instance_type_extra_'.format(prefix)):]
             flavor.extra_specs[extra_key] = value
 
     return flavor
@@ -287,7 +287,7 @@ def save_flavor_info(metadata, instance_type, prefix=''):
     """
 
     for key in system_metadata_flavor_props.keys():
-        to_key = '%sinstance_type_%s' % (prefix, key)
+        to_key = '{0!s}instance_type_{1!s}'.format(prefix, key)
         metadata[to_key] = instance_type[key]
 
     # NOTE(danms): We do NOT save all of extra_specs here, but only the
@@ -298,7 +298,7 @@ def save_flavor_info(metadata, instance_type, prefix=''):
     for extra_prefix in system_metadata_flavor_extra_props:
         for key in extra_specs:
             if key.startswith(extra_prefix):
-                to_key = '%sinstance_type_extra_%s' % (prefix, key)
+                to_key = '{0!s}instance_type_extra_{1!s}'.format(prefix, key)
                 metadata[to_key] = extra_specs[key]
 
     return metadata
@@ -313,7 +313,7 @@ def delete_flavor_info(metadata, *prefixes):
 
     for key in system_metadata_flavor_props.keys():
         for prefix in prefixes:
-            to_key = '%sinstance_type_%s' % (prefix, key)
+            to_key = '{0!s}instance_type_{1!s}'.format(prefix, key)
             del metadata[to_key]
 
     # NOTE(danms): We do NOT save all of extra_specs, but only the
@@ -322,7 +322,7 @@ def delete_flavor_info(metadata, *prefixes):
     # system_metadata very soon.
     for key in list(metadata.keys()):
         for prefix in prefixes:
-            if key.startswith('%sinstance_type_extra_' % prefix):
+            if key.startswith('{0!s}instance_type_extra_'.format(prefix)):
                 del metadata[key]
 
     return metadata

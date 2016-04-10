@@ -847,7 +847,7 @@ def compute_node_get_all(context):
 def compute_node_search_by_hypervisor(context, hypervisor_match):
     field = models.ComputeNode.hypervisor_hostname
     return model_query(context, models.ComputeNode).\
-            filter(field.like('%%%s%%' % hypervisor_match)).\
+            filter(field.like('%{0!s}%'.format(hypervisor_match))).\
             all()
 
 
@@ -2756,7 +2756,7 @@ def _instance_update(context, instance_uuid, values, expected, original=None):
     # Extract 'expected_' values from values dict, as these aren't actually
     # updates
     for field in ('task_state', 'vm_state'):
-        expected_field = 'expected_%s' % field
+        expected_field = 'expected_{0!s}'.format(field)
         if expected_field in values:
             value = values.pop(expected_field, None)
             # Coerce all single values to singleton lists

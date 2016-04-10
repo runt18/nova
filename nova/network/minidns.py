@@ -62,7 +62,7 @@ class MiniDNS(dns_driver.DNSDriver):
 
     def qualify(self, name, domain):
         if domain:
-            qualified = "%s.%s" % (name, domain)
+            qualified = "{0!s}.{1!s}".format(name, domain)
         else:
             qualified = name
 
@@ -80,8 +80,7 @@ class MiniDNS(dns_driver.DNSDriver):
             raise exception.FloatingIpDNSExists(name=name, domain=domain)
 
         with open(self.filename, 'a+') as outfile:
-            outfile.write("%s   %s   %s\n" %
-                (address, self.qualify(name, domain), type))
+            outfile.write("{0!s}   {1!s}   {2!s}\n".format(address, self.qualify(name, domain), type))
 
     def parse_line(self, line):
         vals = line.split()
@@ -130,8 +129,7 @@ class MiniDNS(dns_driver.DNSDriver):
                 entry = self.parse_line(line)
                 if (entry and
                         entry['name'] == self.qualify(name, domain)):
-                    outfile.write("%s   %s   %s\n" %
-                        (address, self.qualify(name, domain), entry['type']))
+                    outfile.write("{0!s}   {1!s}   {2!s}\n".format(address, self.qualify(name, domain), entry['type']))
                 else:
                     outfile.write(line)
         outfile.close()
@@ -177,8 +175,7 @@ class MiniDNS(dns_driver.DNSDriver):
             raise exception.FloatingIpDNSExists(name=fqdomain, domain='')
 
         with open(self.filename, 'a+') as outfile:
-            outfile.write("%s   %s   %s\n" %
-                ('domain', fqdomain, 'domain'))
+            outfile.write("{0!s}   {1!s}   {2!s}\n".format('domain', fqdomain, 'domain'))
 
     def delete_domain(self, fqdomain):
         deleted = False

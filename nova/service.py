@@ -276,8 +276,8 @@ class Service(service.Service):
         if not topic:
             topic = binary.rpartition('nova-')[2]
         if not manager:
-            manager_cls = ('%s_manager' %
-                           binary.rpartition('nova-')[2])
+            manager_cls = ('{0!s}_manager'.format(
+                           binary.rpartition('nova-')[2]))
             manager = CONF.get(manager_cls, None)
         if report_interval is None:
             report_interval = CONF.report_interval
@@ -359,7 +359,7 @@ class WSGIService(service.Service):
         self.name = name
         # NOTE(danms): Name can be metadata, os_compute, or ec2, per
         # nova.service's enabled_apis
-        self.binary = 'nova-%s' % name
+        self.binary = 'nova-{0!s}'.format(name)
         self.topic = None
         self.manager = self._get_manager()
         self.loader = loader or wsgi.Loader()
@@ -369,12 +369,12 @@ class WSGIService(service.Service):
             wname = 'osapi_compute'
         else:
             wname = name
-        self.host = getattr(CONF, '%s_listen' % name, "0.0.0.0")
-        self.port = getattr(CONF, '%s_listen_port' % name, 0)
-        self.workers = (getattr(CONF, '%s_workers' % wname, None) or
+        self.host = getattr(CONF, '{0!s}_listen'.format(name), "0.0.0.0")
+        self.port = getattr(CONF, '{0!s}_listen_port'.format(name), 0)
+        self.workers = (getattr(CONF, '{0!s}_workers'.format(wname), None) or
                         processutils.get_worker_count())
         if self.workers and self.workers < 1:
-            worker_name = '%s_workers' % name
+            worker_name = '{0!s}_workers'.format(name)
             msg = (_("%(worker_name)s value of %(workers)s is invalid, "
                      "must be greater than 0") %
                    {'worker_name': worker_name,
@@ -409,7 +409,7 @@ class WSGIService(service.Service):
         :returns: a Manager instance, or None.
 
         """
-        fl = '%s_manager' % self.name
+        fl = '{0!s}_manager'.format(self.name)
         if fl not in CONF:
             return None
 

@@ -169,19 +169,19 @@ class InstanceMetadata(object):
         cfg = netutils.get_injected_network_template(network_info)
 
         if cfg:
-            key = "%04i" % len(self.content)
+            key = "{0:04d}".format(len(self.content))
             self.content[key] = cfg
             self.network_config = {"name": "network_config",
-                'content_path': "/%s/%s" % (CONTENT_DIR, key)}
+                'content_path': "/{0!s}/{1!s}".format(CONTENT_DIR, key)}
 
         # 'content' is passed in from the configdrive code in
         # nova/virt/libvirt/driver.py.  That's how we get the injected files
         # (personalities) in. AFAIK they're not stored in the db at all,
         # so are not available later (web service metadata time).
         for (path, contents) in content:
-            key = "%04i" % len(self.content)
+            key = "{0:04d}".format(len(self.content))
             self.files.append({'path': path,
-                'content_path': "/%s/%s" % (CONTENT_DIR, key)})
+                'content_path': "/{0!s}/{1!s}".format(CONTENT_DIR, key)})
             self.content[key] = contents
 
         if vd_driver is None:
@@ -349,9 +349,9 @@ class InstanceMetadata(object):
 
     def _handle_content(self, path_tokens):
         if len(path_tokens) == 1:
-            raise KeyError("no listing for %s" % "/".join(path_tokens))
+            raise KeyError("no listing for {0!s}".format("/".join(path_tokens)))
         if len(path_tokens) != 2:
-            raise KeyError("Too many tokens for /%s" % CONTENT_DIR)
+            raise KeyError("Too many tokens for /{0!s}".format(CONTENT_DIR))
         return self.content[path_tokens[1]]
 
     def _handle_version(self, version, path):
@@ -396,7 +396,7 @@ class InstanceMetadata(object):
         return self._check_version(required, requested, OPENSTACK_VERSIONS)
 
     def _get_hostname(self):
-        return "%s%s%s" % (self.instance.hostname,
+        return "{0!s}{1!s}{2!s}".format(self.instance.hostname,
                            '.' if CONF.dhcp_domain else '',
                            CONF.dhcp_domain)
 
@@ -469,23 +469,23 @@ class InstanceMetadata(object):
 
         ALL_OPENSTACK_VERSIONS = OPENSTACK_VERSIONS + ["latest"]
         for version in ALL_OPENSTACK_VERSIONS:
-            path = 'openstack/%s/%s' % (version, MD_JSON_NAME)
+            path = 'openstack/{0!s}/{1!s}'.format(version, MD_JSON_NAME)
             yield (path, self.lookup(path))
 
-            path = 'openstack/%s/%s' % (version, UD_NAME)
+            path = 'openstack/{0!s}/{1!s}'.format(version, UD_NAME)
             if self.userdata_raw is not None:
                 yield (path, self.lookup(path))
 
             if self._check_version(HAVANA, version, ALL_OPENSTACK_VERSIONS):
-                path = 'openstack/%s/%s' % (version, VD_JSON_NAME)
+                path = 'openstack/{0!s}/{1!s}'.format(version, VD_JSON_NAME)
                 yield (path, self.lookup(path))
 
             if self._check_version(LIBERTY, version, ALL_OPENSTACK_VERSIONS):
-                path = 'openstack/%s/%s' % (version, NW_JSON_NAME)
+                path = 'openstack/{0!s}/{1!s}'.format(version, NW_JSON_NAME)
                 yield (path, self.lookup(path))
 
         for (cid, content) in six.iteritems(self.content):
-            yield ('%s/%s/%s' % ("openstack", CONTENT_DIR, cid), content)
+            yield ('{0!s}/{1!s}/{2!s}'.format("openstack", CONTENT_DIR, cid), content)
 
 
 class RouteConfiguration(object):

@@ -111,7 +111,7 @@ def set_vm_state_and_notify(context, instance_uuid, service, method, updates,
                     method=method,
                     reason=ex)
 
-    event_type = '%s.%s' % (service, method)
+    event_type = '{0!s}.{1!s}'.format(service, method)
     notifier.error(context, event_type, payload)
 
 

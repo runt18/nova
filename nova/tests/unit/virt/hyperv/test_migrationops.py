@@ -69,7 +69,7 @@ class MigrationOpsTestCase(test_base.HyperVBaseTestCase):
         get_revert_dir.assert_called_with(mock.sentinel.instance_name,
                                           remove_dir=True, create_dir=True)
         if host == mock.sentinel.dest_path:
-            fake_dest_path = '%s_tmp' % instance_path
+            fake_dest_path = '{0!s}_tmp'.format(instance_path)
             self._migrationops._pathutils.exists.assert_called_once_with(
                 fake_dest_path)
             self._migrationops._pathutils.rmtree.assert_called_once_with(
@@ -100,7 +100,7 @@ class MigrationOpsTestCase(test_base.HyperVBaseTestCase):
                        '_cleanup_failed_disk_migration')
     def test_migrate_disk_files_exception(self, mock_cleanup):
         instance_path = 'fake/instance/path'
-        fake_dest_path = '%s_tmp' % instance_path
+        fake_dest_path = '{0!s}_tmp'.format(instance_path)
         self._migrationops._pathutils.get_instance_dir.return_value = (
             instance_path)
         get_revert_dir = (

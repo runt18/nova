@@ -81,13 +81,13 @@ class ExtendedStatusTestV21(test.TestCase):
         return jsonutils.loads(body).get('servers')
 
     def assertServerStates(self, server, vm_state, power_state, task_state):
-        self.assertEqual(server.get('%svm_state' % self.prefix), vm_state)
-        self.assertEqual(int(server.get('%spower_state' % self.prefix)),
+        self.assertEqual(server.get('{0!s}vm_state'.format(self.prefix)), vm_state)
+        self.assertEqual(int(server.get('{0!s}power_state'.format(self.prefix))),
                          power_state)
-        self.assertEqual(server.get('%stask_state' % self.prefix), task_state)
+        self.assertEqual(server.get('{0!s}task_state'.format(self.prefix)), task_state)
 
     def test_show(self):
-        url = self.fake_url + '/servers/%s' % UUID3
+        url = self.fake_url + '/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)
@@ -103,9 +103,9 @@ class ExtendedStatusTestV21(test.TestCase):
         self.assertEqual(res.status_int, 200)
         for i, server in enumerate(self._get_servers(res.body)):
             self.assertServerStates(server,
-                                    vm_state='vm-%s' % (i + 1),
+                                    vm_state='vm-{0!s}'.format((i + 1)),
                                     power_state=(i + 1),
-                                    task_state='task-%s' % (i + 1))
+                                    task_state='task-{0!s}'.format((i + 1)))
 
     def test_no_instance_passthrough_404(self):
 

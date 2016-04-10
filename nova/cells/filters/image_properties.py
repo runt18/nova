@@ -63,5 +63,5 @@ class ImagePropertiesFilter(filters.BaseCellFilter):
 
     def _matches_version(self, version, version_requires):
         predicate = versionpredicate.VersionPredicate(
-                             'prop (%s)' % version_requires)
+                             'prop ({0!s})'.format(version_requires))
         return predicate.satisfied_by(version)

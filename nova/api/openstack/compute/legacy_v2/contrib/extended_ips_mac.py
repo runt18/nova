@@ -28,7 +28,7 @@ class ExtendedIpsMacController(wsgi.Controller):
         super(ExtendedIpsMacController, self).__init__(*args, **kwargs)
 
     def _extend_server(self, context, server, instance):
-        key = "%s:mac_addr" % Extended_ips_mac.alias
+        key = "{0!s}:mac_addr".format(Extended_ips_mac.alias)
         networks = common.get_networks_for_instance(context, instance)
         for label, network in networks.items():
             # NOTE(vish): ips are hidden in some states via the

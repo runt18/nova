@@ -444,10 +444,10 @@ class UsageInfoTestCase(test.TestCase):
                      'bandwidth', 'audit_period_beginning',
                      'audit_period_ending', 'image_meta'):
             self.assertIn(attr, payload,
-                          "Key %s not in payload" % attr)
+                          "Key {0!s} not in payload".format(attr))
         self.assertEqual(payload['image_meta'],
                 {'md_key1': 'val1', 'md_key2': 'val2'})
-        image_ref_url = "%s/images/1" % glance.generate_glance_url()
+        image_ref_url = "{0!s}/images/1".format(glance.generate_glance_url())
         self.assertEqual(payload['image_ref_url'], image_ref_url)
         self.compute.terminate_instance(self.context, instance, [], [])
 
@@ -479,10 +479,10 @@ class UsageInfoTestCase(test.TestCase):
                      'state', 'state_description',
                      'bandwidth', 'audit_period_beginning',
                      'audit_period_ending', 'image_meta'):
-            self.assertIn(attr, payload, "Key %s not in payload" % attr)
+            self.assertIn(attr, payload, "Key {0!s} not in payload".format(attr))
         self.assertEqual(payload['image_meta'],
                 {'md_key1': 'val1', 'md_key2': 'val2'})
-        image_ref_url = "%s/images/1" % glance.generate_glance_url()
+        image_ref_url = "{0!s}/images/1".format(glance.generate_glance_url())
         self.assertEqual(payload['image_ref_url'], image_ref_url)
 
     def test_notify_usage_exists_instance_not_found(self):
@@ -507,9 +507,9 @@ class UsageInfoTestCase(test.TestCase):
                      'state', 'state_description',
                      'bandwidth', 'audit_period_beginning',
                      'audit_period_ending', 'image_meta'):
-            self.assertIn(attr, payload, "Key %s not in payload" % attr)
+            self.assertIn(attr, payload, "Key {0!s} not in payload".format(attr))
         self.assertEqual(payload['image_meta'], {})
-        image_ref_url = "%s/images/1" % glance.generate_glance_url()
+        image_ref_url = "{0!s}/images/1".format(glance.generate_glance_url())
         self.assertEqual(payload['image_ref_url'], image_ref_url)
 
     def test_notify_about_instance_usage(self):
@@ -540,11 +540,11 @@ class UsageInfoTestCase(test.TestCase):
         self.assertEqual(str(payload['instance_flavor_id']), str(flavor_id))
         for attr in ('display_name', 'created_at', 'launched_at',
                      'state', 'state_description', 'image_meta'):
-            self.assertIn(attr, payload, "Key %s not in payload" % attr)
+            self.assertIn(attr, payload, "Key {0!s} not in payload".format(attr))
         self.assertEqual(payload['image_meta'],
                 {'md_key1': 'val1', 'md_key2': 'val2'})
         self.assertEqual(payload['image_name'], 'fake_name')
-        image_ref_url = "%s/images/1" % glance.generate_glance_url()
+        image_ref_url = "{0!s}/images/1".format(glance.generate_glance_url())
         self.assertEqual(payload['image_ref_url'], image_ref_url)
         self.compute.terminate_instance(self.context, instance, [], [])
 

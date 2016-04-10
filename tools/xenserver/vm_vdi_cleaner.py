@@ -130,7 +130,7 @@ def print_xen_object(obj_type, obj, indent_level=0, spaces_per_indent=4):
         name_label = obj["name_label"]
     except KeyError:
         name_label = ""
-    msg = "%(obj_type)s (%(uuid)s) '%(name_label)s'" % locals()
+    msg = "{obj_type!s} ({uuid!s}) '{name_label!s}'".format(**locals())
     indent = " " * spaces_per_indent * indent_level
     print "".join([indent, msg])
 
@@ -247,7 +247,7 @@ def list_orphaned_vdis(vdi_uuids):
     """List orphaned VDIs."""
     for vdi_uuid in vdi_uuids:
         if CONF.verbose:
-            print "ORPHANED VDI (%s)" % vdi_uuid
+            print "ORPHANED VDI ({0!s})".format(vdi_uuid)
         else:
             print vdi_uuid
 
@@ -256,20 +256,20 @@ def clean_orphaned_vdis(xenapi, vdi_uuids):
     """Clean orphaned VDIs."""
     for vdi_uuid in vdi_uuids:
         if CONF.verbose:
-            print "CLEANING VDI (%s)" % vdi_uuid
+            print "CLEANING VDI ({0!s})".format(vdi_uuid)
 
         vdi_ref = call_xenapi(xenapi, 'VDI.get_by_uuid', vdi_uuid)
         try:
             call_xenapi(xenapi, 'VDI.destroy', vdi_ref)
         except XenAPI.Failure, exc:
-            print >> sys.stderr, "Skipping %s: %s" % (vdi_uuid, exc)
+            print >> sys.stderr, "Skipping {0!s}: {1!s}".format(vdi_uuid, exc)
 
 
 def list_orphaned_instances(orphaned_instances):
     """List orphaned instances."""
     for vm_ref, vm_rec, orphaned_instance in orphaned_instances:
         if CONF.verbose:
-            print "ORPHANED INSTANCE (%s)" % orphaned_instance.name
+            print "ORPHANED INSTANCE ({0!s})".format(orphaned_instance.name)
         else:
             print orphaned_instance.name
 
@@ -278,7 +278,7 @@ def clean_orphaned_instances(xenapi, orphaned_instances):
     """Clean orphaned instances."""
     for vm_ref, vm_rec, instance in orphaned_instances:
         if CONF.verbose:
-            print "CLEANING INSTANCE (%s)" % instance.name
+            print "CLEANING INSTANCE ({0!s})".format(instance.name)
 
         cleanup_instance(xenapi, instance, vm_ref, vm_rec)
 
@@ -321,7 +321,7 @@ def main():
     elif command == "test":
         doctest.testmod()
     else:
-        print "Unknown command '%s'" % command
+        print "Unknown command '{0!s}'".format(command)
         sys.exit(1)
 
 

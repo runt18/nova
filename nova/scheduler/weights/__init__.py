@@ -27,7 +27,7 @@ class WeighedHost(weights.WeighedObject):
         return x
 
     def __repr__(self):
-        return "WeighedHost [host: %r, weight: %s]" % (
+        return "WeighedHost [host: {0!r}, weight: {1!s}]".format(
                 self.obj, self.weight)
 
 

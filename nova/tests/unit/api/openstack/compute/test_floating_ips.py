@@ -856,7 +856,7 @@ class FloatingIPPolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, func, *arg, **kwarg)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
         exc.format_message())
 
     def test_index_policy_failed(self):
@@ -886,7 +886,7 @@ class FloatingIPActionPolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, func, *arg, **kwarg)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
         exc.format_message())
 
     def test_add_policy_failed(self):

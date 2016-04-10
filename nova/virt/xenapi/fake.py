@@ -256,7 +256,7 @@ def after_VM_create(vm_ref, vm_rec):
 
 
 def create_pbd(host_ref, sr_ref, attached):
-    config = {'path': '/var/run/sr-mount/%s' % sr_ref}
+    config = {'path': '/var/run/sr-mount/{0!s}'.format(sr_ref)}
     return _create_object('PBD',
                           {'device_config': config,
                            'host': host_ref,
@@ -438,15 +438,15 @@ def get_record(table, ref):
 
 def check_for_session_leaks():
     if len(_db_content['session']) > 0:
-        raise exception.NovaException('Sessions have leaked: %s' %
-                              _db_content['session'])
+        raise exception.NovaException('Sessions have leaked: {0!s}'.format(
+                              _db_content['session']))
 
 
 def as_value(s):
     """Helper function for simulating XenAPI plugin responses.  It
     escapes and wraps the given argument.
     """
-    return '<value>%s</value>' % saxutils.escape(s)
+    return '<value>{0!s}</value>'.format(saxutils.escape(s))
 
 
 def as_json(*args, **kwargs):
@@ -467,7 +467,7 @@ class Failure(Exception):
         try:
             return str(self.details)
         except Exception:
-            return "XenAPI Fake Failure: %s" % str(self.details)
+            return "XenAPI Fake Failure: {0!s}".format(str(self.details))
 
     def _details_map(self):
         return {str(i): self.details[i] for i in range(len(self.details))}
@@ -646,8 +646,8 @@ class SessionBase(object):
     def _plugin_agent_agentupdate(self, method, args):
         url = args["url"]
         md5 = args["md5sum"]
-        message = "success with %(url)s and hash:%(md5)s" % dict(url=url,
-                                                                 md5=md5)
+        message = "success with {url!s} and hash:{md5!s}".format(**dict(url=url,
+                                                                 md5=md5))
         return as_json(returncode='0', message=message)
 
     def _plugin_noop(self, method, args):
@@ -758,7 +758,7 @@ class SessionBase(object):
         dom_id = args["dom_id"]
         if dom_id == 0:
             raise Failure('Guest does not have a console')
-        return base64.b64encode(zlib.compress("dom_id: %s" % dom_id))
+        return base64.b64encode(zlib.compress("dom_id: {0!s}".format(dom_id)))
 
     def _plugin_nova_plugin_version_get_version(self, method, args):
         return pickle.dumps("1.3")
@@ -767,10 +767,9 @@ class SessionBase(object):
         return pickle.dumps("False")
 
     def host_call_plugin(self, _1, _2, plugin, method, args):
-        func = getattr(self, '_plugin_%s_%s' % (plugin, method), None)
+        func = getattr(self, '_plugin_{0!s}_{1!s}'.format(plugin, method), None)
         if not func:
-            raise Exception('No simulation in host_call_plugin for %s,%s' %
-                            (plugin, method))
+            raise Exception('No simulation in host_call_plugin for {0!s},{1!s}'.format(plugin, method))
 
         return func(method, args)
 
@@ -993,7 +992,7 @@ class SessionBase(object):
                _create_object(cls, params[1]))
 
         # Call hook to provide any fixups needed (ex. creating backrefs)
-        after_hook = 'after_%s_create' % cls
+        after_hook = 'after_{0!s}_create'.format(cls)
         if after_hook in globals():
             globals()[after_hook](ref, params[1])
 
@@ -1013,7 +1012,7 @@ class SessionBase(object):
             raise Failure(['HANDLE_INVALID', table, ref])
 
         # Call destroy function (if exists)
-        destroy_func = globals().get('destroy_%s' % table.lower())
+        destroy_func = globals().get('destroy_{0!s}'.format(table.lower()))
         if destroy_func:
             destroy_func(ref)
         else:
@@ -1077,7 +1076,7 @@ class _Dispatcher(object):
 
     def __repr__(self):
         if self.__name:
-            return '<xenapi.fake._Dispatcher for %s>' % self.__name
+            return '<xenapi.fake._Dispatcher for {0!s}>'.format(self.__name)
         else:
             return '<xenapi.fake._Dispatcher>'
 
@@ -1085,7 +1084,7 @@ class _Dispatcher(object):
         if self.__name is None:
             return _Dispatcher(self.__send, name)
         else:
-            return _Dispatcher(self.__send, "%s.%s" % (self.__name, name))
+            return _Dispatcher(self.__send, "{0!s}.{1!s}".format(self.__name, name))
 
     def __call__(self, *args):
         return self.__send(self.__name, args)

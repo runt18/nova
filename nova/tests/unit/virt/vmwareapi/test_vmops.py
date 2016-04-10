@@ -88,7 +88,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
             'memory_mb': 512,
             'image_ref': self._image_id,
             'root_gb': 10,
-            'node': '%s(%s)' % (cluster.mo_id, cluster.name),
+            'node': '{0!s}({1!s})'.format(cluster.mo_id, cluster.name),
             'expected_attrs': ['system_metadata'],
         }
         self._instance = fake_instance.fake_instance_obj(
@@ -1163,7 +1163,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
                 self._ds, self._dc_info, mock_imagecache, extra_specs)
 
         sized_cached_image_ds_loc = cache_root_folder.join(
-                "%s.%s.vmdk" % (self._image_id, vi.root_gb))
+                "{0!s}.{1!s}.vmdk".format(self._image_id, vi.root_gb))
 
         self._vmops._volumeops = mock.Mock()
         mock_attach_disk_to_vm = self._vmops._volumeops.attach_disk_to_vm
@@ -1220,7 +1220,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
 
         self._vmops._use_disk_image_as_full_clone("fake_vm_ref", vi)
 
-        fake_path = '[fake_ds] %(uuid)s/%(uuid)s.vmdk' % {'uuid': self._uuid}
+        fake_path = '[fake_ds] {uuid!s}/{uuid!s}.vmdk'.format(**{'uuid': self._uuid})
         mock_copy_virtual_disk.assert_called_once_with(
                 self._session, self._dc_info.ref,
                 str(vi.cache_image_path),
@@ -1271,7 +1271,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
                 "fake_vm_ref", self._instance, self._ds.ref,
                 str(vi.cache_image_path))
 
-        fake_path = '[fake_ds] %(uuid)s/%(uuid)s.vmdk' % {'uuid': self._uuid}
+        fake_path = '[fake_ds] {uuid!s}/{uuid!s}.vmdk'.format(**{'uuid': self._uuid})
         if with_root_disk:
             mock_create_virtual_disk.assert_called_once_with(
                     self._session, self._dc_info.ref,
@@ -1460,7 +1460,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
             mock_enlist_image.assert_called_once_with(
                         self._image_id, self._ds, self._dc_info.ref)
 
-            upload_file_name = 'vmware_temp/tmp-uuid/%s/%s-flat.vmdk' % (
+            upload_file_name = 'vmware_temp/tmp-uuid/{0!s}/{1!s}-flat.vmdk'.format(
                     self._image_id, self._image_id)
             _fetch_image.assert_called_once_with(
                     self._context,
@@ -1480,10 +1480,8 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
             self._verify_spawn_method_calls(_call_method, extras)
 
             dc_ref = 'fake_dc_ref'
-            source_file = six.text_type('[fake_ds] vmware_base/%s/%s.vmdk' %
-                          (self._image_id, self._image_id))
-            dest_file = six.text_type('[fake_ds] vmware_base/%s/%s.%d.vmdk' %
-                          (self._image_id, self._image_id,
+            source_file = six.text_type('[fake_ds] vmware_base/{0!s}/{1!s}.vmdk'.format(self._image_id, self._image_id))
+            dest_file = six.text_type('[fake_ds] vmware_base/{0!s}/{1!s}.{2:d}.vmdk'.format(self._image_id, self._image_id,
                           self._instance['root_gb']))
             # TODO(dims): add more tests for copy_virtual_disk after
             # the disk/image code in spawn gets refactored
@@ -1523,11 +1521,11 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         self.assertEqual(self._instance.uuid, vi.instance.uuid)
         self.assertEqual(extra_specs, vi._extra_specs)
 
-        cache_image_path = '[%s] vmware_base/%s/%s.vmdk' % (
+        cache_image_path = '[{0!s}] vmware_base/{1!s}/{2!s}.vmdk'.format(
             self._ds.name, self._image_id, self._image_id)
         self.assertEqual(cache_image_path, str(vi.cache_image_path))
 
-        cache_image_folder = '[%s] vmware_base/%s' % (
+        cache_image_folder = '[{0!s}] vmware_base/{1!s}'.format(
             self._ds.name, self._image_id)
         self.assertEqual(cache_image_folder, str(vi.cache_image_folder))
 
@@ -1730,7 +1728,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
             mock_caa.assert_called_once_with(
                 self._instance, 'fake-vm-ref',
                 vi.dc_info, 1 * units.Mi, 'virtio',
-                '[fake_ds] %s/ephemeral_0.vmdk' % self._uuid)
+                '[fake_ds] {0!s}/ephemeral_0.vmdk'.format(self._uuid))
 
     def _test_create_ephemeral_from_instance(self, bdi):
         vi = self._get_fake_vi()
@@ -1745,7 +1743,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
             mock_caa.assert_called_once_with(
                 self._instance, 'fake-vm-ref',
                 vi.dc_info, 1 * units.Mi, constants.DEFAULT_ADAPTER_TYPE,
-                '[fake_ds] %s/ephemeral_0.vmdk' % self._uuid)
+                '[fake_ds] {0!s}/ephemeral_0.vmdk'.format(self._uuid))
 
     def test_create_ephemeral_with_bdi_but_no_ephemerals(self):
         block_device_info = {'ephemerals': []}
@@ -2160,8 +2158,8 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         vi = self._make_vm_config_info(is_iso=True)
         tmp_dir_loc, tmp_image_ds_loc = self._vmops._prepare_iso_image(vi)
 
-        expected_tmp_dir_path = '[%s] vmware_temp/tmp-uuid' % (self._ds.name)
-        expected_image_path = '[%s] vmware_temp/tmp-uuid/%s/%s.iso' % (
+        expected_tmp_dir_path = '[{0!s}] vmware_temp/tmp-uuid'.format((self._ds.name))
+        expected_image_path = '[{0!s}] vmware_temp/tmp-uuid/{1!s}/{2!s}.iso'.format(
                 self._ds.name, self._image_id, self._image_id)
 
         self.assertEqual(str(tmp_dir_loc), expected_tmp_dir_path)
@@ -2172,8 +2170,8 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         vi = self._make_vm_config_info(is_sparse_disk=True)
         tmp_dir_loc, tmp_image_ds_loc = self._vmops._prepare_sparse_image(vi)
 
-        expected_tmp_dir_path = '[%s] vmware_temp/tmp-uuid' % (self._ds.name)
-        expected_image_path = '[%s] vmware_temp/tmp-uuid/%s/%s' % (
+        expected_tmp_dir_path = '[{0!s}] vmware_temp/tmp-uuid'.format((self._ds.name))
+        expected_image_path = '[{0!s}] vmware_temp/tmp-uuid/{1!s}/{2!s}'.format(
                 self._ds.name, self._image_id, "tmp-sparse.vmdk")
 
         self.assertEqual(str(tmp_dir_loc), expected_tmp_dir_path)
@@ -2191,12 +2189,12 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         vi = self._make_vm_config_info()
         tmp_dir_loc, tmp_image_ds_loc = self._vmops._prepare_flat_image(vi)
 
-        expected_tmp_dir_path = '[%s] vmware_temp/tmp-uuid' % (self._ds.name)
-        expected_image_path = '[%s] vmware_temp/tmp-uuid/%s/%s-flat.vmdk' % (
+        expected_tmp_dir_path = '[{0!s}] vmware_temp/tmp-uuid'.format((self._ds.name))
+        expected_image_path = '[{0!s}] vmware_temp/tmp-uuid/{1!s}/{2!s}-flat.vmdk'.format(
                 self._ds.name, self._image_id, self._image_id)
-        expected_image_path_parent = '[%s] vmware_temp/tmp-uuid/%s' % (
+        expected_image_path_parent = '[{0!s}] vmware_temp/tmp-uuid/{1!s}'.format(
                 self._ds.name, self._image_id)
-        expected_path_to_create = '[%s] vmware_temp/tmp-uuid/%s/%s.vmdk' % (
+        expected_path_to_create = '[{0!s}] vmware_temp/tmp-uuid/{1!s}/{2!s}.vmdk'.format(
                 self._ds.name, self._image_id, self._image_id)
 
         mock_mkdir.assert_called_once_with(
@@ -2227,7 +2225,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         mock_file_move.assert_called_once_with(
                 self._session, self._dc_info.ref,
                 tmp_image_ds_loc.parent,
-                DsPathMatcher('[fake_ds] vmware_base/%s' % self._image_id))
+                DsPathMatcher('[fake_ds] vmware_base/{0!s}'.format(self._image_id)))
 
     @mock.patch.object(ds_util, 'file_move')
     def test_cache_flat_image(self, mock_file_move):
@@ -2239,7 +2237,7 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
         mock_file_move.assert_called_once_with(
                 self._session, self._dc_info.ref,
                 tmp_image_ds_loc.parent,
-                DsPathMatcher('[fake_ds] vmware_base/%s' % self._image_id))
+                DsPathMatcher('[fake_ds] vmware_base/{0!s}'.format(self._image_id)))
 
     @mock.patch.object(ds_util, 'disk_move')
     @mock.patch.object(ds_util, 'mkdir')
@@ -2250,13 +2248,12 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
 
         mock_mkdir.assert_called_once_with(
             self._session,
-            DsPathMatcher('[fake_ds] vmware_base/%s' % self._image_id),
+            DsPathMatcher('[fake_ds] vmware_base/{0!s}'.format(self._image_id)),
             self._dc_info.ref)
         mock_disk_move.assert_called_once_with(
                 self._session, self._dc_info.ref,
                 mock.sentinel.tmp_image,
-                DsPathMatcher('[fake_ds] vmware_base/%s/%s.vmdk' %
-                              (self._image_id, self._image_id)))
+                DsPathMatcher('[fake_ds] vmware_base/{0!s}/{1!s}.vmdk'.format(self._image_id, self._image_id)))
 
     @mock.patch.object(ds_util, 'file_move')
     @mock.patch.object(vm_util, 'copy_virtual_disk')
@@ -2269,13 +2266,13 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
                                 mock_file_move):
         vi = self._make_vm_config_info(is_sparse_disk=True)
 
-        sparse_disk_path = "[%s] vmware_temp/tmp-uuid/%s/tmp-sparse.vmdk" % (
+        sparse_disk_path = "[{0!s}] vmware_temp/tmp-uuid/{1!s}/tmp-sparse.vmdk".format(
                 self._ds.name, self._image_id)
         tmp_image_ds_loc = ds_obj.DatastorePath.parse(sparse_disk_path)
 
         self._vmops._cache_sparse_image(vi, tmp_image_ds_loc)
 
-        target_disk_path = "[%s] vmware_temp/tmp-uuid/%s/%s.vmdk" % (
+        target_disk_path = "[{0!s}] vmware_temp/tmp-uuid/{1!s}/{2!s}.vmdk".format(
                 self._ds.name,
                 self._image_id, self._image_id)
         mock_copy_virtual_disk.assert_called_once_with(
@@ -2484,12 +2481,12 @@ class VMwareVMOpsTestCase(test.NoDBTestCase):
     def test_get_folder_name(self):
         uuid = uuidutils.generate_uuid()
         name = 'fira'
-        expected = 'fira (%s)' % uuid
+        expected = 'fira ({0!s})'.format(uuid)
         folder_name = self._vmops._get_folder_name(name, uuid)
         self.assertEqual(expected, folder_name)
 
         name = 'X' * 255
-        expected = '%s (%s)' % ('X' * 40, uuid)
+        expected = '{0!s} ({1!s})'.format('X' * 40, uuid)
         folder_name = self._vmops._get_folder_name(name, uuid)
         self.assertEqual(expected, folder_name)
         self.assertEqual(79, len(folder_name))

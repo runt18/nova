@@ -49,7 +49,7 @@ def reset_cache():
 
 
 def _make_cache_key(host):
-    return "azcache-%s" % host.encode('utf-8')
+    return "azcache-{0!s}".format(host.encode('utf-8'))
 
 
 def _build_metadata_by_host(aggregates, hosts=None):

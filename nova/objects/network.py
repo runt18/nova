@@ -93,7 +93,7 @@ class Network(obj_base.NovaPersistentObject, obj_base.NovaObject,
         """
         try:
             prefix = int(netmask)
-            return netaddr.IPNetwork('1::/%i' % prefix).netmask
+            return netaddr.IPNetwork('1::/{0:d}'.format(prefix)).netmask
         except ValueError:
             pass
 

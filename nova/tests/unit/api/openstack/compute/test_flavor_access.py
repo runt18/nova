@@ -460,7 +460,7 @@ class FlavorAccessPolicyEnforcementV21(test.NoDBTestCase):
             self.act_controller._add_tenant_access, self.req, fakes.FAKE_UUID,
             body={'addTenantAccess': {'tenant': fakes.FAKE_UUID}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_remove_tenant_access_policy_failed(self):
@@ -473,7 +473,7 @@ class FlavorAccessPolicyEnforcementV21(test.NoDBTestCase):
             fakes.FAKE_UUID,
             body={'removeTenantAccess': {'tenant': fakes.FAKE_UUID}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_extend_create_policy_failed(self):
@@ -499,5 +499,5 @@ class FlavorAccessPolicyEnforcementV21(test.NoDBTestCase):
             self.access_controller.index, self.req,
             fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

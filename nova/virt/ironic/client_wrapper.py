@@ -90,7 +90,7 @@ class IronicClientWrapper(object):
         # Retries for Conflict exception
         kwargs['max_retries'] = max_retries
         kwargs['retry_interval'] = retry_interval
-        kwargs['os_ironic_api_version'] = '%d.%d' % IRONIC_API_VERSION
+        kwargs['os_ironic_api_version'] = '{0:d}.{1:d}'.format(*IRONIC_API_VERSION)
         try:
             cli = ironic.client.get_client(IRONIC_API_VERSION[0], **kwargs)
             # Cache the client so we don't have to reconstruct and

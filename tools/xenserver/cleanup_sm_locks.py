@@ -89,7 +89,7 @@ def main():
                 removed += 1
 
                 if options.verbose:
-                    print 'Removing old lock: %03d %s' % (lock_age_days,
+                    print 'Removing old lock: {0:03d} {1!s}'.format(lock_age_days,
                                                           lockpath)
 
                 if not options.dry_run:
@@ -100,7 +100,7 @@ def main():
             nspaths_removed += 1
 
             if options.verbose:
-                print 'Removing empty namespace: %s' % nspath
+                print 'Removing empty namespace: {0!s}'.format(nspath)
 
             if not options.dry_run:
                 try:

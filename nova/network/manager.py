@@ -875,8 +875,8 @@ class NetworkManager(manager.Manager):
                         self.instance_dns_manager.delete_entry,
                         instance_id, self.instance_dns_domain))
 
-            LOG.debug('Setting up network %(network)s on host %(host)s.' %
-                      {'network': network['id'], 'host': self.host},
+            LOG.debug('Setting up network {network!s} on host {host!s}.'.format(**
+                      {'network': network['id'], 'host': self.host}),
                       instance=instance)
             self._setup_network_on_host(context, network)
             cleanup.append(functools.partial(
@@ -1301,7 +1301,7 @@ class NetworkManager(manager.Manager):
             net.project_id = kwargs.get('project_id')
 
             if num_networks > 1:
-                net.label = '%s_%d' % (label, index)
+                net.label = '{0!s}_{1:d}'.format(label, index)
             else:
                 net.label = label
 
@@ -1358,7 +1358,7 @@ class NetworkManager(manager.Manager):
                 extra_reserved.append(str(net.vpn_private_address))
                 net.dhcp_start = net.dhcp_start + 1
                 net.vlan = vlan
-                net.bridge = 'br%s' % vlan
+                net.bridge = 'br{0!s}'.format(vlan)
 
                 # NOTE(vish): This makes ports unique across the cloud, a more
                 #             robust solution would be to make them uniq per ip

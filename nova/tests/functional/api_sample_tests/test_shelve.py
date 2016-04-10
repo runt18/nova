@@ -39,7 +39,7 @@ class ShelveJsonTest(test_servers.ServersSampleBase):
         CONF.set_override('shelved_offload_time', -1)
 
     def _test_server_action(self, uuid, template, action):
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  template, {'action': action})
         self.assertEqual(202, response.status_code)
         self.assertEqual("", response.content)

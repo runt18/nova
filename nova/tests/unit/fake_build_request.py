@@ -72,7 +72,7 @@ def fake_db_req(**updates):
         elif field.default != fields.UnspecifiedDefault:
             db_build_request[name] = field.default
         else:
-            raise Exception('fake_db_req needs help with %s' % name)
+            raise Exception('fake_db_req needs help with {0!s}'.format(name))
 
     if updates:
         db_build_request.update(updates)

@@ -105,7 +105,7 @@ class LibvirtScalityVolumeDriver(fs.LibvirtBaseFileSystemVolumeDriver):
         # config can be a file path or a URL, check it
         if urlparse.urlparse(config).scheme == '':
             # turn local path into URL
-            config = 'file://%s' % config
+            config = 'file://{0!s}'.format(config)
         try:
             urllib.request.urlopen(config, timeout=5).close()
         except urllib.error.URLError as e:

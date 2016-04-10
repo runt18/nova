@@ -236,7 +236,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'dummydest'
         with testtools.ExpectedException(webob.exc.HTTPNotFound,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.update(self.req, dest, body={'status': 'enable'})
 
     def test_host_maintenance_bad_host(self):
@@ -244,7 +244,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'dummydest'
         with testtools.ExpectedException(webob.exc.HTTPNotFound,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.update(self.req, dest,
                                    body={'maintenance_mode': 'enable'})
 
@@ -253,7 +253,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'dummydest'
         with testtools.ExpectedException(webob.exc.HTTPNotFound,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.reboot(self.req, dest)
 
     def test_host_status_bad_status(self):
@@ -261,7 +261,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'service_not_available'
         with testtools.ExpectedException(webob.exc.HTTPBadRequest,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.update(self.req, dest, body={'status': 'enable'})
 
     def test_host_maintenance_bad_status(self):
@@ -269,7 +269,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'service_not_available'
         with testtools.ExpectedException(webob.exc.HTTPBadRequest,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.update(self.req, dest,
                                    body={'maintenance_mode': 'enable'})
 
@@ -278,7 +278,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'service_not_available'
         with testtools.ExpectedException(webob.exc.HTTPBadRequest,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.reboot(self.req, dest)
 
     def test_bad_status_value(self):
@@ -311,7 +311,7 @@ class HostTestCaseV21(test.TestCase):
         self.req.environ["nova.context"].is_admin = True
         dest = 'dummydest'
         with testtools.ExpectedException(webob.exc.HTTPNotFound,
-                                         ".*%s.*" % dest):
+                                         ".*{0!s}.*".format(dest)):
             self.controller.show(self.req, dest)
 
     def _create_compute_service(self):
@@ -426,7 +426,7 @@ class HostsPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_show_policy_failed(self):
@@ -436,5 +436,5 @@ class HostsPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, 1)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

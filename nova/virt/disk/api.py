@@ -451,8 +451,8 @@ def teardown_container(container_dir, container_root_device=None):
                 utils.execute('qemu-nbd', '-d', container_root_device,
                               run_as_root=True)
             else:
-                LOG.debug('No release necessary for block device %s' %
-                          container_root_device)
+                LOG.debug('No release necessary for block device {0!s}'.format(
+                          container_root_device))
     except Exception:
         LOG.exception(_LE('Failed to teardown container filesystem'))
 
@@ -485,7 +485,7 @@ def inject_data_into_fs(fs, key, net, metadata, admin_password, files,
     status = True
     for inject in ('key', 'net', 'metadata', 'admin_password', 'files'):
         inject_val = locals()[inject]
-        inject_func = globals()['_inject_%s_into_fs' % inject]
+        inject_func = globals()['_inject_{0!s}_into_fs'.format(inject)]
         if inject_val:
             try:
                 inject_func(inject_val, fs)
@@ -543,7 +543,7 @@ def _setup_selinux_for_keys(fs, sshdir):
     restorecon = [
         '\n',
         '# Added by Nova to ensure injected ssh keys have the right context\n',
-        'restorecon -RF %s 2>/dev/null || :\n' % sshdir,
+        'restorecon -RF {0!s} 2>/dev/null || :\n'.format(sshdir),
     ]
 
     if not fs.has_file(rclocal):

@@ -184,13 +184,13 @@ class Mount(object):
         """Map partitions of the device to the file system namespace."""
         assert(os.path.exists(self.device))
         LOG.debug("Map dev %s", self.device)
-        automapped_path = '/dev/%sp%s' % (os.path.basename(self.device),
+        automapped_path = '/dev/{0!s}p{1!s}'.format(os.path.basename(self.device),
                                               self.partition)
 
         if self.partition == -1:
             self.error = _('partition search unsupported with %s') % self.mode
         elif self.partition and not os.path.exists(automapped_path):
-            map_path = '/dev/mapper/%sp%s' % (os.path.basename(self.device),
+            map_path = '/dev/mapper/{0!s}p{1!s}'.format(os.path.basename(self.device),
                                               self.partition)
             assert(not os.path.exists(map_path))
 

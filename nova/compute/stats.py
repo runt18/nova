@@ -46,7 +46,7 @@ class Stats(dict):
         """Calculate an I/O based load by counting I/O heavy operations."""
 
         def _get(state, state_type):
-            key = "num_%s_%s" % (state_type, state)
+            key = "num_{0!s}_{1!s}".format(state_type, state)
             return self.get(key, 0)
 
         num_builds = _get(vm_states.BUILDING, "vm")
@@ -76,11 +76,11 @@ class Stats(dict):
         return self.get("num_instances", 0)
 
     def num_instances_for_project(self, project_id):
-        key = "num_proj_%s" % project_id
+        key = "num_proj_{0!s}".format(project_id)
         return self.get(key, 0)
 
     def num_os_type(self, os_type):
-        key = "num_os_type_%s" % os_type
+        key = "num_os_type_{0!s}".format(os_type)
         return self.get(key, 0)
 
     def update_stats_for_instance(self, instance, is_removed=False):
@@ -93,10 +93,10 @@ class Stats(dict):
         if uuid in self.states:
             old_state = self.states[uuid]
 
-            self._decrement("num_vm_%s" % old_state['vm_state'])
-            self._decrement("num_task_%s" % old_state['task_state'])
-            self._decrement("num_os_type_%s" % old_state['os_type'])
-            self._decrement("num_proj_%s" % old_state['project_id'])
+            self._decrement("num_vm_{0!s}".format(old_state['vm_state']))
+            self._decrement("num_task_{0!s}".format(old_state['task_state']))
+            self._decrement("num_os_type_{0!s}".format(old_state['os_type']))
+            self._decrement("num_proj_{0!s}".format(old_state['project_id']))
         else:
             # new instance
             self._increment("num_instances")
@@ -109,10 +109,10 @@ class Stats(dict):
             self._decrement("num_instances")
             self.states.pop(uuid)
         else:
-            self._increment("num_vm_%s" % vm_state)
-            self._increment("num_task_%s" % task_state)
-            self._increment("num_os_type_%s" % os_type)
-            self._increment("num_proj_%s" % project_id)
+            self._increment("num_vm_{0!s}".format(vm_state))
+            self._increment("num_task_{0!s}".format(task_state))
+            self._increment("num_os_type_{0!s}".format(os_type))
+            self._increment("num_proj_{0!s}".format(project_id))
 
         # save updated I/O workload in stats:
         self["io_workload"] = self.io_workload

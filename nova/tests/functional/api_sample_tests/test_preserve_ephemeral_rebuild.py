@@ -59,7 +59,7 @@ class PreserveEphemeralOnRebuildJsonTest(test_servers.ServersSampleBase):
                                    **kwargs)
         self.stub_out('nova.compute.api.API.rebuild', fake_rebuild)
 
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-action-rebuild-preserve-ephemeral',
                                  subs)
         if resp_tpl:

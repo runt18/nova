@@ -90,7 +90,7 @@ class _AnsiColorizer(object):
         @param color: A string label for a color. e.g. 'red', 'white'.
         """
         color = self._colors[color]
-        self.stream.write('\x1b[%s;1m%s\x1b[0m' % (color, text))
+        self.stream.write('\x1b[{0!s};1m{1!s}\x1b[0m'.format(color, text))
 
 
 class _Win32Colorizer(object):
@@ -186,7 +186,7 @@ class NovaTestResult(testtools.TestResult):
 
     def _writeElapsedTime(self, elapsed):
         color = get_elapsed_time_color(elapsed)
-        self.colorizer.write("  %.2f" % elapsed, color)
+        self.colorizer.write("  {0:.2f}".format(elapsed), color)
 
     def _addResult(self, test, *args):
         try:
@@ -210,7 +210,7 @@ class NovaTestResult(testtools.TestResult):
     def _writeResult(self, test_name, elapsed, long_result, color,
                      short_result, success):
         if self.showAll:
-            self.stream.write('    %s' % str(test_name).ljust(66))
+            self.stream.write('    {0!s}'.format(str(test_name).ljust(66)))
             self.colorizer.write(long_result, color)
             if success:
                 self._writeElapsedTime(elapsed)
@@ -279,8 +279,7 @@ class NovaTestResult(testtools.TestResult):
                       if get_elapsed_time_color(item[0]) != 'green']
         if slow_tests:
             slow_total_time = sum(item[0] for item in slow_tests)
-            slow = ("Slowest %i tests took %.2f secs:"
-                    % (len(slow_tests), slow_total_time))
+            slow = ("Slowest {0:d} tests took {1:.2f} secs:".format(len(slow_tests), slow_total_time))
             self.colorizer.write(slow, 'yellow')
             self.stream.writeln()
             last_cls = None
@@ -291,7 +290,7 @@ class NovaTestResult(testtools.TestResult):
                     self.colorizer.write(cls, 'white')
                     self.stream.writeln()
                 last_cls = cls
-                self.stream.write('    %s' % str(name).ljust(68))
+                self.stream.write('    {0!s}'.format(str(name).ljust(68)))
                 self._writeElapsedTime(elapsed)
                 self.stream.writeln()
 
@@ -306,10 +305,10 @@ class NovaTestResult(testtools.TestResult):
             self.colorizer.write("=" * 70, 'red')
             self.stream.writeln()
             self.colorizer.write(flavor, 'red')
-            self.stream.writeln(": %s" % test.id())
+            self.stream.writeln(": {0!s}".format(test.id()))
             self.colorizer.write("-" * 70, 'red')
             self.stream.writeln()
-            self.stream.writeln("%s" % err)
+            self.stream.writeln("{0!s}".format(err))
 
 
 test = subunit.ProtocolTestCase(sys.stdin, passthrough=None)

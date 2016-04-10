@@ -500,7 +500,7 @@ class ResizeHelpersTestCase(VMUtilsTestBase):
         utils.execute('parted', '--script', path, 'rm', '1',
             run_as_root=True)
         utils.execute('parted', '--script', path, 'mkpart',
-            'primary', '%ds' % start, '%ds' % end, run_as_root=True)
+            'primary', '{0:d}s'.format(start), '{0:d}s'.format(end), run_as_root=True)
 
     def _call_parted_boot_flag(self, path):
         utils.execute('parted', '--script', path, 'set', '1',
@@ -511,7 +511,7 @@ class ResizeHelpersTestCase(VMUtilsTestBase):
         self.mox.StubOutWithMock(utils, 'execute')
 
         dev_path = "/dev/fake"
-        partition_path = "%s1" % dev_path
+        partition_path = "{0!s}1".format(dev_path)
         vm_utils._repair_filesystem(partition_path)
         self._call_tune2fs_remove_journal(partition_path)
         utils.execute("resize2fs", partition_path, "10s", run_as_root=True)
@@ -550,13 +550,13 @@ class ResizeHelpersTestCase(VMUtilsTestBase):
         self.mox.StubOutWithMock(utils, 'execute')
 
         dev_path = "/dev/fake"
-        partition_path = "%s1" % dev_path
+        partition_path = "{0!s}1".format(dev_path)
         new_sectors = 10
         vm_utils._repair_filesystem(partition_path)
         self._call_tune2fs_remove_journal(partition_path)
         mobj = utils.execute("resize2fs",
                              partition_path,
-                             "%ss" % new_sectors,
+                             "{0!s}s".format(new_sectors),
                              run_as_root=True)
         mobj.AndRaise(processutils.ProcessExecutionError)
         self.mox.ReplayAll()
@@ -569,7 +569,7 @@ class ResizeHelpersTestCase(VMUtilsTestBase):
         self.mox.StubOutWithMock(utils, 'execute')
 
         dev_path = "/dev/fake"
-        partition_path = "%s1" % dev_path
+        partition_path = "{0!s}1".format(dev_path)
         vm_utils._repair_filesystem(partition_path)
         self._call_tune2fs_remove_journal(partition_path)
         self._call_parted_mkpart(dev_path, 0, 29)
@@ -1772,7 +1772,7 @@ class GetAllVdiForVMTestCase(VMUtilsTestBase):
     def _setup_get_all_vdi_uuids_for_vm(self, vm_get_vbd_refs,
                                        vbd_get_rec, vdi_get_uuid):
         def fake_vbd_get_rec(session, vbd_ref):
-            return {'userdevice': vbd_ref, 'VDI': "vdi_ref_%s" % vbd_ref}
+            return {'userdevice': vbd_ref, 'VDI': "vdi_ref_{0!s}".format(vbd_ref)}
 
         def fake_vdi_get_uuid(session, vdi_ref):
             return vdi_ref
@@ -2021,13 +2021,13 @@ class ImportMigratedDisksTestCase(VMUtilsTestBase):
         inst_uuid = instance.uuid
         inst_name = instance.name
         expected_calls = [mock.call("s", instance,
-                                    "%s_ephemeral_1" % inst_uuid,
+                                    "{0!s}_ephemeral_1".format(inst_uuid),
                                     "ephemeral",
-                                    "%s ephemeral (1)" % inst_name),
+                                    "{0!s} ephemeral (1)".format(inst_name)),
                           mock.call("s", instance,
-                                    "%s_ephemeral_2" % inst_uuid,
+                                    "{0!s}_ephemeral_2".format(inst_uuid),
                                     "ephemeral",
-                                    "%s ephemeral (2)" % inst_name)]
+                                    "{0!s} ephemeral (2)".format(inst_name))]
         self.assertEqual(expected_calls, mock_migrate.call_args_list)
 
     @mock.patch.object(vm_utils, 'get_ephemeral_disk_sizes')
@@ -2135,7 +2135,7 @@ class StripBaseMirrorTestCase(VMUtilsTestBase):
                 return ['VBD_ref_1', 'VBD_ref_2']
             if method == "VBD.get_VDI":
                 return 'VDI' + arg[3:]
-            return "Unexpected call_xenapi: %s.%s" % (method, arg)
+            return "Unexpected call_xenapi: {0!s}.{1!s}".format(method, arg)
 
         session = mock.Mock()
         session.call_xenapi.side_effect = call_xenapi

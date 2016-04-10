@@ -164,13 +164,13 @@ class DiskConfigTestCaseV21(test.TestCase):
 
     def test_show_server(self):
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s' % MANUAL_INSTANCE_UUID)
+            '/fake/servers/{0!s}'.format(MANUAL_INSTANCE_UUID))
         res = req.get_response(self.app)
         server_dict = jsonutils.loads(res.body)['server']
         self.assertDiskConfig(server_dict, 'MANUAL')
 
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s' % AUTO_INSTANCE_UUID)
+            '/fake/servers/{0!s}'.format(AUTO_INSTANCE_UUID))
         res = req.get_response(self.app)
         server_dict = jsonutils.loads(res.body)['server']
         self.assertDiskConfig(server_dict, 'AUTO')
@@ -323,7 +323,7 @@ class DiskConfigTestCaseV21(test.TestCase):
 
     def _test_update_server_disk_config(self, uuid, disk_config):
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s' % uuid)
+            '/fake/servers/{0!s}'.format(uuid))
         req.method = 'PUT'
         req.content_type = 'application/json'
         body = {'server': {API_DISK_CONFIG: disk_config}}
@@ -341,7 +341,7 @@ class DiskConfigTestCaseV21(test.TestCase):
     def test_update_server_invalid_disk_config(self):
         # Return BadRequest if user passes an invalid diskConfig value.
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s' % MANUAL_INSTANCE_UUID)
+            '/fake/servers/{0!s}'.format(MANUAL_INSTANCE_UUID))
         req.method = 'PUT'
         req.content_type = 'application/json'
         body = {'server': {API_DISK_CONFIG: 'server_test'}}
@@ -356,7 +356,7 @@ class DiskConfigTestCaseV21(test.TestCase):
 
     def _test_rebuild_server_disk_config(self, uuid, disk_config):
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s/action' % uuid)
+            '/fake/servers/{0!s}/action'.format(uuid))
         req.method = 'POST'
         req.content_type = 'application/json'
         body = {"rebuild": {
@@ -400,7 +400,7 @@ class DiskConfigTestCaseV21(test.TestCase):
 
     def test_rebuild_server_with_auto_disk_config(self):
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s/action' % AUTO_INSTANCE_UUID)
+            '/fake/servers/{0!s}/action'.format(AUTO_INSTANCE_UUID))
         req.method = 'POST'
         req.content_type = 'application/json'
         body = {"rebuild": {
@@ -421,7 +421,7 @@ class DiskConfigTestCaseV21(test.TestCase):
 
     def test_resize_server_with_auto_disk_config(self):
         req = fakes.HTTPRequest.blank(
-            '/fake/servers/%s/action' % AUTO_INSTANCE_UUID)
+            '/fake/servers/{0!s}/action'.format(AUTO_INSTANCE_UUID))
         req.method = 'POST'
         req.content_type = 'application/json'
         body = {"resize": {

@@ -37,14 +37,14 @@ class QuotaClassesSampleJsonTests(api_sample_base.ApiSampleTestBaseV21):
 
     def test_show_quota_classes(self):
         # Get api sample to show quota classes.
-        response = self._do_get('os-quota-class-sets/%s' % self.set_id)
+        response = self._do_get('os-quota-class-sets/{0!s}'.format(self.set_id))
         subs = {'set_id': self.set_id}
         self._verify_response('quota-classes-show-get-resp', subs,
                               response, 200)
 
     def test_update_quota_classes(self):
         # Get api sample to update quota classes.
-        response = self._do_put('os-quota-class-sets/%s' % self.set_id,
+        response = self._do_put('os-quota-class-sets/{0!s}'.format(self.set_id),
                                 'quota-classes-update-post-req',
                                 {})
         self._verify_response('quota-classes-update-post-resp',

@@ -167,7 +167,7 @@ class _BaseMessage(object):
     def __repr__(self):
         _dict = self._to_dict()
         _dict.pop('method_kwargs')
-        return "<%s: %s>" % (self.__class__.__name__, _dict)
+        return "<{0!s}: {1!s}>".format(self.__class__.__name__, _dict)
 
     def _append_hop(self):
         """Add our hop to the routing_path."""
@@ -330,7 +330,7 @@ class _TargetedMessage(_BaseMessage):
             if target_cell.is_me:
                 target_cell = self.our_path_part
             else:
-                target_cell = '%s%s%s' % (self.our_path_part,
+                target_cell = '{0!s}{1!s}{2!s}'.format(self.our_path_part,
                                           _PATH_CELL_SEP,
                                           target_cell.name)
         # NOTE(alaski): This occurs when hosts are specified with no cells
@@ -1935,7 +1935,7 @@ def deserialize_remote_exception(data, allowed_remote_exmods):
     str_override = lambda self: message
     new_ex_type = type(ex_type.__name__ + _REMOTE_POSTFIX, (ex_type,),
                        {'__str__': str_override, '__unicode__': str_override})
-    new_ex_type.__module__ = '%s%s' % (module, _REMOTE_POSTFIX)
+    new_ex_type.__module__ = '{0!s}{1!s}'.format(module, _REMOTE_POSTFIX)
     try:
         # NOTE(ameade): Dynamically create a new exception type and swap it in
         # as the new type for the exception. This only works on user defined

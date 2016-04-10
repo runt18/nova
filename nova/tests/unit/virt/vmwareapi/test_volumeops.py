@@ -92,7 +92,7 @@ class VMwareVolumeOpsTestCase(test.NoDBTestCase):
 
     def _fake_call_get_object_property(self, uuid, result):
         def fake_call_method(vim, method, vm_ref, prop):
-            expected_prop = 'config.extraConfig["volume-%s"]' % uuid
+            expected_prop = 'config.extraConfig["volume-{0!s}"]'.format(uuid)
             self.assertEqual('VirtualMachine', vm_ref._type)
             self.assertEqual(expected_prop, prop)
             return result
@@ -102,7 +102,7 @@ class VMwareVolumeOpsTestCase(test.NoDBTestCase):
         vm_ref = vmwareapi_fake.ManagedObjectReference('VirtualMachine',
                                                        'vm-134')
         uuid = '1234'
-        opt_val = vmwareapi_fake.OptionValue('volume-%s' % uuid, 'volume-val')
+        opt_val = vmwareapi_fake.OptionValue('volume-{0!s}'.format(uuid), 'volume-val')
         fake_call = self._fake_call_get_object_property(uuid, opt_val)
         with mock.patch.object(self._session, "_call_method", fake_call):
             val = self._volumeops._get_volume_uuid(vm_ref, uuid)
@@ -159,7 +159,7 @@ class VMwareVolumeOpsTestCase(test.NoDBTestCase):
 
             get_vm_extra_config_spec.assert_called_once_with(
                 self._volumeops._session.vim.client.factory,
-                {'volume-%s' % volume_uuid: device_uuid})
+                {'volume-{0!s}'.format(volume_uuid): device_uuid})
             reconfigure_vm.assert_called_once_with(self._volumeops._session,
                                                    mock.sentinel.vm_ref,
                                                    mock.sentinel.extra_config)

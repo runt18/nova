@@ -85,7 +85,7 @@ class GuestFS(object):
         else:
             if not self.root_mounted:
                 raise RuntimeError(
-                    "mount: %s: No such file or directory" % mntpoint)
+                    "mount: {0!s}: No such file or directory".format(mntpoint))
         self.mounts.append((options, device, mntpoint))
 
     def mkdir_p(self, path):

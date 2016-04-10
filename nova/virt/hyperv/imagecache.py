@@ -59,7 +59,7 @@ class ImageCache(object):
                 flavor_size=root_vhd_size, image_size=vhd_size)
         if root_vhd_internal_size > vhd_size:
             path_parts = os.path.splitext(vhd_path)
-            resized_vhd_path = '%s_%s%s' % (path_parts[0],
+            resized_vhd_path = '{0!s}_{1!s}{2!s}'.format(path_parts[0],
                                             root_vhd_size_gb,
                                             path_parts[1])
 

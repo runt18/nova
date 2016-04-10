@@ -61,7 +61,7 @@ def create_volume(target, device, cipher, key_size, key):
            '--cipher=' + cipher,
            '--key-size=' + str(key_size),
            '--key-file=-')
-    key = ''.join(map(lambda byte: "%02x" % byte, key))
+    key = ''.join(map(lambda byte: "{0:02x}".format(byte), key))
     try:
         utils.execute(*cmd, process_input=key, run_as_root=True)
     except processutils.ProcessExecutionError as e:

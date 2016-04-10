@@ -56,7 +56,7 @@ def check_policy(context, action):
         'project_id': context.project_id,
         'user_id': context.user_id,
     }
-    _action = 'network:%s' % action
+    _action = 'network:{0!s}'.format(action)
     policy.enforce(context, _action, target)
 
 

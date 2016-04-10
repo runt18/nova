@@ -79,7 +79,7 @@ class TestDatabaseArchive(test_servers.ServersTestBase):
         # key back to the instances table.
         actions = self.api.get_instance_actions(server_id)
         self.assertTrue(len(actions),
-                        'No instance actions for server: %s' % server_id)
+                        'No instance actions for server: {0!s}'.format(server_id))
         self._delete_server(server_id)
         # Verify we have the soft deleted instance in the database.
         admin_context = context.get_admin_context(read_deleted='yes')
@@ -89,7 +89,7 @@ class TestDatabaseArchive(test_servers.ServersTestBase):
         self.assertNotEqual(0, instance.deleted)
         # Verify we have some system_metadata since we'll check that later.
         self.assertTrue(len(instance.system_metadata),
-                        'No system_metadata for instance: %s' % server_id)
+                        'No system_metadata for instance: {0!s}'.format(server_id))
         # Now try and archive the soft deleted records.
         results = db.archive_deleted_rows(max_rows=100)
         # verify system_metadata was dropped

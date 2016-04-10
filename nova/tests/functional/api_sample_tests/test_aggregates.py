@@ -48,12 +48,12 @@ class AggregatesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
 
     def test_aggregate_get(self):
         agg_id = self.test_aggregate_create()
-        response = self._do_get('os-aggregates/%s' % agg_id)
+        response = self._do_get('os-aggregates/{0!s}'.format(agg_id))
         self._verify_response('aggregates-get-resp', {}, response, 200)
 
     def test_add_metadata(self):
         agg_id = self.test_aggregate_create()
-        response = self._do_post('os-aggregates/%s/action' % agg_id,
+        response = self._do_post('os-aggregates/{0!s}/action'.format(agg_id),
                                  'aggregate-metadata-post-req',
                                  {'action': 'set_metadata'})
         self._verify_response('aggregates-metadata-post-resp', {},
@@ -64,7 +64,7 @@ class AggregatesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         subs = {
             "host_name": self.compute.host,
         }
-        response = self._do_post('os-aggregates/%s/action' % aggregate_id,
+        response = self._do_post('os-aggregates/{0!s}/action'.format(aggregate_id),
                                  'aggregate-add-host-post-req', subs)
         self._verify_response('aggregates-add-host-post-resp', subs,
                               response, 200)
@@ -81,7 +81,7 @@ class AggregatesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
 
     def test_update_aggregate(self):
         aggregate_id = self.test_aggregate_create()
-        response = self._do_put('os-aggregates/%s' % aggregate_id,
+        response = self._do_put('os-aggregates/{0!s}'.format(aggregate_id),
                                   'aggregate-update-post-req', {})
         self._verify_response('aggregate-update-post-resp',
                               {}, response, 200)

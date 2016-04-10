@@ -289,7 +289,7 @@ class ExtensionControllerTest(ExtensionTestCase):
                 'links': []}, fox_ext)
 
         for ext in data['extensions']:
-            url = '/fake/extensions/%s' % ext['alias']
+            url = '/fake/extensions/{0!s}'.format(ext['alias'])
             request = webob.Request.blank(url)
             response = request.get_response(app)
             output = jsonutils.loads(response.body)
@@ -613,7 +613,7 @@ class ExtensionControllerIdFormatTest(test.NoDBTestCase):
                                                     BounceController())
         manager = StubExtensionManager(res_ext)
         app = compute.APIRouter(manager)
-        request = webob.Request.blank("/fake/bounce/%s" % test_id)
+        request = webob.Request.blank("/fake/bounce/{0!s}".format(test_id))
         response = request.get_response(app)
         return response.body
 

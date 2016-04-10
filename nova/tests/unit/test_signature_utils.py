@@ -136,7 +136,7 @@ class TestSignatureUtils(test.NoDBTestCase):
                 signature_utils.SignatureKeyType.lookup(key_type_name)
             except exception.SignatureVerificationError:
                 import warnings
-                warnings.warn("ECC curve '%s' not supported" % curve.name)
+                warnings.warn("ECC curve '{0!s}' not supported".format(curve.name))
                 continue
 
             # Create a private key to use

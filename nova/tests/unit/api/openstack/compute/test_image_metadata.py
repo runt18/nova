@@ -322,8 +322,7 @@ class ImageMetaDataTestV21(test.NoDBTestCase):
         image_id = 131
         # see nova.tests.unit.api.openstack.fakes:_make_image_fixtures
 
-        req = fakes.HTTPRequest.blank('/v2/fake/images/%s/metadata/key1'
-                                      % image_id)
+        req = fakes.HTTPRequest.blank('/v2/fake/images/{0!s}/metadata/key1'.format(image_id))
         req.method = 'PUT'
         body = {"metadata": {"key1": "value1"}}
         req.body = jsonutils.dump_as_bytes(body)
@@ -339,8 +338,7 @@ class ImageMetaDataTestV21(test.NoDBTestCase):
         image_id = 131
         # see nova.tests.unit.api.openstack.fakes:_make_image_fixtures
 
-        req = fakes.HTTPRequest.blank('/v2/fake/images/%s/metadata/key1'
-                                      % image_id)
+        req = fakes.HTTPRequest.blank('/v2/fake/images/{0!s}/metadata/key1'.format(image_id))
         req.method = 'POST'
         body = {"metadata": {"key1": "value1"}}
         req.body = jsonutils.dump_as_bytes(body)

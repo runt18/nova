@@ -59,7 +59,7 @@ class RequestTest(test.NoDBTestCase):
         request = wsgi.Request.blank('/foo')
         instances = []
         for x in range(3):
-            instances.append({'uuid': 'uuid%s' % x})
+            instances.append({'uuid': 'uuid{0!s}'.format(x)})
         # Store 2
         request.cache_db_instances(instances[:2])
         # Store 1
@@ -80,7 +80,7 @@ class RequestTest(test.NoDBTestCase):
         request = wsgi.Request.blank('/foo')
         compute_nodes = []
         for x in range(3):
-            compute_nodes.append({'id': 'id%s' % x})
+            compute_nodes.append({'id': 'id{0!s}'.format(x)})
         # Store 2
         request.cache_db_compute_nodes(compute_nodes[:2])
         # Store 1

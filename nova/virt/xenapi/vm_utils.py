@@ -838,8 +838,7 @@ def _find_cached_image(session, image_id, sr_ref):
     """Returns the vdi-ref of the cached image."""
     name_label = _get_image_vdi_label(image_id)
     recs = session.call_xenapi("VDI.get_all_records_where",
-                               'field "name__label"="%s"'
-                               % name_label)
+                               'field "name__label"="{0!s}"'.format(name_label))
     number_found = len(recs)
     if number_found > 0:
         if number_found > 1:
@@ -1011,7 +1010,7 @@ def _make_partition(session, dev, partition_start, partition_end):
 
         # Sometimes the partition gets created under /dev/mapper, depending
         # on the setup in dom0.
-        mapper_path = '/dev/mapper/%s' % os.path.basename(partition_path)
+        mapper_path = '/dev/mapper/{0!s}'.format(os.path.basename(partition_path))
         if os.path.exists(mapper_path):
             return mapper_path
 
@@ -1056,7 +1055,7 @@ def _generate_disk(session, instance, vm_ref, userdevice, name_label,
             create_vbd(session, vm_ref, vdi_ref, userdevice, bootable=False)
     except Exception:
         with excutils.save_and_reraise_exception():
-            msg = "Error while generating disk number: %s" % userdevice
+            msg = "Error while generating disk number: {0!s}".format(userdevice)
             LOG.debug(msg, instance=instance, exc_info=True)
             safe_destroy_vdis(session, [vdi_ref])
 
@@ -1093,13 +1092,13 @@ def generate_single_ephemeral(session, instance, vm_ref, userdevice,
     if instance_name_label is None:
         instance_name_label = instance["name"]
 
-    name_label = "%s ephemeral" % instance_name_label
+    name_label = "{0!s} ephemeral".format(instance_name_label)
     fs_label = "ephemeral"
     # TODO(johngarbutt) need to move DEVICE_EPHEMERAL from vmops to use it here
     label_number = int(userdevice) - 4
     if label_number > 0:
-        name_label = "%s (%d)" % (name_label, label_number)
-        fs_label = "ephemeral%d" % label_number
+        name_label = "{0!s} ({1:d})".format(name_label, label_number)
+        fs_label = "ephemeral{0:d}".format(label_number)
 
     return _generate_disk(session, instance, vm_ref, str(userdevice),
                           name_label, 'ephemeral', size_gb * 1024,
@@ -1157,8 +1156,8 @@ def generate_configdrive(session, instance, vm_ref, userdevice,
 
                     dev_path = utils.make_dev_path(dev)
                     utils.execute('dd',
-                                  'if=%s' % tmp_file,
-                                  'of=%s' % dev_path,
+                                  'if={0!s}'.format(tmp_file),
+                                  'of={0!s}'.format(dev_path),
                                   'oflag=direct,sync',
                                   run_as_root=True)
 
@@ -1224,7 +1223,7 @@ def destroy_kernel_ramdisk(session, instance, kernel, ramdisk):
 
 
 def _get_image_vdi_label(image_id):
-    return 'Glance Image %s' % image_id
+    return 'Glance Image {0!s}'.format(image_id)
 
 
 def _create_cached_image(context, session, instance, name_label,
@@ -1951,7 +1950,7 @@ def _get_rrd_server():
 def _get_rrd(server, vm_uuid):
     """Return the VM RRD XML as a string."""
     try:
-        xml = urllib.urlopen("%s://%s:%s@%s/vm_rrd?uuid=%s" % (
+        xml = urllib.urlopen("{0!s}://{1!s}:{2!s}@{3!s}/vm_rrd?uuid={4!s}".format(
             server[0],
             CONF.xenserver.connection_username,
             CONF.xenserver.connection_password,
@@ -2228,7 +2227,7 @@ def get_this_vm_uuid(session):
         # See https://bugs.launchpad.net/ubuntu/+source/xen-api/+bug/1081182
         domid, _ = utils.execute('xenstore-read', 'domid', run_as_root=True)
         vm_key, _ = utils.execute('xenstore-read',
-                                 '/local/domain/%s/vm' % domid.strip(),
+                                 '/local/domain/{0!s}/vm'.format(domid.strip()),
                                  run_as_root=True)
         return vm_key.strip()[4:]
 
@@ -2285,7 +2284,7 @@ def _write_partition(session, virtual_size, dev):
               {'primary_first': primary_first, 'primary_last': primary_last,
                'dev_path': dev_path})
 
-    _make_partition(session, dev, "%ds" % primary_first, "%ds" % primary_last)
+    _make_partition(session, dev, "{0:d}s".format(primary_first), "{0:d}s".format(primary_last))
     LOG.debug('Writing partition table %s done.', dev_path)
 
 
@@ -2318,7 +2317,7 @@ def _resize_part_and_fs(dev, start, old_sectors, new_sectors, flags):
     if new_sectors < old_sectors:
         # Resizing down, resize filesystem before partition resize
         try:
-            utils.execute('resize2fs', partition_path, '%ds' % size,
+            utils.execute('resize2fs', partition_path, '{0:d}s'.format(size),
                           run_as_root=True)
         except processutils.ProcessExecutionError as exc:
             LOG.error(six.text_type(exc))
@@ -2331,8 +2330,8 @@ def _resize_part_and_fs(dev, start, old_sectors, new_sectors, flags):
                   run_as_root=True)
     utils.execute('parted', '--script', dev_path, 'mkpart',
                   'primary',
-                  '%ds' % start,
-                  '%ds' % end,
+                  '{0:d}s'.format(start),
+                  '{0:d}s'.format(end),
                   run_as_root=True)
     if "boot" in flags.lower():
         utils.execute('parted', '--script', dev_path,
@@ -2424,9 +2423,9 @@ def _copy_partition(session, src_ref, dst_ref, partition, virtual_size):
             else:
                 num_blocks = virtual_size / SECTOR_SIZE
                 utils.execute('dd',
-                              'if=%s' % src_path,
-                              'of=%s' % dst_path,
-                              'count=%d' % num_blocks,
+                              'if={0!s}'.format(src_path),
+                              'of={0!s}'.format(dst_path),
+                              'count={0:d}'.format(num_blocks),
                               'iflag=direct,sync',
                               'oflag=direct,sync',
                               run_as_root=True)
@@ -2512,9 +2511,9 @@ def _import_migrate_ephemeral_disks(session, instance):
     ephemeral_gb = instance.old_flavor.ephemeral_gb
     disk_sizes = get_ephemeral_disk_sizes(ephemeral_gb)
     for chain_number, _size in enumerate(disk_sizes, start=1):
-        chain_label = instance_uuid + "_ephemeral_%d" % chain_number
-        vdi_label = "%(name)s ephemeral (%(number)d)" % dict(
-                        name=instance['name'], number=chain_number)
+        chain_label = instance_uuid + "_ephemeral_{0:d}".format(chain_number)
+        vdi_label = "{name!s} ephemeral ({number:d})".format(**dict(
+                        name=instance['name'], number=chain_number))
         ephemeral_vdi = _import_migrated_vhds(session, instance,
                                               chain_label, "ephemeral",
                                               vdi_label)
@@ -2551,7 +2550,7 @@ def migrate_vhd(session, instance, vdi_uuid, dest, sr_path, seq_num,
               instance=instance)
     chain_label = instance['uuid']
     if ephemeral_number:
-        chain_label = instance['uuid'] + "_ephemeral_%d" % ephemeral_number
+        chain_label = instance['uuid'] + "_ephemeral_{0:d}".format(ephemeral_number)
     try:
         # TODO(johngarbutt) tidy up plugin params
         session.call_plugin_serialized('migration', 'transfer_vhd',

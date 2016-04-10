@@ -129,12 +129,12 @@ class ExtendedIpsTestV21(test.TestCase):
         results = []
         for ip in self._get_ips(server):
             results.append({'address': ip.get('addr'),
-                            'type': ip.get('%stype' % self.prefix)})
+                            'type': ip.get('{0!s}type'.format(self.prefix))})
 
         self.assertEqual(ALL_IPS, sorted(results))
 
     def test_show(self):
-        url = '/v2/fake/servers/%s' % UUID3
+        url = '/v2/fake/servers/{0!s}'.format(UUID3)
         res = self._make_request(url)
 
         self.assertEqual(res.status_int, 200)

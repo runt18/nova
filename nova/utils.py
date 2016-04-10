@@ -67,7 +67,7 @@ monkey_patch_opts = [
                 help='Whether to apply monkey patching'),
     cfg.ListOpt('monkey_patch_modules',
                 default=[
-                  'nova.compute.api:%s' % (notify_decorator)
+                  'nova.compute.api:{0!s}'.format((notify_decorator))
                   ],
                 help='List of modules/decorators to monkey patch'),
 ]
@@ -250,7 +250,7 @@ def get_root_helper():
     if CONF.workarounds.disable_rootwrap:
         cmd = 'sudo'
     else:
-        cmd = 'sudo nova-rootwrap %s' % CONF.rootwrap_config
+        cmd = 'sudo nova-rootwrap {0!s}'.format(CONF.rootwrap_config)
     return cmd
 
 
@@ -411,7 +411,7 @@ def trycmd(*args, **kwargs):
 def generate_uid(topic, size=8):
     characters = '01234567890abcdefghijklmnopqrstuvwxyz'
     choices = [random.choice(characters) for _x in range(size)]
-    return '%s-%s' % (topic, ''.join(choices))
+    return '{0!s}-{1!s}'.format(topic, ''.join(choices))
 
 
 # Default symbols to use for passwords. Avoids visually confusing characters.
@@ -690,7 +690,7 @@ def safe_ip_format(ip):
     """
     try:
         if netaddr.IPAddress(ip).version == 6:
-            return '[%s]' % ip
+            return '[{0!s}]'.format(ip)
     except (TypeError, netaddr.AddrFormatError):  # hostname
         pass
     # it's IPv4 or hostname
@@ -733,15 +733,15 @@ def monkey_patch():
         for key, value in module_data.items():
             # set the decorator for the class methods
             if isinstance(value, pyclbr.Class):
-                clz = importutils.import_class("%s.%s" % (module, key))
+                clz = importutils.import_class("{0!s}.{1!s}".format(module, key))
                 for method, func in inspect.getmembers(clz, is_method):
                     setattr(clz, method,
-                        decorator("%s.%s.%s" % (module, key, method), func))
+                        decorator("{0!s}.{1!s}.{2!s}".format(module, key, method), func))
             # set the decorator for the function
             if isinstance(value, pyclbr.Function):
-                func = importutils.import_class("%s.%s" % (module, key))
+                func = importutils.import_class("{0!s}.{1!s}".format(module, key))
                 setattr(sys.modules[module], key,
-                    decorator("%s.%s" % (module, key), func))
+                    decorator("{0!s}.{1!s}".format(module, key), func))
 
 
 def make_dev_path(dev, partition=None, base='/dev'):
@@ -860,7 +860,7 @@ def generate_mac_address():
            random.randint(0x00, 0xff),
            random.randint(0x00, 0xff),
            random.randint(0x00, 0xff)]
-    return ':'.join(map(lambda x: "%02x" % x, mac))
+    return ':'.join(map(lambda x: "{0:02x}".format(x), mac))
 
 
 def read_file_as_root(file_path):
@@ -1396,7 +1396,7 @@ def filter_and_format_resource_metadata(resource_type, resource_list,
 
         for (k, v) in metadata.items():
             formatted_metadata_list.append({'key': k, 'value': v,
-                             '%s_id' % resource_type: _get_id(res)})
+                             '{0!s}_id'.format(resource_type): _get_id(res)})
 
     return formatted_metadata_list
 

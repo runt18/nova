@@ -27,10 +27,10 @@ from nova import utils
 
 class FakeFieldType(fields.FieldType):
     def coerce(self, obj, attr, value):
-        return '*%s*' % value
+        return '*{0!s}*'.format(value)
 
     def to_primitive(self, obj, attr, value):
-        return '!%s!' % value
+        return '!{0!s}!'.format(value)
 
     def from_primitive(self, obj, attr, value):
         return value[1:-1]

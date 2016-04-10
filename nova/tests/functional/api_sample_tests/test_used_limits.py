@@ -61,5 +61,5 @@ class UsedLimitsSamplesJsonTest(api_sample_base.ApiSampleTestBaseV21):
         # TODO(sdague): if we split the admin tests out the whole
         # class doesn't need admin api enabled.
         tenant_id = 'openstack'
-        response = self._do_get('limits?tenant_id=%s' % tenant_id)
+        response = self._do_get('limits?tenant_id={0!s}'.format(tenant_id))
         self._verify_response(self.template, {}, response, 200)

@@ -309,7 +309,7 @@ class TestSecurityGroupsV21(test.TestCase):
 
     def test_create_security_group_quota_limit(self):
         for num in range(1, CONF.quota_security_groups):
-            name = 'test%s' % num
+            name = 'test{0!s}'.format(num)
             sg = security_group_request_template(name=name)
             res_dict = self.controller.create(self.req, {'security_group': sg})
             self.assertEqual(res_dict['security_group']['name'], name)
@@ -412,7 +412,7 @@ class TestSecurityGroupsV21(test.TestCase):
         res_dict = self.controller.index(req)
         self.assertEqual(res_dict, tenant_specific)
 
-        req = fakes.HTTPRequest.blank('%s?all_tenants=1' % path,
+        req = fakes.HTTPRequest.blank('{0!s}?all_tenants=1'.format(path),
                                       use_admin_context=True)
         res_dict = self.controller.index(req)
         self.assertEqual(res_dict, all)
@@ -1364,7 +1364,7 @@ class SecurityGroupsOutputTestV21(test.TestCase):
         self.assertEqual(res.status_int, 202)
         server = self._get_server(res.body)
         for i, group in enumerate(self._get_groups(server)):
-            name = 'fake-2-%s' % i
+            name = 'fake-2-{0!s}'.format(i)
             self.assertEqual(group.get('name'), name)
 
     def test_show(self):
@@ -1374,7 +1374,7 @@ class SecurityGroupsOutputTestV21(test.TestCase):
         self.assertEqual(res.status_int, 200)
         server = self._get_server(res.body)
         for i, group in enumerate(self._get_groups(server)):
-            name = 'fake-2-%s' % i
+            name = 'fake-2-{0!s}'.format(i)
             self.assertEqual(group.get('name'), name)
 
     def test_detail(self):
@@ -1384,7 +1384,7 @@ class SecurityGroupsOutputTestV21(test.TestCase):
         self.assertEqual(res.status_int, 200)
         for i, server in enumerate(self._get_servers(res.body)):
             for j, group in enumerate(self._get_groups(server)):
-                name = 'fake-%s-%s' % (i, j)
+                name = 'fake-{0!s}-{1!s}'.format(i, j)
                 self.assertEqual(group.get('name'), name)
 
     def test_no_instance_passthrough_404(self):
@@ -1468,7 +1468,7 @@ class PolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, func, *arg, **kwarg)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
 

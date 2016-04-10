@@ -30,19 +30,18 @@ import novalib  # noqa
 
 def main(dom_id, command, only_this_vif=None):
     xsls = novalib.execute_get_output('/usr/bin/xenstore-ls',
-                              '/local/domain/%s/vm-data/networking' % dom_id)
+                              '/local/domain/{0!s}/vm-data/networking'.format(dom_id))
     macs = [line.split("=")[0].strip() for line in xsls.splitlines()]
 
     for mac in macs:
         xsread = novalib.execute_get_output('/usr/bin/xenstore-read',
-                                    '/local/domain/%s/vm-data/networking/%s' %
-                                    (dom_id, mac))
+                                    '/local/domain/{0!s}/vm-data/networking/{1!s}'.format(dom_id, mac))
         data = json.loads(xsread)
         for ip in data['ips']:
             if data["label"] == "public":
-                vif = "vif%s.0" % dom_id
+                vif = "vif{0!s}.0".format(dom_id)
             else:
-                vif = "vif%s.1" % dom_id
+                vif = "vif{0!s}.1".format(dom_id)
 
             if (only_this_vif is None) or (vif == only_this_vif):
                 params = dict(IP=ip['ip'], VIF=vif, MAC=data['mac'])
@@ -123,8 +122,8 @@ def apply_ebtables_rules(command, params):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print ("usage: %s dom_id online|offline [vif]" %
-               os.path.basename(sys.argv[0]))
+        print ("usage: {0!s} dom_id online|offline [vif]".format(
+               os.path.basename(sys.argv[0])))
         sys.exit(1)
     else:
         dom_id, command = sys.argv[1:3]

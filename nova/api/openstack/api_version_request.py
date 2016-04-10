@@ -141,8 +141,7 @@ class APIVersionRequest(object):
 
     def __str__(self):
         """Debug/Logging representation of object."""
-        return ("API Version Request Major: %s, Minor: %s"
-                % (self.ver_major, self.ver_minor))
+        return ("API Version Request Major: {0!s}, Minor: {1!s}".format(self.ver_major, self.ver_minor))
 
     def is_null(self):
         return self.ver_major == 0 and self.ver_minor == 0
@@ -212,4 +211,4 @@ class APIVersionRequest(object):
         """
         if self.is_null():
             raise ValueError
-        return "%s.%s" % (self.ver_major, self.ver_minor)
+        return "{0!s}.{1!s}".format(self.ver_major, self.ver_minor)

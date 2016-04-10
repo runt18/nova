@@ -102,11 +102,11 @@ class FloatingIpsTest(api_sample_base.ApiSampleTestBaseV21):
         self.test_floating_ips_create()
         # NOTE(sdague): the first floating ip will always have 1 as an id,
         # but it would be better if we could get this from the create
-        response = self._do_get('os-floating-ips/%d' % 1)
+        response = self._do_get('os-floating-ips/{0:d}'.format(1))
         self._verify_response('floating-ips-get-resp', {}, response, 200)
 
     def test_floating_ips_delete(self):
         self.test_floating_ips_create()
-        response = self._do_delete('os-floating-ips/%d' % 1)
+        response = self._do_delete('os-floating-ips/{0:d}'.format(1))
         self.assertEqual(202, response.status_code)
         self.assertEqual("", response.content)

@@ -53,10 +53,10 @@ class MountTestCase(test.NoDBTestCase):
                 if isinstance(v, list):
                     if len(v) > 0:
                         return v.pop(0)
-                    self.fail("Out of items for: %s" % filename)
+                    self.fail("Out of items for: {0!s}".format(filename))
                 return v
             except KeyError:
-                self.fail("Unexpected call with: %s" % filename)
+                self.fail("Unexpected call with: {0!s}".format(filename))
         return exists_effect
 
     def _check_calls(self, exists, filenames):

@@ -79,9 +79,9 @@ def stub_instance(id, user_id='fake', project_id='fake', host=None,
         key_data = ''
 
     # ReservationID isn't sent back, hack it in there.
-    server_name = name or "server%s" % id
+    server_name = name or "server{0!s}".format(id)
     if reservation_id != "":
-        server_name = "reservation_%s" % (reservation_id, )
+        server_name = "reservation_{0!s}".format(reservation_id )
 
     instance = {
         "id": int(id),
@@ -132,7 +132,7 @@ class ConsolesControllerTestV21(test.NoDBTestCase):
         self.stub_out('nova.db.instance_get_by_uuid',
                       self.instance_db.return_server_by_uuid)
         self.uuid = str(stdlib_uuid.uuid4())
-        self.url = '/v2/fake/servers/%s/consoles' % self.uuid
+        self.url = '/v2/fake/servers/{0!s}/consoles'.format(self.uuid)
         self._set_up_controller()
 
     def _set_up_controller(self):

@@ -329,7 +329,7 @@ def bandwidth_usage(instance_ref, audit_start,
 
     for b in bw_usages:
         if b.mac in macs:
-            label = 'net-name-not-found-%s' % b.mac
+            label = 'net-name-not-found-{0!s}'.format(b.mac)
             for vif in nw_info:
                 if vif['address'] == b.mac:
                     label = vif['network']['label']

@@ -69,7 +69,7 @@ def record_exists(arg_dict):
     """Returns whether or not the given record exists. The record path
     is determined from the given path and dom_id in the arg_dict.
     """
-    cmd = ["xenstore-exists", "/local/domain/%(dom_id)s/%(path)s" % arg_dict]
+    cmd = ["xenstore-exists", "/local/domain/{dom_id!s}/{path!s}".format(**arg_dict)]
     try:
         _run_command(cmd)
         return True
@@ -89,7 +89,7 @@ def read_record(self, arg_dict):
     and boolean True, attempting to read a non-existent path will return
     the string 'None' instead of raising an exception.
     """
-    cmd = ["xenstore-read", "/local/domain/%(dom_id)s/%(path)s" % arg_dict]
+    cmd = ["xenstore-read", "/local/domain/{dom_id!s}/{path!s}".format(**arg_dict)]
     try:
         result = _run_command(cmd)
         return result.strip()
@@ -114,7 +114,7 @@ def write_record(self, arg_dict):
     you can json-ify more complex values and store the json output.
     """
     cmd = ["xenstore-write",
-           "/local/domain/%(dom_id)s/%(path)s" % arg_dict,
+           "/local/domain/{dom_id!s}/{path!s}".format(**arg_dict),
            arg_dict["value"]]
     _run_command(cmd)
     return arg_dict["value"]
@@ -127,7 +127,7 @@ def list_records(self, arg_dict):
     path as the key and the stored value as the value. If the path
     doesn't exist, an empty dict is returned.
     """
-    dirpath = "/local/domain/%(dom_id)s/%(path)s" % arg_dict
+    dirpath = "/local/domain/{dom_id!s}/{path!s}".format(**arg_dict)
     cmd = ["xenstore-ls", dirpath.rstrip("/")]
     try:
         recs = _run_command(cmd)
@@ -143,7 +143,7 @@ def list_records(self, arg_dict):
     ret = {}
     for path in paths:
         if base_path:
-            arg_dict["path"] = "%s/%s" % (base_path, path)
+            arg_dict["path"] = "{0!s}/{1!s}".format(base_path, path)
         else:
             arg_dict["path"] = path
         rec = read_record(self, arg_dict)
@@ -160,7 +160,7 @@ def delete_record(self, arg_dict):
     """Just like it sounds: it removes the record for the specified
     VM and the specified path from xenstore.
     """
-    cmd = ["xenstore-rm", "/local/domain/%(dom_id)s/%(path)s" % arg_dict]
+    cmd = ["xenstore-rm", "/local/domain/{dom_id!s}/{path!s}".format(**arg_dict)]
     try:
         return _run_command(cmd)
     except XenstoreError, e:    # noqa
@@ -189,14 +189,14 @@ def _paths_from_ls(recs):
             path = []
         elif this_level == level:
             # child of same parent
-            ret.append("%s/%s" % ("/".join(path), barename))
+            ret.append("{0!s}/{1!s}".format("/".join(path), barename))
         elif this_level > level:
             path.append(last_nm)
-            ret.append("%s/%s" % ("/".join(path), barename))
+            ret.append("{0!s}/{1!s}".format("/".join(path), barename))
             level = this_level
         elif this_level < level:
             path = path[:this_level]
-            ret.append("%s/%s" % ("/".join(path), barename))
+            ret.append("{0!s}/{1!s}".format("/".join(path), barename))
             level = this_level
         last_nm = barename
     return ret

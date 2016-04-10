@@ -56,7 +56,7 @@ FAKE_FLAVORS = {
 
 
 def fake_flavor_get_by_flavor_id(flavorid, ctxt=None):
-    return FAKE_FLAVORS['flavor %s' % flavorid]
+    return FAKE_FLAVORS['flavor {0!s}'.format(flavorid)]
 
 
 def fake_get_all_flavors_sorted_list(context=None, inactive=False,
@@ -665,7 +665,7 @@ class ParseIsPublicTestV21(test.TestCase):
 
     def assertPublic(self, expected, is_public):
         self.assertIs(expected, self.controller._parse_is_public(is_public),
-                      '%s did not return %s' % (is_public, expected))
+                      '{0!s} did not return {1!s}'.format(is_public, expected))
 
     def test_None(self):
         self.assertPublic(True, None)

@@ -192,7 +192,7 @@ class TestDatabaseFixture(testtools.TestCase):
         conn = engine.connect()
         result = conn.execute("select * from instance_types")
         rows = result.fetchall()
-        self.assertEqual(5, len(rows), "Rows %s" % rows)
+        self.assertEqual(5, len(rows), "Rows {0!s}".format(rows))
 
         # insert a 6th instance type, column 5 below is an int id
         # which has a constraint on it, so if new standard instance
@@ -202,7 +202,7 @@ class TestDatabaseFixture(testtools.TestCase):
                      ", 1.0, 40, 0, 0, 1, 0)")
         result = conn.execute("select * from instance_types")
         rows = result.fetchall()
-        self.assertEqual(6, len(rows), "Rows %s" % rows)
+        self.assertEqual(6, len(rows), "Rows {0!s}".format(rows))
 
         # reset by invoking the fixture again
         #
@@ -213,7 +213,7 @@ class TestDatabaseFixture(testtools.TestCase):
         conn = engine.connect()
         result = conn.execute("select * from instance_types")
         rows = result.fetchall()
-        self.assertEqual(5, len(rows), "Rows %s" % rows)
+        self.assertEqual(5, len(rows), "Rows {0!s}".format(rows))
 
     def test_api_fixture_reset(self):
         # This sets up reasonable db connection strings
@@ -223,14 +223,14 @@ class TestDatabaseFixture(testtools.TestCase):
         conn = engine.connect()
         result = conn.execute("select * from cell_mappings")
         rows = result.fetchall()
-        self.assertEqual(0, len(rows), "Rows %s" % rows)
+        self.assertEqual(0, len(rows), "Rows {0!s}".format(rows))
 
         uuid = uuidutils.generate_uuid()
         conn.execute("insert into cell_mappings (uuid, name) VALUES "
                      "('%s', 'fake-cell')" % (uuid,))
         result = conn.execute("select * from cell_mappings")
         rows = result.fetchall()
-        self.assertEqual(1, len(rows), "Rows %s" % rows)
+        self.assertEqual(1, len(rows), "Rows {0!s}".format(rows))
 
         # reset by invoking the fixture again
         #
@@ -241,7 +241,7 @@ class TestDatabaseFixture(testtools.TestCase):
         conn = engine.connect()
         result = conn.execute("select * from cell_mappings")
         rows = result.fetchall()
-        self.assertEqual(0, len(rows), "Rows %s" % rows)
+        self.assertEqual(0, len(rows), "Rows {0!s}".format(rows))
 
     def test_fixture_cleanup(self):
         # because this sets up reasonable db connection strings
@@ -272,7 +272,7 @@ class TestDatabaseFixture(testtools.TestCase):
                      "('%s', 'fake-cell')" % (uuid,))
         result = conn.execute("select * from cell_mappings")
         rows = result.fetchall()
-        self.assertEqual(1, len(rows), "Rows %s" % rows)
+        self.assertEqual(1, len(rows), "Rows {0!s}".format(rows))
 
         # Manually do the cleanup that addCleanup will do
         fix.cleanup()
@@ -344,13 +344,13 @@ class TestSpawnIsSynchronousFixture(testtools.TestCase):
 
     def test_spawn_return_has_wait(self):
         self.useFixture(fixtures.SpawnIsSynchronousFixture())
-        gt = utils.spawn(lambda x: '%s' % x, 'foo')
+        gt = utils.spawn(lambda x: '{0!s}'.format(x), 'foo')
         foo = gt.wait()
         self.assertEqual('foo', foo)
 
     def test_spawn_n_return_has_wait(self):
         self.useFixture(fixtures.SpawnIsSynchronousFixture())
-        gt = utils.spawn_n(lambda x: '%s' % x, 'foo')
+        gt = utils.spawn_n(lambda x: '{0!s}'.format(x), 'foo')
         foo = gt.wait()
         self.assertEqual('foo', foo)
 

@@ -26,7 +26,7 @@ class ServerUsageController(wsgi.Controller):
 
     def _extend_server(self, server, instance):
         for k in ['launched_at', 'terminated_at']:
-            key = "%s:%s" % (Server_usage.alias, k)
+            key = "{0!s}:{1!s}".format(Server_usage.alias, k)
             # NOTE(danms): Historically, this timestamp has been generated
             # merely by grabbing str(datetime) of a TZ-naive object. The
             # only way we can keep that with instance objects is to strip

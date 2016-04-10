@@ -217,7 +217,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         try:
             self.conn.init_host("fake_host")
         except Exception as ex:
-            self.fail("init_host raised: %s" % ex)
+            self.fail("init_host raised: {0!s}".format(ex))
 
     def _set_exception_vars(self):
         self.wait_task = self.conn._session._wait_for_task
@@ -230,7 +230,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         try:
             self.conn.cleanup_host("fake_host")
         except Exception as ex:
-            self.fail("cleanup_host raised: %s" % ex)
+            self.fail("cleanup_host raised: {0!s}".format(ex))
 
     def test_driver_capabilities(self):
         self.assertTrue(self.conn.capabilities['has_imagecache'])
@@ -446,7 +446,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
     def _cached_files_exist(self, exists=True):
         cache = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                       self.fake_image_uuid,
-                                      '%s.vmdk' % self.fake_image_uuid)
+                                      '{0!s}.vmdk'.format(self.fake_image_uuid))
         if exists:
             vmwareapi_fake.assertPathExists(self, str(cache))
         else:
@@ -464,7 +464,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
 
         mock_from_image.return_value = img_props
         self._create_vm()
-        path = ds_obj.DatastorePath(self.ds, self.uuid, '%s.vmdk' % self.uuid)
+        path = ds_obj.DatastorePath(self.ds, self.uuid, '{0!s}.vmdk'.format(self.uuid))
         vmwareapi_fake.assertPathExists(self, str(path))
         self._cached_files_exist()
 
@@ -484,10 +484,10 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self._create_vm()
         path = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                      self.fake_image_uuid,
-                                     '%s.vmdk' % self.fake_image_uuid)
+                                     '{0!s}.vmdk'.format(self.fake_image_uuid))
         root = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                      self.fake_image_uuid,
-                                     '%s.80.vmdk' % self.fake_image_uuid)
+                                     '{0!s}.80.vmdk'.format(self.fake_image_uuid))
         vmwareapi_fake.assertPathExists(self, str(path))
         vmwareapi_fake.assertPathExists(self, str(root))
 
@@ -496,23 +496,23 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self._create_vm(instance_type=instance_type)
         path = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                      self.fake_image_uuid,
-                                     '%s.iso' % self.fake_image_uuid)
+                                     '{0!s}.iso'.format(self.fake_image_uuid))
         vmwareapi_fake.assertPathExists(self, str(path))
 
     def test_iso_disk_type_created(self):
         self._iso_disk_type_created()
-        path = ds_obj.DatastorePath(self.ds, self.uuid, '%s.vmdk' % self.uuid)
+        path = ds_obj.DatastorePath(self.ds, self.uuid, '{0!s}.vmdk'.format(self.uuid))
         vmwareapi_fake.assertPathExists(self, str(path))
 
     def test_iso_disk_type_created_with_root_gb_0(self):
         self._iso_disk_type_created(instance_type='m1.micro')
-        path = ds_obj.DatastorePath(self.ds, self.uuid, '%s.vmdk' % self.uuid)
+        path = ds_obj.DatastorePath(self.ds, self.uuid, '{0!s}.vmdk'.format(self.uuid))
         vmwareapi_fake.assertPathNotExists(self, str(path))
 
     def test_iso_disk_cdrom_attach(self):
         iso_path = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                          self.fake_image_uuid,
-                                         '%s.iso' % self.fake_image_uuid)
+                                         '{0!s}.iso'.format(self.fake_image_uuid))
 
         def fake_attach_cdrom(vm_ref, instance, data_store_ref,
                               iso_uploaded_path):
@@ -539,7 +539,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         iso_path = [
             ds_obj.DatastorePath(self.ds, 'vmware_base',
                                   self.fake_image_uuid,
-                                  '%s.iso' % self.fake_image_uuid),
+                                  '{0!s}.iso'.format(self.fake_image_uuid)),
             ds_obj.DatastorePath(self.ds, 'fake-config-drive')]
         self.iso_index = 0
 
@@ -710,10 +710,8 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self._create_vm(instance_type='m1.micro')
         info = self._get_info()
         self._check_vm_info(info, power_state.RUNNING)
-        cache = ('[%s] vmware_base/%s/%s.vmdk' %
-                 (self.ds, self.fake_image_uuid, self.fake_image_uuid))
-        gb_cache = ('[%s] vmware_base/%s/%s.0.vmdk' %
-                    (self.ds, self.fake_image_uuid, self.fake_image_uuid))
+        cache = ('[{0!s}] vmware_base/{1!s}/{2!s}.vmdk'.format(self.ds, self.fake_image_uuid, self.fake_image_uuid))
+        gb_cache = ('[{0!s}] vmware_base/{1!s}/{2!s}.0.vmdk'.format(self.ds, self.fake_image_uuid, self.fake_image_uuid))
         vmwareapi_fake.assertPathExists(self, cache)
         vmwareapi_fake.assertPathNotExists(self, gb_cache)
 
@@ -768,7 +766,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
     def test_spawn_disk_extend_exists(self):
         root = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                      self.fake_image_uuid,
-                                     '%s.80.vmdk' % self.fake_image_uuid)
+                                     '{0!s}.80.vmdk'.format(self.fake_image_uuid))
 
         def _fake_extend(instance, requested_size, name, dc_ref):
             vmwareapi_fake._add_file(str(root))
@@ -805,7 +803,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
             self._create_vm()
             iid = img_props.image_id
             cached_image = ds_obj.DatastorePath(self.ds, 'vmware_base',
-                                                 iid, '%s.80.vmdk' % iid)
+                                                 iid, '{0!s}.80.vmdk'.format(iid))
             mock_extend.assert_called_once_with(
                     self.instance, self.instance.root_gb * units.Mi,
                     str(cached_image), "fake_dc_ref")
@@ -846,7 +844,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self.flags(use_linked_clone=True, group='vmware')
         self.task_ref = None
         uuid = self.fake_image_uuid
-        cached_image = '[%s] vmware_base/%s/%s.80.vmdk' % (self.ds,
+        cached_image = '[{0!s}] vmware_base/{1!s}/{2!s}.80.vmdk'.format(self.ds,
                                                            uuid, uuid)
 
         CopyError = vexc.FileFaultException
@@ -884,7 +882,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self.flags(use_linked_clone=True, group='vmware')
         self.task_ref = None
         uuid = self.fake_image_uuid
-        cached_image = '[%s] vmware_base/%s/%s.80.vmdk' % (self.ds,
+        cached_image = '[{0!s}] vmware_base/{1!s}/{2!s}.80.vmdk'.format(self.ds,
                                                            uuid, uuid)
 
         CopyError = vexc.FileFaultException
@@ -945,12 +943,12 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
 
         cached_image = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                              self.fake_image_uuid,
-                                             '%s.80.vmdk' %
-                                              self.fake_image_uuid)
+                                             '{0!s}.80.vmdk'.format(
+                                              self.fake_image_uuid))
         tmp_file = ds_obj.DatastorePath(self.ds, 'vmware_base',
                                          self.fake_image_uuid,
-                                         '%s.80-flat.vmdk' %
-                                          self.fake_image_uuid)
+                                         '{0!s}.80-flat.vmdk'.format(
+                                          self.fake_image_uuid))
 
         NoDiskSpace = vexc.get_fault_class('NoDiskSpace')
 
@@ -1570,7 +1568,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
                                    'node': self.instance_node})
         self._check_vm_info(info, power_state.RUNNING)
         info = self.conn.get_info({'name': '1-orig',
-                                   'uuid': '%s-orig' % self.uuid,
+                                   'uuid': '{0!s}-orig'.format(self.uuid),
                                    'node': self.instance_node})
         self._check_vm_info(info, power_state.SHUTDOWN)
         self.assertIsNotNone(vm_util.vm_ref_cache_get(self.uuid))
@@ -1872,7 +1870,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         self._cached_files_exist()
 
     def _get_timestamp_filename(self):
-        return '%s%s' % (imagecache.TIMESTAMP_PREFIX,
+        return '{0!s}{1!s}'.format(imagecache.TIMESTAMP_PREFIX,
                          self.old_time.strftime(imagecache.TIMESTAMP_FORMAT))
 
     def _override_time(self):
@@ -2114,7 +2112,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
         vm = self._get_vm_record()
         found_iface_id = False
         extras = vm.get("config.extraConfig")
-        key = "nvp.iface-id.%s" % index
+        key = "nvp.iface-id.{0!s}".format(index)
         num_found = 0
         for c in extras.OptionValue:
             if c.key.startswith("nvp.iface-id."):
@@ -2265,7 +2263,7 @@ class VMwareAPIVMTestCase(test.NoDBTestCase):
 
     def test_nodename(self):
         test_mor = "domain-26"
-        self.assertEqual("%s.%s" % (test_mor,
+        self.assertEqual("{0!s}.{1!s}".format(test_mor,
                                     vmwareapi_fake._FAKE_VCENTER_UUID),
                          self.conn._create_nodename(test_mor),
                          "VC driver failed to create the proper node name")

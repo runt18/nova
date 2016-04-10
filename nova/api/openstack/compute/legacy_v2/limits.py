@@ -407,7 +407,7 @@ class WsgiLimiter(object):
         delay, error = self._limiter.check_for_delay(verb, path, username)
 
         if delay:
-            headers = {"X-Wait-Seconds": "%.2f" % delay}
+            headers = {"X-Wait-Seconds": "{0:.2f}".format(delay)}
             return webob.exc.HTTPForbidden(headers=headers, explanation=error)
         else:
             return webob.exc.HTTPNoContent()
@@ -430,7 +430,7 @@ class WsgiLimiterProxy(object):
         conn = httplib.HTTPConnection(self.limiter_address)
 
         if username:
-            conn.request("POST", "/%s" % (username), body, headers)
+            conn.request("POST", "/{0!s}".format((username)), body, headers)
         else:
             conn.request("POST", "/", body, headers)
 

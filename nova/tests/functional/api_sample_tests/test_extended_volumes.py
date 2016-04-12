@@ -47,7 +47,7 @@ class ExtendedVolumesSampleJsonTests(test_servers.ServersSampleBase):
         uuid = self._post_server()
         self.stub_out('nova.db.block_device_mapping_get_all_by_instance_uuids',
                       fakes.stub_bdm_get_all_by_instance_uuids)
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = '1.2.3.4'

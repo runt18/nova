@@ -272,7 +272,7 @@ def get_id_from_href(href):
     Returns: 'abc123'
 
     """
-    return urlparse.urlsplit("%s" % href).path.split('/')[-1]
+    return urlparse.urlsplit("{0!s}".format(href)).path.split('/')[-1]
 
 
 def remove_trailing_version_from_href(href):
@@ -439,7 +439,7 @@ class ViewBuilder(object):
         url = url_join(prefix,
                        self._get_project_id(request),
                        collection_name)
-        return "%s?%s" % (url, urlparse.urlencode(params))
+        return "{0!s}?{1!s}".format(url, urlparse.urlencode(params))
 
     def _get_href_link(self, request, identifier, collection_name):
         """Return an href string pointing to this object."""

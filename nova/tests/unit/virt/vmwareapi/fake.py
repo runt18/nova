@@ -115,7 +115,7 @@ def _create_array_of_type(t):
     if t in _array_types:
         return _array_types[t]()
 
-    array_type_name = 'ArrayOf%s' % t
+    array_type_name = 'ArrayOf{0!s}'.format(t)
     array_type = type(array_type_name, (DataObject,), {})
 
     def __init__(self):
@@ -427,7 +427,7 @@ class VirtualMachine(ManagedObject):
                  _convert_to_array_of_opt_val(exconfig_do))
         if exconfig_do:
             for optval in exconfig_do:
-                self.set('config.extraConfig["%s"]' % optval.key, optval)
+                self.set('config.extraConfig["{0!s}"]'.format(optval.key), optval)
         self.set('runtime.host', kwargs.get("runtime_host", None))
         self.device = kwargs.get("virtual_device", [])
         # Sample of diagnostics data is below.
@@ -727,7 +727,7 @@ class HostSystem(ManagedObject):
         self.set("configManager.storageSystem", host_storage_sys_key)
 
         if not ds_ref:
-            ds_ref = create_datastore('local-host-%s' % name, 500, 500)
+            ds_ref = create_datastore('local-host-{0!s}'.format(name), 500, 500)
         datastores = DataObject()
         datastores.ManagedObjectReference = [ds_ref]
         self.set("datastore", datastores)
@@ -856,13 +856,13 @@ class HostSystem(ManagedObject):
         vswitch_do = DataObject()
         vswitch_do.pnic = ["vmnic0"]
         vswitch_do.name = vswitch_name
-        vswitch_do.portgroup = ["PortGroup-%s" % pg_name]
+        vswitch_do.portgroup = ["PortGroup-{0!s}".format(pg_name)]
 
         vswitches = self.get("config.network.vswitch").HostVirtualSwitch
         vswitches.append(vswitch_do)
 
         host_pg_do = DataObject()
-        host_pg_do.key = "PortGroup-%s" % pg_name
+        host_pg_do.key = "PortGroup-{0!s}".format(pg_name)
 
         pg_spec = DataObject()
         pg_spec.vlanId = vlanid
@@ -1432,7 +1432,7 @@ class FakeVim(object):
         matched_files = set()
         # Check if we are searching for a file or a directory
         directory = False
-        dname = '%s/' % ds_path
+        dname = '{0!s}/'.format(ds_path)
         for file in _db_content.get("files"):
             if file == dname:
                 directory = True
@@ -1488,7 +1488,7 @@ class FakeVim(object):
         ds_path = kwargs.get("name")
         if get_file(ds_path):
             raise vexc.FileAlreadyExistsException()
-        _db_content["files"].append('%s/' % ds_path)
+        _db_content["files"].append('{0!s}/'.format(ds_path))
 
     def _set_power_state(self, method, vm_ref, pwr_state="poweredOn"):
         """Sets power state for the VM."""

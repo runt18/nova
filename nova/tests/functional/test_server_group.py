@@ -107,8 +107,7 @@ class ServerGroupTestBase(test.TestCase):
                                 expected_status='ACTIVE', flavor=None):
         server = self._build_minimal_create_server_request('some-server')
         if flavor:
-            server[self._flavor_ref_parameter] = ('http://fake.server/%s'
-                                                  % flavor['id'])
+            server[self._flavor_ref_parameter] = ('http://fake.server/{0!s}'.format(flavor['id']))
         post = {'server': server,
                 'os:scheduler_hints': {'group': group['id']}}
         created_server = self.api.post_server(post)
@@ -129,15 +128,14 @@ class ServerGroupTestBase(test.TestCase):
             image_href = image[self._image_ref_parameter]
         else:
             image_href = image['id']
-            image_href = 'http://fake.server/%s' % image_href
+            image_href = 'http://fake.server/{0!s}'.format(image_href)
 
         # We now have a valid imageId
         server[self._image_ref_parameter] = image_href
 
         # Set a valid flavorId
         flavor = self.api.get_flavors()[1]
-        server[self._flavor_ref_parameter] = ('http://fake.server/%s'
-                                              % flavor['id'])
+        server[self._flavor_ref_parameter] = ('http://fake.server/{0!s}'.format(flavor['id']))
         server['name'] = name
         return server
 

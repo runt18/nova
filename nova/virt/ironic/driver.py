@@ -98,13 +98,13 @@ def _get_nodes_supported_instances(cpu_arch=None):
 
 def _log_ironic_polling(what, node, instance):
     power_state = (None if node.power_state is None else
-                   '"%s"' % node.power_state)
+                   '"{0!s}"'.format(node.power_state))
     tgt_power_state = (None if node.target_power_state is None else
-                       '"%s"' % node.target_power_state)
+                       '"{0!s}"'.format(node.target_power_state))
     prov_state = (None if node.provision_state is None else
-                  '"%s"' % node.provision_state)
+                  '"{0!s}"'.format(node.provision_state))
     tgt_prov_state = (None if node.target_provision_state is None else
-                      '"%s"' % node.target_provision_state)
+                      '"{0!s}"'.format(node.target_provision_state))
     LOG.debug('Still waiting for ironic node %(node)s to %(what)s: '
               'power_state=%(power_state)s, '
               'target_power_state=%(tgt_power_state)s, '

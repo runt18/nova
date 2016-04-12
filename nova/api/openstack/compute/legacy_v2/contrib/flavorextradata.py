@@ -33,7 +33,7 @@ class FlavorextradataController(wsgi.Controller):
     def _extend_flavors(self, req, flavors):
         for flavor in flavors:
             db_flavor = req.get_db_flavor(flavor['id'])
-            key = "%s:ephemeral" % Flavorextradata.alias
+            key = "{0!s}:ephemeral".format(Flavorextradata.alias)
             flavor[key] = db_flavor['ephemeral_gb']
 
     def _show(self, req, resp_obj):

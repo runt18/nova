@@ -137,7 +137,7 @@ class XenAPIBridgeDriver(XenVIFDriver):
         if network_ref is None:
             # If bridge does not exists
             # 1 - create network
-            description = 'network for nova bridge %s' % bridge
+            description = 'network for nova bridge {0!s}'.format(bridge)
             network_rec = {'name_label': bridge,
                            'name_description': description,
                            'other_config': {}}
@@ -146,8 +146,8 @@ class XenAPIBridgeDriver(XenVIFDriver):
             # 2 - find PIF for VLAN NOTE(salvatore-orlando): using double
             # quotes inside single quotes as xapi filter only support
             # tokens in double quotes
-            expr = ('field "device" = "%s" and field "VLAN" = "-1"' %
-                    bridge_interface)
+            expr = ('field "device" = "{0!s}" and field "VLAN" = "-1"'.format(
+                    bridge_interface))
             pifs = self._session.call_xenapi('PIF.get_all_records_where',
                                              expr)
 

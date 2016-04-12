@@ -24,7 +24,7 @@ from nova.objects import fields
 def fake_db_secgroups(instance, names):
     secgroups = []
     for i, name in enumerate(names):
-        group_name = 'secgroup-%i' % i
+        group_name = 'secgroup-{0:d}'.format(i)
         if isinstance(name, dict) and name.get('name'):
             group_name = name.get('name')
         secgroups.append(
@@ -88,7 +88,7 @@ def fake_db_instance(**updates):
         elif name in ['flavor', 'ec2_ids']:
             pass
         else:
-            raise Exception('fake_db_instance needs help with %s' % name)
+            raise Exception('fake_db_instance needs help with {0!s}'.format(name))
 
     if updates:
         db_instance.update(updates)

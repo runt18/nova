@@ -41,7 +41,7 @@ def configure_logging(name):
     log.setLevel(logging.DEBUG)
     sysh = logging.handlers.SysLogHandler('/dev/log')
     sysh.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%s: %%(levelname)-8s %%(message)s' % name)
+    formatter = logging.Formatter('{0!s}: %(levelname)-8s %(message)s'.format(name))
     sysh.setFormatter(formatter)
     log.addHandler(sysh)
 

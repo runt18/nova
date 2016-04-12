@@ -183,6 +183,6 @@ class HostOps(object):
         # and number of logged in users.
         # This is done to ensure the format of the returned
         # value is same as in libvirt
-        return "%s up %s,  0 users,  load average: 0, 0, 0" % (
+        return "{0!s} up {1!s},  0 users,  load average: 0, 0, 0".format(
                    str(time.strftime("%H:%M:%S")),
                    str(datetime.timedelta(milliseconds=int(tick_count64))))

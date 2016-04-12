@@ -281,7 +281,7 @@ class DsUtilTestCase(test.NoDBTestCase):
                 return
 
             # Sentinel that get_datastore's use of vim has changed
-            self.fail('Unexpected vim call in get_datastore: %s' % method)
+            self.fail('Unexpected vim call in get_datastore: {0!s}'.format(method))
 
         return mock.patch.object(self.session, '_call_method',
                                  side_effect=fake_call_method)
@@ -344,8 +344,7 @@ class DsUtilTestCase(test.NoDBTestCase):
         # Test with a regex that has no match
         # Checks if code raises DatastoreNotFound with a specific message
         datastore_invalid_regex = re.compile("unknown-ds")
-        exp_message = ("Datastore regex %s did not match any datastores"
-                       % datastore_invalid_regex.pattern)
+        exp_message = ("Datastore regex {0!s} did not match any datastores".format(datastore_invalid_regex.pattern))
         fake_objects = fake.FakeRetrieveResult()
         fake_objects.add_object(fake.Datastore("fake-ds0"))
         fake_objects.add_object(fake.Datastore("fake-ds1"))

@@ -180,7 +180,7 @@ class BarbicanKeyManager(key_mgr.KeyManager):
             elif (payload_content_type == 'application/octet-stream' and
                   not from_copy):
                 key_list = key.get_encoded()
-                string_key = ''.join(map(lambda byte: "%02x" % byte, key_list))
+                string_key = ''.join(map(lambda byte: "{0:02x}".format(byte), key_list))
                 encoded_key = base64.b64encode(binascii.unhexlify(string_key))
             else:
                 encoded_key = key.get_encoded()

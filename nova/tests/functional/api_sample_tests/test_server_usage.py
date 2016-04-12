@@ -45,7 +45,7 @@ class ServerUsageSampleJsonTest(test_servers.ServersSampleBase):
         self.uuid = self._post_server()
 
     def test_show(self):
-        response = self._do_get('servers/%s' % self.uuid)
+        response = self._do_get('servers/{0!s}'.format(self.uuid))
         subs = {}
         subs['id'] = self.uuid
         subs['hostid'] = '[a-f0-9]+'

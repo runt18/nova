@@ -77,8 +77,7 @@ def dump_db(db_driver, db_name, db_url, migration_version, dump_filename):
 
 
 def diff_files(filename1, filename2):
-    pipeline = ['diff -U 3 %(filename1)s %(filename2)s'
-                % {'filename1': filename1, 'filename2': filename2}]
+    pipeline = ['diff -U 3 {filename1!s} {filename2!s}'.format(**{'filename1': filename1, 'filename2': filename2})]
 
     # Use colordiff if available
     if subprocess.call(['which', 'colordiff']) == 0:
@@ -102,8 +101,7 @@ class Mysql(object):
 
     def dump(self, name, dump_filename):
         subprocess.check_call(
-                'mysqldump -u root %(name)s > %(dump_filename)s'
-                % {'name': name, 'dump_filename': dump_filename},
+                'mysqldump -u root {name!s} > {dump_filename!s}'.format(**{'name': name, 'dump_filename': dump_filename}),
                 shell=True)
 
 
@@ -116,8 +114,7 @@ class Postgresql(object):
 
     def dump(self, name, dump_filename):
         subprocess.check_call(
-                'pg_dump %(name)s > %(dump_filename)s'
-                % {'name': name, 'dump_filename': dump_filename},
+                'pg_dump {name!s} > {dump_filename!s}'.format(**{'name': name, 'dump_filename': dump_filename}),
                 shell=True)
 
 
@@ -126,20 +123,20 @@ class Ibm_db_sa(object):
     @classmethod
     def db2cmd(cls, cmd):
         """Wraps a command to be run under the DB2 instance user."""
-        subprocess.check_call('su - $(db2ilist) -c "%s"' % cmd, shell=True)
+        subprocess.check_call('su - $(db2ilist) -c "{0!s}"'.format(cmd), shell=True)
 
     def create(self, name):
-        self.db2cmd('db2 \'create database %s\'' % name)
+        self.db2cmd('db2 \'create database {0!s}\''.format(name))
 
     def drop(self, name):
-        self.db2cmd('db2 \'drop database %s\'' % name)
+        self.db2cmd('db2 \'drop database {0!s}\''.format(name))
 
     def dump(self, name, dump_filename):
-        self.db2cmd('db2look -d %(name)s -e -o %(dump_filename)s' %
-                    {'name': name, 'dump_filename': dump_filename})
+        self.db2cmd('db2look -d {name!s} -e -o {dump_filename!s}'.format(**
+                    {'name': name, 'dump_filename': dump_filename}))
         # The output file gets dumped to the db2 instance user's home directory
         # so we have to copy it back to our current working directory.
-        subprocess.check_call('cp /home/$(db2ilist)/%s ./' % dump_filename,
+        subprocess.check_call('cp /home/$(db2ilist)/{0!s} ./'.format(dump_filename),
                               shell=True)
 
 
@@ -176,8 +173,8 @@ def _migrate_cmd(db_url, *cmd):
 
     args = ['python', manage_py]
     args += cmd
-    args += ['--repository=%s' % MIGRATE_REPO,
-             '--url=%s' % db_url]
+    args += ['--repository={0!s}'.format(MIGRATE_REPO),
+             '--url={0!s}'.format(db_url)]
 
     subprocess.check_call(args)
 
@@ -229,19 +226,19 @@ def git_has_uncommited_changes():
 
 
 def die(msg):
-    print("ERROR: %s" % msg, file=sys.stderr)
+    print("ERROR: {0!s}".format(msg), file=sys.stderr)
     sys.exit(1)
 
 
 def usage(msg=None):
     if msg:
-        print("ERROR: %s" % msg, file=sys.stderr)
+        print("ERROR: {0!s}".format(msg), file=sys.stderr)
 
     prog = "schema_diff.py"
     args = ["<db-url>", "<orig-branch:orig-version>",
             "<new-branch:new-version>"]
 
-    print("usage: %s %s" % (prog, ' '.join(args)), file=sys.stderr)
+    print("usage: {0!s} {1!s}".format(prog, ' '.join(args)), file=sys.stderr)
     sys.exit(1)
 
 
@@ -267,8 +264,8 @@ def parse_options():
 def main():
     timestamp = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
 
-    ORIG_DB = 'orig_db_%s' % timestamp
-    NEW_DB = 'new_db_%s' % timestamp
+    ORIG_DB = 'orig_db_{0!s}'.format(timestamp)
+    NEW_DB = 'new_db_{0!s}'.format(timestamp)
 
     ORIG_DUMP = ORIG_DB + ".dump"
     NEW_DUMP = NEW_DB + ".dump"

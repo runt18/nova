@@ -596,7 +596,7 @@ class NetworksAssociateTestV21(test.NoDBTestCase):
 
     def test_network_associate_project_delete_fail(self):
         uuid = FAKE_NETWORKS[0]['uuid']
-        req = fakes.HTTPRequest.blank('/v2/1234/os-networks/%s/action' % uuid)
+        req = fakes.HTTPRequest.blank('/v2/1234/os-networks/{0!s}/action'.format(uuid))
         self.assertRaises(webob.exc.HTTPConflict,
                                     self.controller.delete, req, -1)
 
@@ -708,7 +708,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_index_policy_failed(self):
@@ -718,7 +718,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_create_policy_failed(self):
@@ -728,7 +728,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.create, self.req, body=NEW_NETWORK)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_policy_failed(self):
@@ -738,7 +738,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.delete, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_add_policy_failed(self):
@@ -749,7 +749,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             self.controller.add, self.req,
             body={'id': fakes.FAKE_UUID})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_disassociate_policy_failed(self):
@@ -760,7 +760,7 @@ class NetworksEnforcementV21(test.NoDBTestCase):
             self.controller._disassociate_host_and_project,
             self.req, fakes.FAKE_UUID, body={'network': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
 
@@ -780,7 +780,7 @@ class NetworksAssociateEnforcementV21(test.NoDBTestCase):
             self.controller._disassociate_host_only,
             self.req, fakes.FAKE_UUID, body={'disassociate_host': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_disassociate_project_only_policy_failed(self):
@@ -791,7 +791,7 @@ class NetworksAssociateEnforcementV21(test.NoDBTestCase):
             self.controller._disassociate_project_only,
             self.req, fakes.FAKE_UUID, body={'disassociate_project': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_disassociate_host_only_policy_failed(self):
@@ -802,5 +802,5 @@ class NetworksAssociateEnforcementV21(test.NoDBTestCase):
             self.controller._associate_host,
             self.req, fakes.FAKE_UUID, body={'associate_host': 'fake_host'})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

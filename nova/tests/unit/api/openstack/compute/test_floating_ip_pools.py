@@ -75,5 +75,5 @@ class FloatingIPPoolsPolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
             exception.PolicyNotAuthorized, self.controller.index, self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." %
-            rule_name, exc.format_message())
+            "Policy doesn't allow {0!s} to be performed.".format(
+            rule_name), exc.format_message())

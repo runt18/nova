@@ -94,14 +94,14 @@ class KeyPairsSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
     def test_keypairs_get(self):
         # Get api sample of key pairs get request.
         key_name = self.test_keypairs_post()
-        response = self._do_get('os-keypairs/%s' % key_name)
+        response = self._do_get('os-keypairs/{0!s}'.format(key_name))
         subs = {'keypair_name': key_name}
         self._verify_response('keypairs-get-resp', subs, response, 200)
 
     def test_keypairs_delete(self):
         # Get api sample of key pairs delete request.
         key_name = self.test_keypairs_post()
-        response = self._do_delete('os-keypairs/%s' % key_name)
+        response = self._do_delete('os-keypairs/{0!s}'.format(key_name))
         self.assertEqual(self.expected_delete_status_code,
                          response.status_code)
 
@@ -202,7 +202,7 @@ class KeyPairsV210SampleJsonTest(KeyPairsSampleJsonTest):
             'user_id': "fake"
         }
         key_name = self._check_keypairs_post(**subs)
-        response = self._do_delete('os-keypairs/%s?user_id=fake' % key_name)
+        response = self._do_delete('os-keypairs/{0!s}?user_id=fake'.format(key_name))
         self.assertEqual(self.expected_delete_status_code,
                          response.status_code)
 

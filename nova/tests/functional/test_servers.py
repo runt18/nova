@@ -64,7 +64,7 @@ class ServersTestBase(integrated_helpers._IntegratedTestBase):
                 LOG.debug("Got 404, proceeding")
                 break
 
-            LOG.debug("Found_server=%s" % found_server)
+            LOG.debug("Found_server={0!s}".format(found_server))
 
             # TODO(justinsb): Mock doesn't yet do accurate state changes
             # if found_server['status'] != 'deleting':
@@ -95,7 +95,7 @@ class ServersTest(ServersTestBase):
         # Simple check that listing servers works.
         servers = self.api.get_servers()
         for server in servers:
-            LOG.debug("server: %s" % server)
+            LOG.debug("server: {0!s}".format(server))
 
     def test_create_server_with_error(self):
         # Create a server which will enter error state.
@@ -162,7 +162,7 @@ class ServersTest(ServersTestBase):
         server['name'] = good_server['name']
 
         created_server = self.api.post_server(post)
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -204,7 +204,7 @@ class ServersTest(ServersTestBase):
         server = self._build_minimal_create_server_request()
 
         created_server = self.api.post_server({'server': server})
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -240,7 +240,7 @@ class ServersTest(ServersTestBase):
         server = self._build_minimal_create_server_request()
 
         created_server = self.api.post_server({'server': server})
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -273,7 +273,7 @@ class ServersTest(ServersTestBase):
         server = self._build_minimal_create_server_request()
 
         created_server = self.api.post_server({'server': server})
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -306,13 +306,13 @@ class ServersTest(ServersTestBase):
 
         metadata = {}
         for i in range(30):
-            metadata['key_%s' % i] = 'value_%s' % i
+            metadata['key_{0!s}'.format(i)] = 'value_{0!s}'.format(i)
 
         server['metadata'] = metadata
 
         post = {'server': server}
         created_server = self.api.post_server(post)
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -349,12 +349,12 @@ class ServersTest(ServersTestBase):
 
         metadata = {}
         for i in range(30):
-            metadata['key_%s' % i] = 'value_%s' % i
+            metadata['key_{0!s}'.format(i)] = 'value_{0!s}'.format(i)
 
         server_post['server']['metadata'] = metadata
 
         created_server = self.api.post_server(server_post)
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -372,7 +372,7 @@ class ServersTest(ServersTestBase):
         post['rebuild'].update(self._get_access_ips_params())
 
         self.api.post_server_action(created_server_id, post)
-        LOG.debug("rebuilt server: %s" % created_server)
+        LOG.debug("rebuilt server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
 
         found_server = self.api.get_server(created_server_id)
@@ -391,7 +391,7 @@ class ServersTest(ServersTestBase):
         }
 
         self.api.post_server_action(created_server_id, post)
-        LOG.debug("rebuilt server: %s" % created_server)
+        LOG.debug("rebuilt server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
 
         found_server = self.api.get_server(created_server_id)
@@ -412,7 +412,7 @@ class ServersTest(ServersTestBase):
         # Create a server
         server = self._build_minimal_create_server_request()
         created_server = self.api.post_server({'server': server})
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         server_id = created_server['id']
         self.assertTrue(server_id)
 
@@ -488,7 +488,7 @@ class ServersTest(ServersTestBase):
         post = {'server': server}
 
         created_server = self.api.post_server(post)
-        LOG.debug("created_server: %s" % created_server)
+        LOG.debug("created_server: {0!s}".format(created_server))
         self.assertTrue(created_server['id'])
         created_server_id = created_server['id']
 
@@ -524,7 +524,7 @@ class ServersTestV219(ServersTestBase):
         server = {'server': {'name': new_name}}
         if set_desc:
             server['server']['description'] = desc
-        self.api.api_put('/servers/%s' % server_id, server,
+        self.api.api_put('/servers/{0!s}'.format(server_id), server,
                          headers=self._headers)
 
     def _rebuild_server(self, server_id, set_desc = True, desc = None):
@@ -540,7 +540,7 @@ class ServersTestV219(ServersTestBase):
         post['rebuild'].update(self._get_access_ips_params())
         if set_desc:
             post['rebuild']['description'] = desc
-        self.api.api_post('/servers/%s/action' % server_id, post,
+        self.api.api_post('/servers/{0!s}/action'.format(server_id), post,
                           headers=self._headers)
 
     def _create_server_and_verify(self, set_desc = True, expected_desc = None):
@@ -569,7 +569,7 @@ class ServersTestV219(ServersTestBase):
                                    desc_in_resp = True):
         # Calls GET on the servers and verifies that the description
         # is set as expected in the response, or not set at all.
-        response = self.api.api_get('/servers/%s' % server_id,
+        response = self.api.api_get('/servers/{0!s}'.format(server_id),
                                     headers=self._headers)
         found_server = response.body['server']
         self.assertEqual(server_id, found_server['id'])

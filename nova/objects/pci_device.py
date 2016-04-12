@@ -140,7 +140,7 @@ class PciDevice(base.NovaPersistentObject, base.NovaObject):
             if status in added_statuses:
                 raise exception.ObjectActionError(
                     action='obj_make_compatible',
-                    reason='status=%s not supported in version %s' % (
+                    reason='status={0!s} not supported in version {1!s}'.format(
                         status, target_version))
 
     def update_device(self, dev_dict):

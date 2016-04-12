@@ -69,7 +69,7 @@ def main():
     if '--verbose' in sys.argv:
         print '\n'.join(destroyed)
 
-    print "Destroyed %d cached VDIs" % len(destroyed)
+    print "Destroyed {0:d} cached VDIs".format(len(destroyed))
 
 
 if __name__ == "__main__":

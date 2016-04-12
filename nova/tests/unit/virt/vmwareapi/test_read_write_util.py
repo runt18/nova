@@ -39,6 +39,6 @@ class ReadWriteUtilTestCase(test.NoDBTestCase):
                                                         dict(),
                                                         folder)
             param_list = {"dcPath": 'fake_dc', "dsName": 'fake_ds'}
-            base_url = 'https://[%s]:%s/folder/%s' % (ipv6_host, port, folder)
+            base_url = 'https://[{0!s}]:{1!s}/folder/{2!s}'.format(ipv6_host, port, folder)
             base_url += '?' + urllib.urlencode(param_list)
             self.assertEqual(base_url, reader._base_url)

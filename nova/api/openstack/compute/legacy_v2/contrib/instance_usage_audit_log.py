@@ -110,9 +110,9 @@ class InstanceUsageAuditLogController(object):
                                 message=tl['message'])
                for tl in task_logs}
         missing_hosts = hosts - seen_hosts
-        overall_status = "%s hosts done. %s errors." % (
+        overall_status = "{0!s} hosts done. {1!s} errors.".format(
                     'ALL' if len(done_hosts) == len(hosts)
-                    else "%s of %s" % (len(done_hosts), len(hosts)),
+                    else "{0!s} of {1!s}".format(len(done_hosts), len(hosts)),
                     total_errors)
         return dict(period_beginning=str(begin),
                     period_ending=str(end),

@@ -27,7 +27,7 @@ class ServersMetadataJsonTest(test_servers.ServersSampleBase):
 
     def _create_and_set(self, subs):
         uuid = self._post_server()
-        response = self._do_put('/servers/%s/metadata' % uuid,
+        response = self._do_put('/servers/{0!s}/metadata'.format(uuid),
                                 'server-metadata-all-req',
                                 subs)
         self._verify_response('server-metadata-all-resp', subs, response, 200)
@@ -47,7 +47,7 @@ class ServersMetadataJsonTest(test_servers.ServersSampleBase):
         subs = {'value': 'Foo Value'}
         uuid = self._create_and_set(subs)
         subs['value'] = 'Bar Value'
-        response = self._do_post('servers/%s/metadata' % uuid,
+        response = self._do_post('servers/{0!s}/metadata'.format(uuid),
                                  'server-metadata-all-req',
                                  subs)
         self._verify_response('server-metadata-all-resp', subs, response, 200)
@@ -56,7 +56,7 @@ class ServersMetadataJsonTest(test_servers.ServersSampleBase):
         # Test getting all metadata for a server.
         subs = {'value': 'Foo Value'}
         uuid = self._create_and_set(subs)
-        response = self._do_get('servers/%s/metadata' % uuid)
+        response = self._do_get('servers/{0!s}/metadata'.format(uuid))
         self._verify_response('server-metadata-all-resp', subs, response, 200)
 
     def test_metadata_put(self):
@@ -64,7 +64,7 @@ class ServersMetadataJsonTest(test_servers.ServersSampleBase):
         subs = {'value': 'Foo Value'}
         uuid = self._create_and_set(subs)
         subs['value'] = 'Bar Value'
-        response = self._do_put('servers/%s/metadata/foo' % uuid,
+        response = self._do_put('servers/{0!s}/metadata/foo'.format(uuid),
                                 'server-metadata-req',
                                 subs)
         self._verify_response('server-metadata-resp', subs, response, 200)
@@ -73,13 +73,13 @@ class ServersMetadataJsonTest(test_servers.ServersSampleBase):
         # Test getting an individual metadata item for a server.
         subs = {'value': 'Foo Value'}
         uuid = self._create_and_set(subs)
-        response = self._do_get('servers/%s/metadata/foo' % uuid)
+        response = self._do_get('servers/{0!s}/metadata/foo'.format(uuid))
         self._verify_response('server-metadata-resp', subs, response, 200)
 
     def test_metadata_delete(self):
         # Test deleting an individual metadata item for a server.
         subs = {'value': 'Foo Value'}
         uuid = self._create_and_set(subs)
-        response = self._do_delete('servers/%s/metadata/foo' % uuid)
+        response = self._do_delete('servers/{0!s}/metadata/foo'.format(uuid))
         self.assertEqual(204, response.status_code)
         self.assertEqual('', response.content)

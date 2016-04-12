@@ -60,7 +60,7 @@ class LibvirtGlusterfsVolumeDriver(fs.LibvirtBaseFileSystemVolumeDriver):
             conf.source_type = 'network'
             conf.source_protocol = 'gluster'
             conf.source_hosts = [source_host]
-            conf.source_name = '%s/%s' % (vol_name, data['name'])
+            conf.source_name = '{0!s}/{1!s}'.format(vol_name, data['name'])
         else:
             conf.source_type = 'file'
             conf.source_path = connection_info['data']['device_path']

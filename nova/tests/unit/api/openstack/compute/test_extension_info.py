@@ -202,7 +202,7 @@ class ExtensionInfoPolicyEnforcementV21(test.NoDBTestCase):
             getattr(self.controller, action), self.req, *args)
 
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_extension_index_policy_failed(self):

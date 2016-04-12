@@ -124,7 +124,7 @@ class XenAPIDriverTestCase(stubs.XenAPITestBaseNoDB):
     def test_get_volume_connector(self):
         ip = '123.123.123.123'
         driver = self._get_driver()
-        self.flags(connection_url='http://%s' % ip,
+        self.flags(connection_url='http://{0!s}'.format(ip),
                    connection_password='test_pass', group='xenserver')
         self.stubs.Set(driver.host_state, 'get_host_stats', self.host_stats)
 
@@ -138,7 +138,7 @@ class XenAPIDriverTestCase(stubs.XenAPITestBaseNoDB):
         my_ip = '123.123.123.123'
         connection_ip = '124.124.124.124'
         driver = self._get_driver()
-        self.flags(connection_url='http://%s' % connection_ip,
+        self.flags(connection_url='http://{0!s}'.format(connection_ip),
                    group='xenserver')
         self.flags(my_ip=my_ip, my_block_storage_ip=my_ip)
 

@@ -58,7 +58,7 @@ def generate_glance_url():
 
 def generate_image_url(image_ref):
     """Generate an image URL from an image_ref."""
-    return "%s/images/%s" % (generate_glance_url(), image_ref)
+    return "{0!s}/images/{1!s}".format(generate_glance_url(), image_ref)
 
 
 def _endpoint_from_image_ref(image_href):

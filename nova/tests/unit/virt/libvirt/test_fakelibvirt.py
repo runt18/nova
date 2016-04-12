@@ -24,11 +24,11 @@ def get_vm_xml(name="testname", uuid=None, source_type='file',
                interface_type='bridge'):
     uuid_tag = ''
     if uuid:
-        uuid_tag = '<uuid>%s</uuid>' % (uuid,)
+        uuid_tag = '<uuid>{0!s}</uuid>'.format(uuid)
 
     return '''<domain type='kvm'>
-  <name>%(name)s</name>
-%(uuid_tag)s
+  <name>{name!s}</name>
+{uuid_tag!s}
   <memory>128000</memory>
   <vcpu>1</vcpu>
   <os>
@@ -43,21 +43,21 @@ def get_vm_xml(name="testname", uuid=None, source_type='file',
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source %(source_type)s='/somefile'/>
+      <source {source_type!s}='/somefile'/>
       <target dev='vda' bus='virtio'/>
     </disk>
-    <interface type='%(interface_type)s'>
+    <interface type='{interface_type!s}'>
       <mac address='05:26:3e:31:28:1f'/>
-      <source %(interface_type)s='br100'/>
+      <source {interface_type!s}='br100'/>
     </interface>
     <input type='mouse' bus='ps2'/>
     <graphics type='vnc' port='5901' autoport='yes' keymap='en-us'/>
     <graphics type='spice' port='5901' autoport='yes' keymap='en-us'/>
   </devices>
-</domain>''' % {'name': name,
+</domain>'''.format(**{'name': name,
                 'uuid_tag': uuid_tag,
                 'source_type': source_type,
-                'interface_type': interface_type}
+                'interface_type': interface_type})
 
 
 class FakeLibvirtTests(test.NoDBTestCase):
@@ -306,11 +306,11 @@ class FakeLibvirtTests(test.NoDBTestCase):
         conn = self.get_openAuth_curry_func()('qemu:///system')
 
         xml = '''<cpu>
-                   <arch>%s</arch>
-                   <model>%s</model>
-                   <vendor>%s</vendor>
-                   <topology sockets="%d" cores="%d" threads="%d"/>
-                 </cpu>''' % (conn.host_info.arch,
+                   <arch>{0!s}</arch>
+                   <model>{1!s}</model>
+                   <vendor>{2!s}</vendor>
+                   <topology sockets="{3:d}" cores="{4:d}" threads="{5:d}"/>
+                 </cpu>'''.format(conn.host_info.arch,
                               conn.host_info.cpu_model,
                               conn.host_info.cpu_vendor,
                               conn.host_info.cpu_sockets,
@@ -323,11 +323,11 @@ class FakeLibvirtTests(test.NoDBTestCase):
         conn = self.get_openAuth_curry_func()('qemu:///system')
 
         xml = '''<cpu>
-                   <arch>%s</arch>
-                   <model>%s</model>
-                   <vendor>%s</vendor>
-                   <topology sockets="%d" cores="%d" threads="%d"/>
-                 </cpu>''' % (conn.host_info.arch,
+                   <arch>{0!s}</arch>
+                   <model>{1!s}</model>
+                   <vendor>{2!s}</vendor>
+                   <topology sockets="{3:d}" cores="{4:d}" threads="{5:d}"/>
+                 </cpu>'''.format(conn.host_info.arch,
                               conn.host_info.cpu_model,
                               "AnotherVendor",
                               conn.host_info.cpu_sockets,
@@ -340,11 +340,11 @@ class FakeLibvirtTests(test.NoDBTestCase):
         conn = self.get_openAuth_curry_func()('qemu:///system')
 
         xml = '''<cpu>
-                   <arch>%s</arch>
-                   <model>%s</model>
-                   <vendor>%s</vendor>
-                   <topology sockets="%d" cores="%d" threads="%d"/>
-                 </cpu>''' % ('not-a-valid-arch',
+                   <arch>{0!s}</arch>
+                   <model>{1!s}</model>
+                   <vendor>{2!s}</vendor>
+                   <topology sockets="{3:d}" cores="{4:d}" threads="{5:d}"/>
+                 </cpu>'''.format('not-a-valid-arch',
                               conn.host_info.cpu_model,
                               conn.host_info.cpu_vendor,
                               conn.host_info.cpu_sockets,
@@ -357,11 +357,11 @@ class FakeLibvirtTests(test.NoDBTestCase):
         conn = self.get_openAuth_curry_func()('qemu:///system')
 
         xml = '''<cpu>
-                   <arch>%s</arch>
-                   <model>%s</model>
-                   <vendor>%s</vendor>
-                   <topology sockets="%d" cores="%d" threads="%d"/>
-                 </cpu>''' % (conn.host_info.arch,
+                   <arch>{0!s}</arch>
+                   <model>{1!s}</model>
+                   <vendor>{2!s}</vendor>
+                   <topology sockets="{3:d}" cores="{4:d}" threads="{5:d}"/>
+                 </cpu>'''.format(conn.host_info.arch,
                               "AnotherModel",
                               conn.host_info.cpu_vendor,
                               conn.host_info.cpu_sockets,
@@ -374,10 +374,10 @@ class FakeLibvirtTests(test.NoDBTestCase):
         conn = self.get_openAuth_curry_func()('qemu:///system')
 
         xml = '''<cpu>
-                   <arch>%s</arch>
-                   <vendor>%s</vendor>
-                   <topology sockets="%d" cores="%d" threads="%d"/>
-                 </cpu>''' % (conn.host_info.arch,
+                   <arch>{0!s}</arch>
+                   <vendor>{1!s}</vendor>
+                   <topology sockets="{2:d}" cores="{3:d}" threads="{4:d}"/>
+                 </cpu>'''.format(conn.host_info.arch,
                               conn.host_info.cpu_vendor,
                               conn.host_info.cpu_sockets,
                               conn.host_info.cpu_cores,

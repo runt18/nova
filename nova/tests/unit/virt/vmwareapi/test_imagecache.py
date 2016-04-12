@@ -54,7 +54,7 @@ class ImageCacheManagerTestCase(test.NoDBTestCase):
             self.assertEqual('[fake-ds] fake-path', str(ds_path))
             if not self.exists:
                 return
-            ts = '%s%s' % (imagecache.TIMESTAMP_PREFIX,
+            ts = '{0!s}{1!s}'.format(imagecache.TIMESTAMP_PREFIX,
                            self._time.strftime(imagecache.TIMESTAMP_FORMAT))
             return ts
 

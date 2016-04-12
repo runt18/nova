@@ -28,7 +28,7 @@ from nova.tests.unit import policy_fixture
 
 def rand_flavor(**kwargs):
     flav = {
-        'name': 'name-%s' % helper.generate_random_alphanumeric(10),
+        'name': 'name-{0!s}'.format(helper.generate_random_alphanumeric(10)),
         'id': helper.generate_random_alphanumeric(10),
         'ram': int(helper.generate_random_numeric(2)) + 1,
         'disk': int(helper.generate_random_numeric(3)),
@@ -97,7 +97,7 @@ class FlavorManageFullstack(test.TestCase):
         for k, v in six.iteritems(mapping):
             if k in flav:
                 self.assertEqual(flav[k], flavdb[v],
-                                 "%s != %s" % (flav, flavdb))
+                                 "{0!s} != {1!s}".format(flav, flavdb))
 
     def assertFlavorAPIEqual(self, flav, flavapi):
         # for all keys in the flavor, ensure they are correctly set in
@@ -105,21 +105,21 @@ class FlavorManageFullstack(test.TestCase):
         for k, v in six.iteritems(flav):
             if k in flavapi:
                 self.assertEqual(flav[k], flavapi[k],
-                                 "%s != %s" % (flav, flavapi))
+                                 "{0!s} != {1!s}".format(flav, flavapi))
             else:
-                self.fail("Missing key: %s in flavor: %s" % (k, flavapi))
+                self.fail("Missing key: {0!s} in flavor: {1!s}".format(k, flavapi))
 
     def assertFlavorInList(self, flav, flavlist):
         for item in flavlist['flavors']:
             if flav['id'] == item['id']:
                 self.assertEqual(flav['name'], item['name'])
                 return
-        self.fail("%s not found in %s" % (flav, flavlist))
+        self.fail("{0!s} not found in {1!s}".format(flav, flavlist))
 
     def assertFlavorNotInList(self, flav, flavlist):
         for item in flavlist['flavors']:
             if flav['id'] == item['id']:
-                self.fail("%s found in %s" % (flav, flavlist))
+                self.fail("{0!s} found in {1!s}".format(flav, flavlist))
 
     def test_flavor_manage_func_negative(self):
         """Test flavor manage edge conditions.
@@ -174,7 +174,7 @@ class FlavorManageFullstack(test.TestCase):
         # create a deleted flavor
         new_flav = {'flavor': rand_flavor()}
         self.api.api_post('flavors', new_flav)
-        self.api.api_delete('flavors/%s' % new_flav['flavor']['id'])
+        self.api.api_delete('flavors/{0!s}'.format(new_flav['flavor']['id']))
 
         # deleted flavor should not show up in a list
         resp = self.api.api_get('flavors')
@@ -219,12 +219,12 @@ class FlavorManageFullstack(test.TestCase):
         self.assertFlavorInList(flav1['flavor'], resp.body)
 
         # Delete flavor and ensure it was removed from the database
-        self.api.api_delete('flavors/%s' % flav1['flavor']['id'])
+        self.api.api_delete('flavors/{0!s}'.format(flav1['flavor']['id']))
         self.assertRaises(ex.FlavorNotFound,
                           objects.Flavor.get_by_flavor_id,
                           ctx, flav1['flavor']['id'])
 
-        resp = self.api.api_delete('flavors/%s' % flav1['flavor']['id'],
+        resp = self.api.api_delete('flavors/{0!s}'.format(flav1['flavor']['id']),
                                    check_response_status=False)
         self.assertEqual(404, resp.status)
 
@@ -248,7 +248,7 @@ class FlavorManageFullstack(test.TestCase):
         self.api.api_post('flavors', flav1)
 
         # Ensure user can't delete flavors from our cloud
-        resp = self.user_api.api_delete('flavors/%s' % flav1['flavor']['id'],
+        resp = self.user_api.api_delete('flavors/{0!s}'.format(flav1['flavor']['id']),
                                         check_response_status=False)
         self.assertEqual(403, resp.status)
         # ... and ensure that we didn't actually delete the flavor,

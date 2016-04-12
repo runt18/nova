@@ -250,7 +250,7 @@ class TestGlanceClientWrapper(test.NoDBTestCase):
         ctx = context.RequestContext('fake', 'fake')
         host = 'host4'
         port = 9295
-        endpoint = 'http://%s:%s' % (host, port)
+        endpoint = 'http://{0!s}:{1!s}'.format(host, port)
         client = glance.GlanceClientWrapper(context=ctx, endpoint=endpoint)
         create_client_mock.assert_called_once_with(ctx, mock.ANY, 1)
         self.assertRaises(exception.GlanceConnectionFailed,
@@ -272,7 +272,7 @@ class TestGlanceClientWrapper(test.NoDBTestCase):
         ctx = context.RequestContext('fake', 'fake')
         host = 'host4'
         port = 9295
-        endpoint = 'http://%s:%s' % (host, port)
+        endpoint = 'http://{0!s}:{1!s}'.format(host, port)
 
         client = glance.GlanceClientWrapper(context=ctx, endpoint=endpoint)
 
@@ -301,7 +301,7 @@ class TestGlanceClientWrapper(test.NoDBTestCase):
         ctx = context.RequestContext('fake', 'fake')
         host = 'host4'
         port = 9295
-        endpoint = 'http://%s:%s' % (host, port)
+        endpoint = 'http://{0!s}:{1!s}'.format(host, port)
 
         client = glance.GlanceClientWrapper(context=ctx, endpoint=endpoint)
         client.call(ctx, 1, 'get', 'meow')

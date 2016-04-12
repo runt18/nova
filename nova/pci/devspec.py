@@ -89,7 +89,7 @@ class PciAddress(object):
                 if f > MAX_FUNC:
                     raise exception.PciDeviceInvalidAddressField(
                         address=pci_addr, field="function")
-                self.func = "%1x" % f
+                self.func = "{0:1x}".format(f)
         if dbs:
             dbs_fields = dbs.split(':')
             if len(dbs_fields) > 3:

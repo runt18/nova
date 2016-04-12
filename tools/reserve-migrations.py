@@ -43,13 +43,13 @@ def get_last_migration(base):
 def reserve_migrations(base, number, git_add):
     last = get_last_migration(base)
     for i in range(last + 1, last + number + 1):
-        name = '%03i_placeholder.py' % i
+        name = '{0:03d}_placeholder.py'.format(i)
         path = os.path.join(*tuple(base + [name]))
         with open(path, 'w') as f:
             f.write(STUB)
-        print('Created %s' % path)
+        print('Created {0!s}'.format(path))
         if git_add:
-            subprocess.call('git add %s' % path, shell=True)
+            subprocess.call('git add {0!s}'.format(path), shell=True)
 
 
 def main():

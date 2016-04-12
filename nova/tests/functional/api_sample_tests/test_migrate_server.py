@@ -46,7 +46,7 @@ class MigrateServerSamplesJsonTest(test_servers.ServersSampleBase):
     @mock.patch('nova.conductor.manager.ComputeTaskManager._cold_migrate')
     def test_post_migrate(self, mock_cold_migrate):
         # Get api samples to migrate server request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'migrate-server', {})
         self.assertEqual(202, response.status_code)
 
@@ -75,7 +75,7 @@ class MigrateServerSamplesJsonTest(test_servers.ServersSampleBase):
             return {'compute_node': [service]}
         self.stub_out("nova.db.service_get_by_compute_host", fake_get_compute)
 
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'live-migrate-server',
                                  {'hostname': self.compute.host})
         self.assertEqual(202, response.status_code)

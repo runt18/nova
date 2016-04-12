@@ -25,7 +25,7 @@ class SchedulerHintsController(wsgi.Controller):
     def _extract_scheduler_hints(body):
         hints = {}
 
-        attr = '%s:scheduler_hints' % Scheduler_hints.alias
+        attr = '{0!s}:scheduler_hints'.format(Scheduler_hints.alias)
         try:
             if 'os:scheduler_hints' in body:
                 # NOTE(vish): This is for legacy support

@@ -62,7 +62,7 @@ def get_image_fixtures():
         deleted = False if status != 'deleted' else True
         deleted_at = NOW_DATE if deleted else None
 
-        add_fixture(id=str(image_id), name='%s snapshot' % status,
+        add_fixture(id=str(image_id), name='{0!s} snapshot'.format(status),
                     is_public=False, status=status,
                     properties=snapshot_properties, size='25165824',
                     deleted=deleted, deleted_at=deleted_at)

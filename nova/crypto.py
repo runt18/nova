@@ -186,7 +186,7 @@ def generate_key_pair(bits=2048):
     keyout = six.StringIO()
     key.write_private_key(keyout)
     private_key = keyout.getvalue()
-    public_key = '%s %s Generated-by-Nova' % (key.get_name(), key.get_base64())
+    public_key = '{0!s} {1!s} Generated-by-Nova'.format(key.get_name(), key.get_base64())
     fingerprint = generate_fingerprint(public_key)
     return (private_key, public_key, fingerprint)
 
@@ -296,7 +296,7 @@ def generate_x509_cert(user_id, project_id, bits=2048):
             csr = f.read()
 
     (serial, signed_csr) = sign_csr(csr, project_id)
-    fname = os.path.join(ca_folder(project_id), 'newcerts/%s.pem' % serial)
+    fname = os.path.join(ca_folder(project_id), 'newcerts/{0!s}.pem'.format(serial))
     cert = {'user_id': user_id,
             'project_id': project_id,
             'file_name': fname}
@@ -306,8 +306,8 @@ def generate_x509_cert(user_id, project_id, bits=2048):
 
 def generate_winrm_x509_cert(user_id, bits=2048):
     """Generate a cert for passwordless auth for user in project."""
-    subject = '/CN=%s' % user_id
-    upn = '%s@localhost' % user_id
+    subject = '/CN={0!s}'.format(user_id)
+    upn = '{0!s}@localhost'.format(user_id)
 
     with utils.tempdir() as tmpdir:
         keyfile = os.path.abspath(os.path.join(tmpdir, 'temp.key'))
@@ -317,7 +317,7 @@ def generate_winrm_x509_cert(user_id, bits=2048):
 
         (certificate, _err) = utils.execute(
              'openssl', 'req', '-x509', '-nodes', '-days', '3650',
-             '-config', conffile, '-newkey', 'rsa:%s' % bits,
+             '-config', conffile, '-newkey', 'rsa:{0!s}'.format(bits),
              '-outform', 'PEM', '-keyout', keyfile, '-subj', subject,
              '-extensions', 'v3_req_client',
              binary=True)

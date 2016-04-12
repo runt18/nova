@@ -69,7 +69,7 @@ class FloatingIP(obj_base.NovaPersistentObject, obj_base.NovaObject,
         if attrname not in FLOATING_IP_OPTIONAL_ATTRS:
             raise exception.ObjectActionError(
                 action='obj_load_attr',
-                reason='attribute %s is not lazy-loadable' % attrname)
+                reason='attribute {0!s} is not lazy-loadable'.format(attrname))
         if not self._context:
             raise exception.OrphanedObjectError(method='obj_load_attr',
                                                 objtype=self.obj_name())

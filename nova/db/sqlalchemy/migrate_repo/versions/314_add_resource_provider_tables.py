@@ -80,5 +80,5 @@ def upgrade(migrate_engine):
 
     for table_name in ('', 'shadow_'):
         uuid_column = Column('uuid', String(36))
-        compute_nodes = Table('%scompute_nodes' % table_name, meta)
+        compute_nodes = Table('{0!s}compute_nodes'.format(table_name), meta)
         compute_nodes.create_column(uuid_column)

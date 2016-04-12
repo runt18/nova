@@ -410,7 +410,7 @@ class FloatingIPDNSDomainPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_update_floating_ip_dns_policy_failed(self):
@@ -423,7 +423,7 @@ class FloatingIPDNSDomainPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.update, self.req, _quote_domain(domain), body=body)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_floating_ip_dns_policy_failed(self):
@@ -433,7 +433,7 @@ class FloatingIPDNSDomainPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.delete, self.req, _quote_domain(domain))
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
 
@@ -452,7 +452,7 @@ class FloatingIPDNSEntryPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.show, self.req,
                 _quote_domain(domain), test_ipv4_address)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
     def test_update_floating_ip_dns_policy_failed(self):
@@ -464,7 +464,7 @@ class FloatingIPDNSEntryPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.update, self.req, _quote_domain(domain),
                                     name, body=body)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())
 
     def test_delete_floating_ip_dns_policy_failed(self):
@@ -472,5 +472,5 @@ class FloatingIPDNSEntryPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.delete, self.req, _quote_domain(domain), name)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % self.rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(self.rule_name),
             exc.format_message())

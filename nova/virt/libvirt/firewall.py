@@ -80,12 +80,12 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
                   <!-- no nd reflection -->
                   <!-- drop if destination mac is v6 mcast mac addr and
                        we sent it. -->
-                  <uuid>%s</uuid>
+                  <uuid>{0!s}</uuid>
                   <rule action='drop' direction='in'>
                       <mac dstmacaddr='33:33:00:00:00:00'
                            dstmacmask='ff:ff:00:00:00:00' srcmacaddr='$MAC'/>
                   </rule>
-                  </filter>''' % uuid
+                  </filter>'''.format(uuid)
 
     def nova_dhcp_filter(self):
         """The standard allow-dhcp-server filter is an <ip> one, so it uses
@@ -94,7 +94,7 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
         """
         uuid = self._get_filter_uuid('nova-allow-dhcp-server')
         return '''<filter name='nova-allow-dhcp-server' chain='ipv4'>
-                    <uuid>%s</uuid>
+                    <uuid>{0!s}</uuid>
                     <rule action='accept' direction='out'
                           priority='100'>
                       <udp srcipaddr='0.0.0.0'
@@ -108,7 +108,7 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
                            srcportstart='67'
                            dstportstart='68'/>
                     </rule>
-                  </filter>''' % uuid
+                  </filter>'''.format(uuid)
 
     def setup_basic_filtering(self, instance, network_info):
         """Set up basic filtering (MAC, IP, and ARP spoofing protection)."""
@@ -140,7 +140,7 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
         parameters = []
 
         def format_parameter(parameter, value):
-            return ("<parameter name='%s' value='%s'/>" % (parameter, value))
+            return ("<parameter name='{0!s}' value='{1!s}'/>".format(parameter, value))
 
         network = vif['network']
         if not vif['network'] or not vif['network']['subnets']:
@@ -184,10 +184,10 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
         instance_filter_name = self._instance_filter_name(instance, nic_id)
         parameters = self._get_instance_filter_parameters(vif)
         uuid = self._get_filter_uuid(instance_filter_name)
-        xml = '''<filter name='%s' chain='root'>''' % instance_filter_name
-        xml += '<uuid>%s</uuid>' % uuid
+        xml = '''<filter name='{0!s}' chain='root'>'''.format(instance_filter_name)
+        xml += '<uuid>{0!s}</uuid>'.format(uuid)
         for f in filters:
-            xml += '''<filterref filter='%s'>''' % f
+            xml += '''<filterref filter='{0!s}'>'''.format(f)
             xml += ''.join(parameters)
             xml += '</filterref>'
         xml += '</filter>'
@@ -237,11 +237,11 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
 
     def _filter_container(self, name, filters):
         uuid = self._get_filter_uuid(name)
-        xml = '''<filter name='%s' chain='root'>
-                   <uuid>%s</uuid>
-                   %s
-                 </filter>''' % (name, uuid,
-                 ''.join(["<filterref filter='%s'/>" % (f,) for f in filters]))
+        xml = '''<filter name='{0!s}' chain='root'>
+                   <uuid>{1!s}</uuid>
+                   {2!s}
+                 </filter>'''.format(name, uuid,
+                 ''.join(["<filterref filter='{0!s}'/>".format(f) for f in filters]))
         return xml
 
     def _get_filter_uuid(self, name):
@@ -300,8 +300,8 @@ class NWFilterFirewall(base_firewall.FirewallDriver):
     @staticmethod
     def _instance_filter_name(instance, nic_id=None):
         if not nic_id:
-            return 'nova-instance-%s' % (instance.name)
-        return 'nova-instance-%s-%s' % (instance.name, nic_id)
+            return 'nova-instance-{0!s}'.format((instance.name))
+        return 'nova-instance-{0!s}-{1!s}'.format(instance.name, nic_id)
 
     def instance_filter_exists(self, instance, network_info):
         """Check nova-instance-instance-xxx exists."""

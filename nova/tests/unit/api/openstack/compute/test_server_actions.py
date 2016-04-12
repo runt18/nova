@@ -309,7 +309,7 @@ class ServerActionsControllerTestV21(test.TestCase):
         return_server = fakes.fake_instance_get(image_ref='2',
                 vm_state=vm_states.ACTIVE, host='fake_host')
         self.stub_out('nova.db.instance_get_by_uuid', return_server)
-        self_href = 'http://localhost/v2/servers/%s' % FAKE_UUID
+        self_href = 'http://localhost/v2/servers/{0!s}'.format(FAKE_UUID)
 
         body = {
             "rebuild": {
@@ -374,7 +374,7 @@ class ServerActionsControllerTestV21(test.TestCase):
         return_server = fakes.fake_instance_get(image_ref='2',
                 vm_state=vm_states.ACTIVE, host='fake_host')
         self.stub_out('nova.db.instance_get_by_uuid', return_server)
-        self_href = 'http://localhost/v2/servers/%s' % FAKE_UUID
+        self_href = 'http://localhost/v2/servers/{0!s}'.format(FAKE_UUID)
 
         body = {
             "rebuild": {
@@ -935,7 +935,7 @@ class ServerActionsControllerTestV21(test.TestCase):
     def _do_test_create_volume_backed_image(self, extra_properties):
 
         def _fake_id(x):
-            return '%s-%s-%s-%s' % (x * 8, x * 4, x * 4, x * 12)
+            return '{0!s}-{1!s}-{2!s}-{3!s}'.format(x * 8, x * 4, x * 4, x * 12)
 
         body = dict(createImage=dict(name='snapshot_of_volume_backed'))
 
@@ -1033,7 +1033,7 @@ class ServerActionsControllerTestV21(test.TestCase):
             self, extra_metadata=None):
 
         def _fake_id(x):
-            return '%s-%s-%s-%s' % (x * 8, x * 4, x * 4, x * 12)
+            return '{0!s}-{1!s}-{2!s}-{3!s}'.format(x * 8, x * 4, x * 4, x * 12)
 
         body = dict(createImage=dict(name='snapshot_of_volume_backed'))
         if extra_metadata:
@@ -1141,7 +1141,7 @@ class ServerActionsControllerTestV21(test.TestCase):
             },
         }
         for num in range(CONF.quota_metadata_items + 1):
-            body['createImage']['metadata']['foo%i' % num] = "bar"
+            body['createImage']['metadata']['foo{0:d}'.format(num)] = "bar"
 
         self.assertRaises(webob.exc.HTTPForbidden,
                           self.controller._action_create_image,
@@ -1334,7 +1334,7 @@ class ServerActionsControllerTestV2(ServerActionsControllerTestV21):
                               self.controller._action_create_image,
                               self.req, FAKE_UUID, body=body)
             self.assertEqual(
-                "Policy doesn't allow %s to be performed." % rule_name,
+                "Policy doesn't allow {0!s} to be performed.".format(rule_name),
                 exc.format_message())
 
     def test_create_vol_backed_img_snapshotting_policy_blocks_role(self):
@@ -1358,5 +1358,5 @@ class ServerActionsControllerTestV2(ServerActionsControllerTestV21):
                               self.controller._action_create_image,
                               self.req, FAKE_UUID, body=body)
             self.assertEqual(
-                "Policy doesn't allow %s to be performed." % rule_name,
+                "Policy doesn't allow {0!s} to be performed.".format(rule_name),
                 exc.format_message())

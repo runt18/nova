@@ -22,7 +22,7 @@ from nova import weights
 
 class WeightedCell(weights.WeighedObject):
     def __repr__(self):
-        return "WeightedCell [cell: %s, weight: %s]" % (
+        return "WeightedCell [cell: {0!s}, weight: {1!s}]".format(
                 self.obj.name, self.weight)
 
 

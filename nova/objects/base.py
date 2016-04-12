@@ -204,7 +204,7 @@ class ObjectListBase(ovoo_base.ObjectListBase):
     # base object and can be removed when we move to it.
     @classmethod
     def _obj_primitive_key(cls, field):
-        return 'nova_object.%s' % field
+        return 'nova_object.{0!s}'.format(field)
 
     @classmethod
     def _obj_primitive_field(cls, primitive, field,

@@ -346,7 +346,7 @@ class FixedIpCommands(object):
         for instance in instances:
             instances_by_uuid[instance['uuid']] = instance
 
-        print("%-18s\t%-15s\t%-15s\t%s" % (_('network'),
+        print("{0:<18!s}\t{1:<15!s}\t{2:<15!s}\t{3!s}".format(_('network'),
                                               _('IP address'),
                                               _('hostname'),
                                               _('host')))
@@ -379,7 +379,7 @@ class FixedIpCommands(object):
                     else:
                         print(_('WARNING: fixed IP %s allocated to missing'
                                 ' instance') % str(fixed_ip['address']))
-                print("%-18s\t%-15s\t%-15s\t%s" % (
+                print("{0:<18!s}\t{1:<15!s}\t{2:<15!s}\t{3!s}".format(
                         network['cidr'],
                         fixed_ip['address'],
                         hostname, host))
@@ -465,7 +465,7 @@ class FloatingIpCommands(object):
             # NOTE(simplylizz): Maybe logging would be better here
             # instead of printing, but logging isn't used here and I
             # don't know why.
-            print('error: %s' % exc)
+            print('error: {0!s}'.format(exc))
             return(1)
 
     @args('--ip_range', metavar='<range>', help='IP range')
@@ -498,7 +498,7 @@ class FloatingIpCommands(object):
                 fixed_ip = db.fixed_ip_get(ctxt, floating_ip['fixed_ip_id'])
                 instance_uuid = fixed_ip['instance_uuid']
 
-            print("%s\t%s\t%s\t%s\t%s" % (floating_ip['project_id'],
+            print("{0!s}\t{1!s}\t{2!s}\t{3!s}\t{4!s}".format(floating_ip['project_id'],
                                           floating_ip['address'],
                                           instance_uuid,
                                           floating_ip['pool'],
@@ -855,22 +855,22 @@ class ServiceCommands(object):
         else:
             # Printing a total and used_now
             # (NOTE)The host name width 16 characters
-            print('%(a)-25s%(b)16s%(c)8s%(d)8s%(e)8s' % {"a": _('HOST'),
+            print('{a:<25!s}{b:16!s}{c:8!s}{d:8!s}{e:8!s}'.format(**{"a": _('HOST'),
                                                          "b": _('PROJECT'),
                                                          "c": _('cpu'),
                                                          "d": _('mem(mb)'),
-                                                         "e": _('hdd')})
-            print(('%(a)-16s(total)%(b)26s%(c)8s%(d)8s' %
+                                                         "e": _('hdd')}))
+            print(('{a:<16!s}(total){b:26!s}{c:8!s}{d:8!s}'.format(**
                    {"a": host,
                     "b": result['resource']['vcpus'],
                     "c": result['resource']['memory_mb'],
-                    "d": result['resource']['local_gb']}))
+                    "d": result['resource']['local_gb']})))
 
-            print(('%(a)-16s(used_now)%(b)23s%(c)8s%(d)8s' %
+            print(('{a:<16!s}(used_now){b:23!s}{c:8!s}{d:8!s}'.format(**
                    {"a": host,
                     "b": result['resource']['vcpus_used'],
                     "c": result['resource']['memory_mb_used'],
-                    "d": result['resource']['local_gb_used']}))
+                    "d": result['resource']['local_gb_used']})))
 
             # Printing a used_max
             cpu_sum = 0
@@ -881,18 +881,18 @@ class ServiceCommands(object):
                 mem_sum += val['memory_mb']
                 hdd_sum += val['root_gb']
                 hdd_sum += val['ephemeral_gb']
-            print('%(a)-16s(used_max)%(b)23s%(c)8s%(d)8s' % {"a": host,
+            print('{a:<16!s}(used_max){b:23!s}{c:8!s}{d:8!s}'.format(**{"a": host,
                                                              "b": cpu_sum,
                                                              "c": mem_sum,
-                                                             "d": hdd_sum})
+                                                             "d": hdd_sum}))
 
             for p_id, val in result['usage'].items():
-                print('%(a)-25s%(b)16s%(c)8s%(d)8s%(e)8s' % {
+                print('{a:<25!s}{b:16!s}{c:8!s}{d:8!s}{e:8!s}'.format(**{
                         "a": host,
                         "b": p_id,
                         "c": val['vcpus'],
                         "d": val['memory_mb'],
-                        "e": val['root_gb'] + val['ephemeral_gb']})
+                        "e": val['root_gb'] + val['ephemeral_gb']}))
 
 
 class HostCommands(object):
@@ -902,7 +902,7 @@ class HostCommands(object):
         """Show a list of all physical hosts. Filter by zone.
         args: [zone]
         """
-        print("%-25s\t%-15s" % (_('host'),
+        print("{0:<25!s}\t{1:<15!s}".format(_('host'),
                                 _('zone')))
         ctxt = context.get_admin_context()
         services = db.service_get_all(ctxt)
@@ -915,7 +915,7 @@ class HostCommands(object):
                 hosts.append(srv)
 
         for h in hosts:
-            print("%-25s\t%-15s" % (h['host'], h['availability_zone']))
+            print("{0:<25!s}\t{1:<15!s}".format(h['host'], h['availability_zone']))
 
 
 class DbCommands(object):
@@ -1115,7 +1115,7 @@ class AgentBuildCommands(object):
             for agent_build in buildlist:
                 print(fmt % (agent_build.os, agent_build.architecture,
                              agent_build.version, agent_build.md5hash))
-                print('    %s' % agent_build.url)
+                print('    {0!s}'.format(agent_build.url))
 
             print()
 
@@ -1184,7 +1184,7 @@ class GetLogCommands(object):
         for line in lines:
             if line.find("nova") > 0:
                 count += 1
-                print("%s" % (line))
+                print("{0!s}".format((line)))
             if count == entries:
                 break
 
@@ -1350,7 +1350,7 @@ class CellV2Commands(object):
                 mapping.create()
             except db_exc.DBDuplicateEntry:
                 if verbose:
-                    print("%s already mapped to cell" % instance.uuid)
+                    print("{0!s} already mapped to cell".format(instance.uuid))
                 continue
             mapped += 1
 
@@ -1358,7 +1358,7 @@ class CellV2Commands(object):
         print(fmt % (mapped, cell_mapping.uuid))
         if instances:
             instance = instances[-1]
-            print('Next marker: - %s' % instance.uuid)
+            print('Next marker: - {0!s}'.format(instance.uuid))
 
     # TODO(melwitt): Remove this when the oslo.messaging function
     # for assembling a transport url from ConfigOpts is available
@@ -1521,7 +1521,7 @@ def main():
             st = os.stat(cfgfile)
             print(_("Could not read %s. Re-running with sudo") % cfgfile)
             try:
-                os.execvp('sudo', ['sudo', '-u', '#%s' % st.st_uid] + sys.argv)
+                os.execvp('sudo', ['sudo', '-u', '#{0!s}'.format(st.st_uid)] + sys.argv)
             except OSError:
                 print(_('sudo failed, continuing as if nothing happened'))
 

@@ -226,10 +226,10 @@ class TestDriverBlockDevice(test.NoDBTestCase):
                               cls, bdm)
 
     def _test_driver_device(self, name):
-        db_bdm = getattr(self, "%s_bdm" % name)
+        db_bdm = getattr(self, "{0!s}_bdm".format(name))
         test_bdm = self.driver_classes[name](db_bdm)
         self.assertThat(test_bdm, matchers.DictMatches(
-            getattr(self, "%s_driver_bdm" % name)))
+            getattr(self, "{0!s}_driver_bdm".format(name))))
 
         for k, v in six.iteritems(db_bdm):
             field_val = getattr(test_bdm._bdm_obj, k)
@@ -239,7 +239,7 @@ class TestDriverBlockDevice(test.NoDBTestCase):
 
         self.assertThat(test_bdm.legacy(),
                         matchers.DictMatches(
-                            getattr(self, "%s_legacy_driver_bdm" % name)))
+                            getattr(self, "{0!s}_legacy_driver_bdm".format(name))))
 
         # Test passthru attributes
         for passthru in test_bdm._proxy_as_attr:
@@ -252,7 +252,7 @@ class TestDriverBlockDevice(test.NoDBTestCase):
                 continue
             self.assertRaises(driver_block_device._InvalidType,
                               cls,
-                              getattr(self, '%s_bdm' % name))
+                              getattr(self, '{0!s}_bdm'.format(name)))
 
         # Test the save method
         with mock.patch.object(test_bdm._bdm_obj, 'save') as save_mock:
@@ -280,7 +280,7 @@ class TestDriverBlockDevice(test.NoDBTestCase):
 
     def _test_driver_default_size(self, name):
         size = 'swap_size' if name == 'swap' else 'size'
-        no_size_bdm = getattr(self, "%s_bdm_dict" % name).copy()
+        no_size_bdm = getattr(self, "{0!s}_bdm_dict".format(name)).copy()
         no_size_bdm['volume_size'] = None
 
         driver_bdm = self.driver_classes[name](

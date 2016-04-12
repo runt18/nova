@@ -47,7 +47,7 @@ class InstanceExternalEvent(obj_base.NovaObject):
     @staticmethod
     def make_key(name, tag=None):
         if tag is not None:
-            return '%s-%s' % (name, tag)
+            return '{0!s}-{1!s}'.format(name, tag)
         else:
             return name
 

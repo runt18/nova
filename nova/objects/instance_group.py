@@ -87,7 +87,7 @@ class InstanceGroup(base.NovaPersistentObject, base.NovaObject,
         # NOTE(sbauza): Only hosts could be lazy-loaded right now
         if attrname != 'hosts':
             raise exception.ObjectActionError(
-                action='obj_load_attr', reason='unable to load %s' % attrname)
+                action='obj_load_attr', reason='unable to load {0!s}'.format(attrname))
 
         self.hosts = self.get_hosts()
         self.obj_reset_changes(['hosts'])

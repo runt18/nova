@@ -71,7 +71,7 @@ def refresh_cache(f):
             msg = _('instance is a required argument to use @refresh_cache')
             raise Exception(msg)
 
-        with lockutils.lock('refresh_cache-%s' % instance.uuid):
+        with lockutils.lock('refresh_cache-{0!s}'.format(instance.uuid)):
             # We need to call the wrapped function with the lock held to ensure
             # that it can call _get_instance_nw_info safely.
             res = f(self, context, *args, **kwargs)
@@ -249,7 +249,7 @@ class NetworkAPI(base.Base):
 
     def get_instance_nw_info(self, context, instance, **kwargs):
         """Returns all network info related to an instance."""
-        with lockutils.lock('refresh_cache-%s' % instance.uuid):
+        with lockutils.lock('refresh_cache-{0!s}'.format(instance.uuid)):
             result = self._get_instance_nw_info(context, instance, **kwargs)
             # NOTE(comstud): Don't update API cell with new info_cache every
             # time we pull network info for an instance.  The periodic healing

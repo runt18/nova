@@ -177,7 +177,7 @@ class HostOpsTestCase(test_base.HyperVBaseTestCase):
 
         response = self._hostops.get_host_uptime()
         tdelta = datetime.timedelta(milliseconds=int(self.FAKE_TICK_COUNT))
-        expected = "%s up %s,  0 users,  load average: 0, 0, 0" % (
+        expected = "{0!s} up {1!s},  0 users,  load average: 0, 0, 0".format(
                    str(mock_time()), str(tdelta))
 
         self.assertEqual(expected, response)

@@ -281,7 +281,7 @@ class CellsManagerClassTestCase(test.NoDBTestCase):
         # 3 cells... so 3 responses.  Each response is a list of services.
         # Manager should turn these into a single list of responses.
         for i in range(3):
-            cell_name = 'path!to!cell%i' % i
+            cell_name = 'path!to!cell{0:d}'.format(i)
             services = []
             for service in FAKE_SERVICES:
                 fake_service = objects.Service(**service)
@@ -390,7 +390,7 @@ class CellsManagerClassTestCase(test.NoDBTestCase):
                                  'proxy_rpc_to_manager')
         fake_response = self._get_fake_response()
         cell_and_host = cells_utils.cell_with_item('fake-cell', 'fake-host')
-        topic = "%s.%s" % (CONF.compute_topic, cell_and_host)
+        topic = "{0!s}.{1!s}".format(CONF.compute_topic, cell_and_host)
         self.msg_runner.proxy_rpc_to_manager(self.ctxt, 'fake-cell',
                 'fake-host', topic, 'fake-rpc-msg',
                 True, -1).AndReturn(fake_response)
@@ -407,7 +407,7 @@ class CellsManagerClassTestCase(test.NoDBTestCase):
         # entries. Manager should turn these into a single list of
         # task log entries.
         for i in range(num):
-            cell_name = 'path!to!cell%i' % i
+            cell_name = 'path!to!cell{0:d}'.format(i)
             task_logs = []
             for task_log in FAKE_TASK_LOGS:
                 task_logs.append(copy.deepcopy(task_log))
@@ -470,7 +470,7 @@ class CellsManagerClassTestCase(test.NoDBTestCase):
         # 3 cells... so 3 responses.  Each response is a list of computes.
         # Manager should turn these into a single list of responses.
         for i in range(3):
-            cell_name = 'path!to!cell%i' % i
+            cell_name = 'path!to!cell{0:d}'.format(i)
             compute_nodes = []
             for compute_node in FAKE_COMPUTE_NODES:
                 fake_compute = objects.ComputeNode(**compute_node)
@@ -670,7 +670,7 @@ class CellsManagerClassTestCase(test.NoDBTestCase):
 
     def test_get_migrations_for_a_given_cell(self):
         filters = {'status': 'confirmed', 'cell_name': 'ChildCell1'}
-        target_cell = '%s%s%s' % (CONF.cells.name, '!', filters['cell_name'])
+        target_cell = '{0!s}{1!s}{2!s}'.format(CONF.cells.name, '!', filters['cell_name'])
         migrations = [{'id': 123}]
         fake_responses = [self._get_fake_response(migrations)]
         self.mox.StubOutWithMock(self.msg_runner,

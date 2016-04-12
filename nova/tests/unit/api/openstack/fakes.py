@@ -303,15 +303,15 @@ class FakeAuthDatabase(object):
     def auth_token_create(context, token):
         fake_token = FakeToken(created_at=timeutils.utcnow(), **token)
         FakeAuthDatabase.data[fake_token.token_hash] = fake_token
-        FakeAuthDatabase.data['id_%i' % fake_token.id] = fake_token
+        FakeAuthDatabase.data['id_{0:d}'.format(fake_token.id)] = fake_token
         return fake_token
 
     @staticmethod
     def auth_token_destroy(context, token_id):
-        token = FakeAuthDatabase.data.get('id_%i' % token_id)
+        token = FakeAuthDatabase.data.get('id_{0:d}'.format(token_id))
         if token and token.token_hash in FakeAuthDatabase.data:
             del FakeAuthDatabase.data[token.token_hash]
-            del FakeAuthDatabase.data['id_%i' % token_id]
+            del FakeAuthDatabase.data['id_{0:d}'.format(token_id)]
 
 
 def create_info_cache(nw_cache):
@@ -474,9 +474,9 @@ def stub_instance(id=1, user_id=None, project_id=None, host=None,
                             "deleted_at": None, "deleted": False}]
 
     # ReservationID isn't sent back, hack it in there.
-    server_name = name or "server%s" % id
+    server_name = name or "server{0!s}".format(id)
     if reservation_id != "":
-        server_name = "reservation_%s" % (reservation_id, )
+        server_name = "reservation_{0!s}".format(reservation_id )
 
     info_cache = create_info_cache(nw_cache)
 
@@ -532,7 +532,7 @@ def stub_instance(id=1, user_id=None, project_id=None, host=None,
         "uuid": uuid,
         "progress": progress,
         "auto_disk_config": auto_disk_config,
-        "name": "instance-%s" % id,
+        "name": "instance-{0!s}".format(id),
         "shutdown_terminate": True,
         "disable_terminate": False,
         "security_groups": security_groups,
@@ -699,7 +699,7 @@ def stub_bdm_get_all_by_instance_uuids(context, instance_uuids,
                 'id': i,
                 'source_type': 'volume',
                 'destination_type': 'volume',
-                'volume_id': 'volume_id%d' % (i),
+                'volume_id': 'volume_id{0:d}'.format((i)),
                 'instance_uuid': instance_uuid,
             }))
             i += 1

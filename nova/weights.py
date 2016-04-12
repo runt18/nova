@@ -60,7 +60,7 @@ class WeighedObject(object):
         self.weight = weight
 
     def __repr__(self):
-        return "<WeighedObject '%s': %s>" % (self.obj, self.weight)
+        return "<WeighedObject '{0!s}': {1!s}>".format(self.obj, self.weight)
 
 
 @six.add_metaclass(abc.ABCMeta)

@@ -184,8 +184,8 @@ class InstanceTypeToolsTest(test.TestCase):
         example_prefix = {}
 
         for key in flavors.system_metadata_flavor_props.keys():
-            example['instance_type_%s' % key] = instance_type[key]
-            example_prefix['fooinstance_type_%s' % key] = instance_type[key]
+            example['instance_type_{0!s}'.format(key)] = instance_type[key]
+            example_prefix['fooinstance_type_{0!s}'.format(key)] = instance_type[key]
 
         metadata = {}
         flavors.save_flavor_info(metadata, instance_type)

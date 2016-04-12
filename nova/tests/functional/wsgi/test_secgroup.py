@@ -62,21 +62,20 @@ class SecgroupsFullstack(testscenarios.WithScenarios, test.TestCase):
         server = {}
 
         image = self.api.get_images()[0]
-        LOG.info("Image: %s" % image)
+        LOG.info("Image: {0!s}".format(image))
 
         if self._image_ref_parameter in image:
             image_href = image[self._image_ref_parameter]
         else:
             image_href = image['id']
-            image_href = 'http://fake.server/%s' % image_href
+            image_href = 'http://fake.server/{0!s}'.format(image_href)
 
         # We now have a valid imageId
         server[self._image_ref_parameter] = image_href
 
         # Set a valid flavorId
         flavor = self.api.get_flavors()[1]
-        server[self._flavor_ref_parameter] = ('http://fake.server/%s'
-                                              % flavor['id'])
+        server[self._flavor_ref_parameter] = ('http://fake.server/{0!s}'.format(flavor['id']))
         server['name'] = name
         return server
 

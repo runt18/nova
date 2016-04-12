@@ -41,13 +41,13 @@ class SuspendServerSamplesJsonTest(test_servers.ServersSampleBase):
 
     def test_post_suspend(self):
         # Get api samples to suspend server request.
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'server-suspend', {})
         self.assertEqual(202, response.status_code)
 
     def test_post_resume(self):
         # Get api samples to server resume request.
         self.test_post_suspend()
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  'server-resume', {})
         self.assertEqual(202, response.status_code)

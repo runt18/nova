@@ -45,7 +45,7 @@ class VirtualInterfacesJsonTest(test_servers.ServersSampleBase):
     def test_vifs_list(self):
         uuid = self._post_server()
 
-        response = self._do_get('servers/%s/os-virtual-interfaces' % uuid)
+        response = self._do_get('servers/{0!s}/os-virtual-interfaces'.format(uuid))
 
         subs = {'mac_addr': '(?:[a-f0-9]{2}:){5}[a-f0-9]{2}'}
         self._verify_response(self.template, subs, response, 200)

@@ -24,7 +24,7 @@ def upgrade(migrate_engine):
 
     for table_prefix in ('', 'shadow_'):
         uuid_column = Column('uuid', String(36))
-        aggregates = Table('%saggregates' % table_prefix, meta)
+        aggregates = Table('{0!s}aggregates'.format(table_prefix), meta)
         if not hasattr(aggregates.c, 'uuid'):
             aggregates.create_column(uuid_column)
             if not table_prefix:

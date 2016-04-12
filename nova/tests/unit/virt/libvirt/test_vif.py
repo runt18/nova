@@ -446,11 +446,11 @@ class LibvirtVifTestCase(test.NoDBTestCase):
         if type:
             addr_type = address.get("type")
             self.assertEqual(type, addr_type)
-        pci_slot = "%(domain)s:%(bus)s:%(slot)s.%(func)s" % {
+        pci_slot = "{domain!s}:{bus!s}:{slot!s}.{func!s}".format(**{
                      'domain': address.get("domain")[2:],
                      'bus': address.get("bus")[2:],
                      'slot': address.get("slot")[2:],
-                     'func': address.get("function")[2:]}
+                     'func': address.get("function")[2:]})
 
         pci_slot_want = vif['profile']['pci_slot']
         self.assertEqual(pci_slot, pci_slot_want)
@@ -545,7 +545,7 @@ class LibvirtVifTestCase(test.NoDBTestCase):
         xml = conf.to_xml()
         doc = etree.fromstring(xml)
         for nic in nics:
-            path = "./devices/interface/[@type='%s']" % nic['net_type']
+            path = "./devices/interface/[@type='{0!s}']".format(nic['net_type'])
             node = doc.find(path)
             self.assertEqual(nic['net_type'], node.get("type"))
             self.assertEqual(nic['mac_addr'],

@@ -37,7 +37,7 @@ class ImagesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
     def test_image_get(self):
         # Get api sample of one single image details request.
         image_id = fake.get_valid_image_id()
-        response = self._do_get('images/%s' % image_id)
+        response = self._do_get('images/{0!s}'.format(image_id))
         subs = {'image_id': image_id}
         self._verify_response('image-get-resp', subs, response, 200)
 
@@ -49,7 +49,7 @@ class ImagesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
     def test_image_metadata_get(self):
         # Get api sample of an image metadata request.
         image_id = fake.get_valid_image_id()
-        response = self._do_get('images/%s/metadata' % image_id)
+        response = self._do_get('images/{0!s}/metadata'.format(image_id))
         subs = {'image_id': image_id}
         self._verify_response('image-metadata-get-resp', subs, response, 200)
 
@@ -57,28 +57,28 @@ class ImagesSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         # Get api sample to update metadata of an image metadata request.
         image_id = fake.get_valid_image_id()
         response = self._do_post(
-                'images/%s/metadata' % image_id,
+                'images/{0!s}/metadata'.format(image_id),
                 'image-metadata-post-req', {})
         self._verify_response('image-metadata-post-resp', {}, response, 200)
 
     def test_image_metadata_put(self):
         # Get api sample of image metadata put request.
         image_id = fake.get_valid_image_id()
-        response = self._do_put('images/%s/metadata' %
-                                (image_id), 'image-metadata-put-req', {})
+        response = self._do_put('images/{0!s}/metadata'.format(
+                                (image_id)), 'image-metadata-put-req', {})
         self._verify_response('image-metadata-put-resp', {}, response, 200)
 
     def test_image_meta_key_get(self):
         # Get api sample of an image metadata key request.
         image_id = fake.get_valid_image_id()
         key = "kernel_id"
-        response = self._do_get('images/%s/metadata/%s' % (image_id, key))
+        response = self._do_get('images/{0!s}/metadata/{1!s}'.format(image_id, key))
         self._verify_response('image-meta-key-get', {}, response, 200)
 
     def test_image_meta_key_put(self):
         # Get api sample of image metadata key put request.
         image_id = fake.get_valid_image_id()
         key = "auto_disk_config"
-        response = self._do_put('images/%s/metadata/%s' % (image_id, key),
+        response = self._do_put('images/{0!s}/metadata/{1!s}'.format(image_id, key),
                                 'image-meta-key-put-req', {})
         self._verify_response('image-meta-key-put-resp', {}, response, 200)

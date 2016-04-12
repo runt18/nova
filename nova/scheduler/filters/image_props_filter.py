@@ -77,7 +77,7 @@ class ImagePropertiesFilter(filters.BaseHostFilter):
             if not(hypervisor_version and version_required):
                 return True
             img_prop_predicate = versionpredicate.VersionPredicate(
-                'image_prop (%s)' % version_required)
+                'image_prop ({0!s})'.format(version_required))
             hyper_ver_str = versionutils.convert_version_to_str(hyper_version)
             return img_prop_predicate.satisfied_by(hyper_ver_str)
 

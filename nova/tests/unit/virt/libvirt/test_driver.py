@@ -315,7 +315,7 @@ class FakeVirtDomain(object):
 
     def name(self):
         if self.domname is None:
-            return "fake-domain %s" % self
+            return "fake-domain {0!s}".format(self)
         else:
             return self.domname
 
@@ -594,8 +594,8 @@ class LibvirtConnTestCase(test.NoDBTestCase):
 
     REQUIRES_LOCKING = True
 
-    _EPHEMERAL_20_DEFAULT = ('ephemeral_20_%s' %
-                             utils.get_hash_str(disk._DEFAULT_FILE_SYSTEM)[:7])
+    _EPHEMERAL_20_DEFAULT = ('ephemeral_20_{0!s}'.format(
+                             utils.get_hash_str(disk._DEFAULT_FILE_SYSTEM)[:7]))
 
     def setUp(self):
         super(LibvirtConnTestCase, self).setUp()
@@ -3567,20 +3567,20 @@ class LibvirtConnTestCase(test.NoDBTestCase):
         xml = """
         <domain type='kvm'>
           <devices>
-            <%(dev_name)s type="tcp">
+            <{dev_name!s} type="tcp">
               <source host="127.0.0.1" service="100" mode="connect"/>
-            </%(dev_name)s>
-            <%(dev_name)s type="tcp">
+            </{dev_name!s}>
+            <{dev_name!s} type="tcp">
               <source host="127.0.0.1" service="101" mode="bind"/>
-            </%(dev_name)s>
-            <%(dev_name)s type="tcp">
+            </{dev_name!s}>
+            <{dev_name!s} type="tcp">
               <source host="127.0.0.2" service="100" mode="bind"/>
-            </%(dev_name)s>
-            <%(dev_name)s type="tcp">
+            </{dev_name!s}>
+            <{dev_name!s} type="tcp">
               <source host="127.0.0.2" service="101" mode="connect"/>
-            </%(dev_name)s>
+            </{dev_name!s}>
           </devices>
-        </domain>""" % {'dev_name': dev_name}
+        </domain>""".format(**{'dev_name': dev_name})
 
         mock_get_xml_desc.return_value = xml
 
@@ -5798,7 +5798,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
         for i, (check, expected_result) in enumerate(check):
             self.assertEqual(check(tree),
                              expected_result,
-                             '%s failed common check %d' % (xml, i))
+                             '{0!s} failed common check {1:d}'.format(xml, i))
 
         target = tree.find('./devices/filesystem/source').get('dir')
         self.assertTrue(len(target) > 0)
@@ -5850,8 +5850,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             for i, (check, expected_result) in enumerate(checks):
                 self.assertEqual(check(tree),
                                  expected_result,
-                                 '%s != %s failed check %d' %
-                                 (check(tree), expected_result, i))
+                                 '{0!s} != {1!s} failed check {2:d}'.format(check(tree), expected_result, i))
 
     def _check_xml_and_disk_driver(self, image_meta):
         os_open = os.open
@@ -5861,7 +5860,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             if flags & os.O_DIRECT:
                 if not directio_supported:
                     raise OSError(errno.EINVAL,
-                                  '%s: %s' % (os.strerror(errno.EINVAL), path))
+                                  '{0!s}: {1!s}'.format(os.strerror(errno.EINVAL), path))
                 flags &= ~os.O_DIRECT
             return os_open(path, flags, *args, **kwargs)
 
@@ -6121,14 +6120,12 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                 for i, (check, expected_result) in enumerate(checks):
                     self.assertEqual(check(tree),
                                      expected_result,
-                                     '%s != %s failed check %d' %
-                                     (check(tree), expected_result, i))
+                                     '{0!s} != {1!s} failed check {2:d}'.format(check(tree), expected_result, i))
 
                 for i, (check, expected_result) in enumerate(common_checks):
                     self.assertEqual(check(tree),
                                      expected_result,
-                                     '%s != %s failed common check %d' %
-                                     (check(tree), expected_result, i))
+                                     '{0!s} != {1!s} failed common check {2:d}'.format(check(tree), expected_result, i))
 
                 filterref = './devices/interface/filterref'
                 vif = network_info[0]
@@ -6196,8 +6193,8 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             drvr.ensure_filtering_rules_for_instance(instance_ref,
                                                      network_info)
         except exception.NovaException as e:
-            msg = ('The firewall filter for %s does not exist' %
-                   instance_ref['name'])
+            msg = ('The firewall filter for {0!s} does not exist'.format(
+                   instance_ref['name']))
             c1 = (0 <= six.text_type(e).find(msg))
         self.assertTrue(c1)
 
@@ -8468,7 +8465,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             self.assertEqual(
                 ret.to_legacy_dict(True)['pre_live_migration_result'],
                 target_ret)
-            self.assertTrue(os.path.exists('%s/%s/' % (tmpdir,
+            self.assertTrue(os.path.exists('{0!s}/{1!s}/'.format(tmpdir,
                                                        inst_ref['name'])))
 
     def test_pre_live_migration_plug_vifs_retry_fails(self):
@@ -9134,8 +9131,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                 return None
 
         def fake_node_device_lookup_by_name(address):
-            pattern = ("pci_%(hex)s{4}_%(hex)s{2}_%(hex)s{2}_%(oct)s{1}"
-                       % dict(hex='[\da-f]', oct='[0-8]'))
+            pattern = ("pci_{hex!s}{{4}}_{hex!s}{{2}}_{hex!s}{{2}}_{oct!s}{{1}}".format(**dict(hex='[\da-f]', oct='[0-8]')))
             pattern = re.compile(pattern)
             if pattern.match(address) is None:
                 raise fakelibvirt.libvirtError()
@@ -9255,8 +9251,8 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                                       mkfs=False)
 
     def test_create_image_plain_os_type_set_with_fs(self):
-        ephemeral_file_name = ('ephemeral_20_%s' % utils.get_hash_str(
-            'mkfs.ext4 --label %(fs_label)s %(target)s')[:7])
+        ephemeral_file_name = ('ephemeral_20_{0!s}'.format(utils.get_hash_str(
+            'mkfs.ext4 --label %(fs_label)s %(target)s')[:7]))
 
         self._test_create_image_plain(os_type='test',
                                       filename=ephemeral_file_name,
@@ -9606,7 +9602,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             instance = objects.Instance(**instance_ref)
 
             console_dir = (os.path.join(tmpdir, instance['name']))
-            console_log = '%s/console.log' % (console_dir)
+            console_log = '{0!s}/console.log'.format((console_dir))
             fake_dom_xml = """
                 <domain type='kvm'>
                     <devices>
@@ -9614,12 +9610,12 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                             <source file='filename'/>
                         </disk>
                         <console type='file'>
-                            <source path='%s'/>
+                            <source path='{0!s}'/>
                             <target port='0'/>
                         </console>
                     </devices>
                 </domain>
-            """ % console_log
+            """.format(console_log)
 
             def fake_lookup(id):
                 return FakeVirtDomain(fake_dom_xml)
@@ -9656,12 +9652,12 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                             <source file='filename'/>
                         </disk>
                         <console type='file'>
-                            <source path='%s'/>
+                            <source path='{0!s}'/>
                             <target port='0'/>
                         </console>
                     </devices>
                 </domain>
-            """ % console_log
+            """.format(console_log)
 
             def fake_lookup(id):
                 return FakeVirtDomain(fake_dom_xml)
@@ -9687,7 +9683,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
             instance = objects.Instance(**instance_ref)
 
             console_dir = (os.path.join(tmpdir, instance['name']))
-            pty_file = '%s/fake_pty' % (console_dir)
+            pty_file = '{0!s}/fake_pty'.format((console_dir))
             fake_dom_xml = """
                 <domain type='kvm'>
                     <devices>
@@ -9695,12 +9691,12 @@ class LibvirtConnTestCase(test.NoDBTestCase):
                             <source file='filename'/>
                         </disk>
                         <console type='pty'>
-                            <source path='%s'/>
+                            <source path='{0!s}'/>
                             <target port='0'/>
                         </console>
                     </devices>
                 </domain>
-            """ % pty_file
+            """.format(pty_file)
 
             def fake_lookup(id):
                 return FakeVirtDomain(fake_dom_xml)
@@ -12625,7 +12621,7 @@ class LibvirtConnTestCase(test.NoDBTestCase):
         elif method_name == "detach_interface":
             drvr.detach_interface(instance, network_info[0])
         else:
-            raise ValueError("Unhandled method %s" % method_name)
+            raise ValueError("Unhandled method {0!s}".format(method_name))
 
     @mock.patch.object(lockutils, "external_lock")
     def test_attach_interface_get_config(self, mock_lock):
@@ -15616,12 +15612,12 @@ class LibvirtDriverTestCase(test.NoDBTestCase):
                 <devices>
                   <disk type="block">
                     <driver name='qemu' type='raw' cache='none'/>
-                    <source dev="/dev/mapper/%s"/>
+                    <source dev="/dev/mapper/{0!s}"/>
                     <target dev="vda" bus="virtio" serial="1234"/>
                   </disk>
                 </devices>
               </domain>
-              """ % dev_name
+              """.format(dev_name)
         dom = mock.MagicMock()
         dom.XMLDesc.return_value = dom_xml
         guest = libvirt_guest.Guest(dom)

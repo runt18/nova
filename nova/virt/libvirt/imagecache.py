@@ -162,7 +162,7 @@ def read_stored_info(target, field=None, timestamped=False):
             d = {}
 
     else:
-        lock_name = 'info-%s' % os.path.split(target)[-1]
+        lock_name = 'info-{0!s}'.format(os.path.split(target)[-1])
         lock_path = os.path.join(CONF.instances_path, 'locks')
 
         @utils.synchronized(lock_name, external=True, lock_path=lock_path)
@@ -176,7 +176,7 @@ def read_stored_info(target, field=None, timestamped=False):
 
     if field:
         if timestamped:
-            return (d.get(field, None), d.get('%s-timestamp' % field, None))
+            return (d.get(field, None), d.get('{0!s}-timestamp'.format(field), None))
         else:
             return d.get(field, None)
     return d
@@ -192,7 +192,7 @@ def write_stored_info(target, field=None, value=None):
     LOG.info(_LI('Writing stored info to %s'), info_file)
     fileutils.ensure_tree(os.path.dirname(info_file))
 
-    lock_name = 'info-%s' % os.path.split(target)[-1]
+    lock_name = 'info-{0!s}'.format(os.path.split(target)[-1])
     lock_path = os.path.join(CONF.instances_path, 'locks')
 
     @utils.synchronized(lock_name, external=True, lock_path=lock_path)
@@ -204,7 +204,7 @@ def write_stored_info(target, field=None, value=None):
                 d = _read_possible_json(f.read(), info_file)
 
         d[field] = value
-        d['%s-timestamp' % field] = time.time()
+        d['{0!s}-timestamp'.format(field)] = time.time()
 
         with open(info_file, 'w') as f:
             f.write(jsonutils.dumps(d))
@@ -359,7 +359,7 @@ class ImageCacheManager(imagecache.ImageCacheManager):
             yield base_file, True, False
 
         # Resized images
-        resize_re = re.compile('.*/%s_[0-9]+$' % fingerprint)
+        resize_re = re.compile('.*/{0!s}_[0-9]+$'.format(fingerprint))
         for img in self.unexplained_images:
             m = resize_re.match(img)
             if m:
@@ -376,7 +376,7 @@ class ImageCacheManager(imagecache.ImageCacheManager):
         if not CONF.libvirt.checksum_base_images:
             return None
 
-        lock_name = 'hash-%s' % os.path.split(base_file)[-1]
+        lock_name = 'hash-{0!s}'.format(os.path.split(base_file)[-1])
 
         # Protect against other nova-computes performing checksums at the same
         # time if we are using shared storage

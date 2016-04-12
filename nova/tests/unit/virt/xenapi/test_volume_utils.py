@@ -152,7 +152,7 @@ class ParseVolumeInfoTestCase(stubs.XenAPITestBaseNoDB):
         for (input, expected) in six.iteritems(cases):
             actual = volume_utils._mountpoint_to_number(input)
             self.assertEqual(actual, expected,
-                    '%s yielded %s, not %s' % (input, actual, expected))
+                    '{0!s} yielded {1!s}, not {2!s}'.format(input, actual, expected))
 
     @classmethod
     def _make_connection_info(cls):

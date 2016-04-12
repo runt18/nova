@@ -609,18 +609,18 @@ class TestNeutronv2Base(test.TestCase):
 
     def _verify_nw_info(self, nw_inf, index=0):
         id_suffix = index + 1
-        self.assertEqual('10.0.%s.2' % id_suffix,
+        self.assertEqual('10.0.{0!s}.2'.format(id_suffix),
                          nw_inf.fixed_ips()[index]['address'])
-        self.assertEqual('172.0.%s.2' % id_suffix,
+        self.assertEqual('172.0.{0!s}.2'.format(id_suffix),
             nw_inf.fixed_ips()[index].floating_ip_addresses()[0])
-        self.assertEqual('my_netname%s' % id_suffix,
+        self.assertEqual('my_netname{0!s}'.format(id_suffix),
                          nw_inf[index]['network']['label'])
-        self.assertEqual('my_portid%s' % id_suffix, nw_inf[index]['id'])
-        self.assertEqual('my_mac%s' % id_suffix, nw_inf[index]['address'])
-        self.assertEqual('10.0.%s.0/24' % id_suffix,
+        self.assertEqual('my_portid{0!s}'.format(id_suffix), nw_inf[index]['id'])
+        self.assertEqual('my_mac{0!s}'.format(id_suffix), nw_inf[index]['address'])
+        self.assertEqual('10.0.{0!s}.0/24'.format(id_suffix),
             nw_inf[index]['network']['subnets'][0]['cidr'])
 
-        ip_addr = model.IP(address='8.8.%s.1' % id_suffix,
+        ip_addr = model.IP(address='8.8.{0!s}.1'.format(id_suffix),
                            version=4, type='dns')
         self.assertIn(ip_addr, nw_inf[index]['network']['subnets'][0]['dns'])
 
@@ -656,7 +656,7 @@ class TestNeutronv2Base(test.TestCase):
                         {'floatingips': float_data})
             subnet_data = i == 1 and self.subnet_data1 or self.subnet_data2
             self.moxed_client.list_subnets(
-                id=mox.SameElementsAs(['my_subid%s' % i])).AndReturn(
+                id=mox.SameElementsAs(['my_subid{0!s}'.format(i)])).AndReturn(
                     {'subnets': subnet_data})
             self.moxed_client.list_ports(
                 network_id=subnet_data[0]['network_id'],
@@ -938,8 +938,8 @@ class TestNeutronv2(TestNeutronv2Base):
         id_suffix = 3
         self.assertEqual(0, len(nw_inf.fixed_ips()))
         self.assertEqual('my_netname1', nw_inf[0]['network']['label'])
-        self.assertEqual('my_portid%s' % id_suffix, nw_inf[0]['id'])
-        self.assertEqual('my_mac%s' % id_suffix, nw_inf[0]['address'])
+        self.assertEqual('my_portid{0!s}'.format(id_suffix), nw_inf[0]['id'])
+        self.assertEqual('my_mac{0!s}'.format(id_suffix), nw_inf[0]['address'])
         self.assertEqual(0, len(nw_inf[0]['network']['subnets']))
 
     def test_refresh_neutron_extensions_cache(self):
@@ -1930,7 +1930,7 @@ class TestNeutronv2(TestNeutronv2Base):
             port_data = self.port_data2
         address = self.port_address
         self.moxed_client.list_ports(
-            fixed_ips=MyComparator('ip_address=%s' % address)).AndReturn(
+            fixed_ips=MyComparator('ip_address={0!s}'.format(address))).AndReturn(
                 {'ports': port_data})
         self.mox.ReplayAll()
         return address
@@ -2394,10 +2394,10 @@ class TestNeutronv2(TestNeutronv2Base):
         api = neutronapi.API()
         self._setup_mock_for_refresh_cache(api, [instance])
         address = '10.0.0.3'
-        zone = 'compute:%s' % self.instance['availability_zone']
+        zone = 'compute:{0!s}'.format(self.instance['availability_zone'])
         search_opts = {'device_id': self.instance['uuid'],
                        'device_owner': zone,
-                       'fixed_ips': 'ip_address=%s' % address}
+                       'fixed_ips': 'ip_address={0!s}'.format(address)}
         self.moxed_client.list_ports(
             **search_opts).AndReturn({'ports': self.port_data1})
         port_req_body = {
@@ -2965,7 +2965,7 @@ class TestNeutronv2WithMock(test.TestCase):
         mock_lock.side_effect = test.TestingException
         self.assertRaises(test.TestingException,
                           api.get_instance_nw_info, 'context', instance)
-        mock_lock.assert_called_once_with('refresh_cache-%s' % instance.uuid)
+        mock_lock.assert_called_once_with('refresh_cache-{0!s}'.format(instance.uuid))
 
     @mock.patch('nova.network.neutronv2.api.LOG')
     def test_get_instance_nw_info_verify_duplicates_ignored(self, mock_log):
@@ -3040,7 +3040,7 @@ class TestNeutronv2WithMock(test.TestCase):
             for args, return_value in list_port_values:
                 if args == search_opts:
                     return return_value
-            self.fail('Unexpected call to list_ports %s' % search_opts)
+            self.fail('Unexpected call to list_ports {0!s}'.format(search_opts))
 
         with test.nested(
             mock.patch.object(client.Client, 'list_ports',
@@ -3214,7 +3214,7 @@ class TestNeutronv2WithMock(test.TestCase):
         with mock.patch.object(client.Client, 'create_port',
             side_effect=exceptions.IpAddressGenerationFailureClient()) as (
             create_port_mock):
-            zone = 'compute:%s' % instance['availability_zone']
+            zone = 'compute:{0!s}'.format(instance['availability_zone'])
             port_req_body = {'port': {'device_id': instance['uuid'],
                                       'device_owner': zone}}
             self.assertRaises(exception.NoMoreFixedIps,
@@ -3233,7 +3233,7 @@ class TestNeutronv2WithMock(test.TestCase):
                'name': 'my_netname1',
                'subnets': ['mysubnid1'],
                'tenant_id': instance['project_id']}
-        zone = 'compute:%s' % instance['availability_zone']
+        zone = 'compute:{0!s}'.format(instance['availability_zone'])
         port_req_body = {'port': {'device_id': instance['uuid'],
                                   'device_owner': zone,
                                   'mac_address': 'XX:XX:XX:XX:XX:XX'}}
@@ -3256,7 +3256,7 @@ class TestNeutronv2WithMock(test.TestCase):
                'name': 'my_netname1',
                'subnets': ['mysubnid1'],
                'tenant_id': instance['project_id']}
-        zone = 'compute:%s' % instance['availability_zone']
+        zone = 'compute:{0!s}'.format(instance['availability_zone'])
         port_req_body = {'port': {'device_id': instance['uuid'],
                                   'device_owner': zone,
                                   'mac_address': 'XX:XX:XX:XX:XX:XX'}}
@@ -3279,7 +3279,7 @@ class TestNeutronv2WithMock(test.TestCase):
                'name': 'my_netname1',
                'subnets': ['mysubnid1'],
                'tenant_id': instance['project_id']}
-        zone = 'compute:%s' % instance['availability_zone']
+        zone = 'compute:{0!s}'.format(instance['availability_zone'])
         port_req_body = {'port': {'device_id': instance['uuid'],
                                   'device_owner': zone,
                                   'mac_address': 'XX:XX:XX:XX:XX:XX'}}

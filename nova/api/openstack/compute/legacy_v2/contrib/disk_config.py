@@ -23,7 +23,7 @@ from nova.i18n import _
 
 ALIAS = 'OS-DCF'
 XMLNS_DCF = "http://docs.openstack.org/compute/ext/disk_config/api/v1.1"
-API_DISK_CONFIG = "%s:diskConfig" % ALIAS
+API_DISK_CONFIG = "{0!s}:diskConfig".format(ALIAS)
 INTERNAL_DISK_CONFIG = "auto_disk_config"
 authorize = extensions.soft_extension_authorizer('compute', 'disk_config')
 

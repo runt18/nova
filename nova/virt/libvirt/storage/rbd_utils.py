@@ -190,7 +190,7 @@ class RBDDriver(object):
             return False
 
         if self.get_fsid() != fsid:
-            reason = '%s is in a different ceph cluster' % url
+            reason = '{0!s} is in a different ceph cluster'.format(url)
             LOG.debug(reason)
             return False
 
@@ -205,8 +205,8 @@ class RBDDriver(object):
         try:
             return self.exists(image, pool=pool, snapshot=snapshot)
         except rbd.Error as e:
-            LOG.debug('Unable to open image %(loc)s: %(err)s' %
-                      dict(loc=url, err=e))
+            LOG.debug('Unable to open image {loc!s}: {err!s}'.format(**
+                      dict(loc=url, err=e)))
             return False
 
     def clone(self, image_location, dest_name, dest_pool=None):

@@ -38,7 +38,7 @@ class ExtendedVolumesController(wsgi.Controller):
         # NOTE(mriedem): The os-extended-volumes prefix should not be used for
         # new attributes after v2.1. They are only in v2.1 for backward compat
         # with v2.0.
-        key = "%s:volumes_attached" % ExtendedVolumes.alias
+        key = "{0!s}:volumes_attached".format(ExtendedVolumes.alias)
         server[key] = volumes_attached
 
     @wsgi.extends

@@ -132,11 +132,11 @@ class ExtendedVolumesTestV21(test.TestCase):
         return jsonutils.loads(body).get('servers')
 
     def test_show(self):
-        res = self._make_request('/%s' % UUID1)
+        res = self._make_request('/{0!s}'.format(UUID1))
 
         self.assertEqual(200, res.status_int)
         server = self._get_server(res.body)
-        actual = server.get('%svolumes_attached' % self.prefix)
+        actual = server.get('{0!s}volumes_attached'.format(self.prefix))
         self.assertEqual(self.exp_volumes_show, actual)
 
     def test_detail(self):
@@ -144,7 +144,7 @@ class ExtendedVolumesTestV21(test.TestCase):
 
         self.assertEqual(200, res.status_int)
         for i, server in enumerate(self._get_servers(res.body)):
-            actual = server.get('%svolumes_attached' % self.prefix)
+            actual = server.get('{0!s}volumes_attached'.format(self.prefix))
             self.assertEqual(self.exp_volumes_detail[i], actual)
 
 

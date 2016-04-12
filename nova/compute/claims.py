@@ -60,7 +60,7 @@ class NopClaim(object):
         pass
 
     def __str__(self):
-        return "[Claim: %d MB memory, %d GB disk]" % (self.memory_mb,
+        return "[Claim: {0:d} MB memory, {1:d} GB disk]".format(self.memory_mb,
                 self.disk_gb)
 
 

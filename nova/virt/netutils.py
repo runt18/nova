@@ -143,7 +143,7 @@ def get_injected_network_template(network_info, use_ipv6=None, template=None,
                     gateway_v6 = subnet_v6['gateway']['address']
                 dns_v6 = ' '.join([i['address'] for i in subnet_v6['dns']])
 
-        net_info = {'name': 'eth%d' % ifc_num,
+        net_info = {'name': 'eth{0:d}'.format(ifc_num),
                     'hwaddress': hwaddress,
                     'address': address,
                     'netmask': netmask,
@@ -246,7 +246,7 @@ def _get_eth_link(vif, ifc_num):
     """
     link_id = vif.get('devname')
     if not link_id:
-        link_id = 'interface%d' % ifc_num
+        link_id = 'interface{0:d}'.format(ifc_num)
 
     # Use 'phy' for physical links. Ethernet can be confusing
     if vif.get('type') == 'ethernet':
@@ -276,8 +276,8 @@ def _get_nets(vif, subnet, version, net_num, link_id):
     """
     if subnet.get_meta('dhcp_server') is not None:
         net_info = {
-            'id': 'network%d' % net_num,
-            'type': 'ipv%d_dhcp' % version,
+            'id': 'network{0:d}'.format(net_num),
+            'type': 'ipv{0:d}_dhcp'.format(version),
             'link': link_id,
             'network_id': vif['network']['id']
         }
@@ -291,8 +291,8 @@ def _get_nets(vif, subnet, version, net_num, link_id):
         netmask = str(subnet.as_netaddr().netmask)
 
     net_info = {
-        'id': 'network%d' % net_num,
-        'type': 'ipv%d' % version,
+        'id': 'network{0:d}'.format(net_num),
+        'type': 'ipv{0:d}'.format(version),
         'link': link_id,
         'ip_address': address,
         'netmask': netmask,

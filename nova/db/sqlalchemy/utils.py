@@ -42,7 +42,7 @@ class DeleteFromSelect(UpdateBase):
 # 'LIMIT & IN/ALL/ANY/SOME' We need work around this with nesting select .
 @compiles(DeleteFromSelect)
 def visit_delete_from_select(element, compiler, **kw):
-    return "DELETE FROM %s WHERE %s in (SELECT T1.%s FROM (%s) as T1)" % (
+    return "DELETE FROM {0!s} WHERE {1!s} in (SELECT T1.{2!s} FROM ({3!s}) as T1)".format(
         compiler.process(element.table, asfrom=True),
         compiler.process(element.column),
         element.column.name,

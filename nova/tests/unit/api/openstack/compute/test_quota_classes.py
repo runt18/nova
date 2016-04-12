@@ -177,7 +177,7 @@ class QuotaClassesPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_update_policy_failed(self):
@@ -188,5 +188,5 @@ class QuotaClassesPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.update, self.req, fakes.FAKE_UUID,
             body={'quota_class_set': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

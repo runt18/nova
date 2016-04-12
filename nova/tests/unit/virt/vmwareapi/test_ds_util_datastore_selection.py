@@ -47,7 +47,7 @@ class VMwareDSUtilDatastoreSelectionTestCase(test.NoDBTestCase):
         objects = []
         for id, row in enumerate(mock_data):
             obj = ObjectContent(
-                obj=MoRef(value="ds-%03d" % id),
+                obj=MoRef(value="ds-{0:03d}".format(id)),
                 propSet=[])
             for index, value in enumerate(row):
                 obj.propSet.append(

@@ -398,5 +398,5 @@ class CreateBackupPolicyEnforcementv21(test.NoDBTestCase):
             self.controller._create_backup, self.req, fakes.FAKE_UUID,
             body=body)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

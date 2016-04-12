@@ -1785,12 +1785,12 @@ class VMwareVMUtilTestCase(test.NoDBTestCase):
         self.assertEqual(expected, name)
 
         display_name = 'fira'
-        expected = 'fira (%s)' % uuid
+        expected = 'fira ({0!s})'.format(uuid)
         name = vm_util._get_vm_name(display_name, uuid)
         self.assertEqual(expected, name)
 
         display_name = 'X' * 255
-        expected = '%s (%s)' % ('X' * 41, uuid)
+        expected = '{0!s} ({1!s})'.format('X' * 41, uuid)
         name = vm_util._get_vm_name(display_name, uuid)
         self.assertEqual(expected, name)
         self.assertEqual(len(name), 80)

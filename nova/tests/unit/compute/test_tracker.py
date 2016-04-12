@@ -1517,7 +1517,7 @@ class TestMoveClaim(BaseTestCase):
         for k, e in expected.items():
             a = actual[k]
             if e != a:
-                print("%s: %s != %s" % (k, e, a))
+                print("{0!s}: {1!s} != {2!s}".format(k, e, a))
                 fail = True
         if fail:
             self.fail()

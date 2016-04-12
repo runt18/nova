@@ -83,7 +83,7 @@ class VolumeOps(object):
 
     def _connect_to_volume_provider(self, connection_data, instance_name):
         sr_uuid, sr_label, sr_params = volume_utils.parse_sr_info(
-                connection_data, 'Disk-for:%s' % instance_name)
+                connection_data, 'Disk-for:{0!s}'.format(instance_name))
         sr_ref = volume_utils.find_sr_by_uuid(self._session, sr_uuid)
         if not sr_ref:
             # introduce SR because not already present
@@ -204,7 +204,7 @@ class VolumeOps(object):
             except self._session.XenAPI.Failure as exc:
                 if exc.details[0] == 'SR_BACKEND_FAILURE_40':
                     device = self._session.VBD.get_device(vbd_ref)
-                    bad_devices.append('/dev/%s' % device)
+                    bad_devices.append('/dev/{0!s}'.format(device))
                 else:
                     raise
 
@@ -224,5 +224,5 @@ class VolumeOps(object):
                 # Forget (i.e. disconnect) SR only if not in use
                 volume_utils.purge_sr(self._session, sr_ref)
             except Exception:
-                LOG.debug('Ignoring error while purging sr: %s' % sr_ref,
+                LOG.debug('Ignoring error while purging sr: {0!s}'.format(sr_ref),
                         exc_info=True)

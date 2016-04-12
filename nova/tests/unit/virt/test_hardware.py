@@ -1956,7 +1956,7 @@ class _CPUPinningTestCaseBase(object):
     def assertEqualTopology(self, expected, got):
         for attr in ('sockets', 'cores', 'threads'):
             self.assertEqual(getattr(expected, attr), getattr(got, attr),
-                             "Mismatch on %s" % attr)
+                             "Mismatch on {0!s}".format(attr))
 
     def assertInstanceCellPinned(self, instance_cell, cell_ids=None):
         default_cell_id = 0

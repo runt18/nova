@@ -55,7 +55,7 @@ class XenAPISessionObject(object):
         self.name = name
 
     def _call_method(self, method_name, *args):
-        call = "%s.%s" % (self.name, method_name)
+        call = "{0!s}.{1!s}".format(self.name, method_name)
         return self.session.call_xenapi(call, *args)
 
     def __getattr__(self, method_name):

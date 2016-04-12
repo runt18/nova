@@ -114,8 +114,7 @@ class AttachInterfacesSampleJsonTest(test_servers.ServersSampleBase):
 
     def test_list_interfaces(self):
         instance_uuid = self._post_server()
-        response = self._do_get('servers/%s/os-interface'
-                                % instance_uuid)
+        response = self._do_get('servers/{0!s}/os-interface'.format(instance_uuid))
         subs = {
                 'ip_address': '192.168.1.3',
                 'subnet_id': 'f8a6e8f8-c2ec-497c-9f23-da9616de54ef',
@@ -137,8 +136,7 @@ class AttachInterfacesSampleJsonTest(test_servers.ServersSampleBase):
         instance_uuid = self._post_server()
         port_id = 'ce531f90-199f-48c0-816c-13e38010b442'
         self._stub_show_for_instance(instance_uuid, port_id)
-        response = self._do_get('servers/%s/os-interface/%s' %
-                                (instance_uuid, port_id))
+        response = self._do_get('servers/{0!s}/os-interface/{1!s}'.format(instance_uuid, port_id))
         subs = {
                 'ip_address': '192.168.1.3',
                 'subnet_id': 'f8a6e8f8-c2ec-497c-9f23-da9616de54ef',
@@ -162,8 +160,7 @@ class AttachInterfacesSampleJsonTest(test_servers.ServersSampleBase):
                 'mac_addr': 'fa:16:3e:4c:2c:30',
                 }
         self._stub_show_for_instance(instance_uuid, subs['port_id'])
-        response = self._do_post('servers/%s/os-interface'
-                                 % instance_uuid,
+        response = self._do_post('servers/{0!s}/os-interface'.format(instance_uuid),
                                  'attach-interfaces-create-req', subs)
         self._verify_response('attach-interfaces-create-resp', subs,
                               response, 200)
@@ -171,7 +168,6 @@ class AttachInterfacesSampleJsonTest(test_servers.ServersSampleBase):
     def test_delete_interfaces(self):
         instance_uuid = self._post_server()
         port_id = 'ce531f90-199f-48c0-816c-13e38010b442'
-        response = self._do_delete('servers/%s/os-interface/%s' %
-                                (instance_uuid, port_id))
+        response = self._do_delete('servers/{0!s}/os-interface/{1!s}'.format(instance_uuid, port_id))
         self.assertEqual(202, response.status_code)
         self.assertEqual('', response.content)

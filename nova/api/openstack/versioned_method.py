@@ -31,5 +31,4 @@ class VersionedMethod(object):
         self.func = func
 
     def __str__(self):
-        return ("Version Method %s: min: %s, max: %s"
-                % (self.name, self.start_version, self.end_version))
+        return ("Version Method {0!s}: min: {1!s}, max: {2!s}".format(self.name, self.start_version, self.end_version))

@@ -44,8 +44,8 @@ class PathUtils(pathutils.PathUtils):
             else:
                 # Use an administrative share
                 path = local_instance_path.replace(':', '$')
-            return ('\\\\%(remote_server)s\\%(path)s' %
-                {'remote_server': remote_server, 'path': path})
+            return ('\\\\{remote_server!s}\\{path!s}'.format(**
+                {'remote_server': remote_server, 'path': path}))
         else:
             return local_instance_path
 
@@ -72,7 +72,7 @@ class PathUtils(pathutils.PathUtils):
 
     def get_instance_migr_revert_dir(self, instance_name, create_dir=False,
                                      remove_dir=False):
-        dir_name = '%s_revert' % instance_name
+        dir_name = '{0!s}_revert'.format(instance_name)
         return self._get_instances_sub_dir(dir_name, None, create_dir,
                                            remove_dir)
 

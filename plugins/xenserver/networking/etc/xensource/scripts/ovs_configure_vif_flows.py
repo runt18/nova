@@ -41,7 +41,7 @@ class OvsFlow(object):
 
     def clear_flows(self, ofport):
         novalib.execute(OVS_OFCTL, 'del-flows',
-                                        self.bridge, "in_port=%s" % ofport)
+                                        self.bridge, "in_port={0!s}".format(ofport))
 
 
 def main(command, vif_raw, net_type):
@@ -49,25 +49,24 @@ def main(command, vif_raw, net_type):
         return
 
     vif_name, dom_id, vif_index = vif_raw.split('-')
-    vif = "%s%s.%s" % (vif_name, dom_id, vif_index)
+    vif = "{0!s}{1!s}.{2!s}".format(vif_name, dom_id, vif_index)
 
     bridge = novalib.execute_get_output('/usr/bin/ovs-vsctl',
                                                     'iface-to-br', vif)
 
     xsls = novalib.execute_get_output('/usr/bin/xenstore-ls',
-                              '/local/domain/%s/vm-data/networking' % dom_id)
+                              '/local/domain/{0!s}/vm-data/networking'.format(dom_id))
     macs = [line.split("=")[0].strip() for line in xsls.splitlines()]
 
     for mac in macs:
         xsread = novalib.execute_get_output('/usr/bin/xenstore-read',
-                                    '/local/domain/%s/vm-data/networking/%s' %
-                                    (dom_id, mac))
+                                    '/local/domain/{0!s}/vm-data/networking/{1!s}'.format(dom_id, mac))
         data = json.loads(xsread)
         if data["label"] == "public":
-            this_vif = "vif%s.0" % dom_id
+            this_vif = "vif{0!s}.0".format(dom_id)
             phys_dev = "eth0"
         else:
-            this_vif = "vif%s.1" % dom_id
+            this_vif = "vif{0!s}.1".format(dom_id)
             phys_dev = "eth1"
 
         if vif == this_vif:
@@ -227,8 +226,8 @@ def apply_ovs_ipv6_flows(ovs, bridge, params):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print ("usage: %s [online|offline] vif-domid-idx [ipv4|ipv6|all] " %
-               os.path.basename(sys.argv[0]))
+        print ("usage: {0!s} [online|offline] vif-domid-idx [ipv4|ipv6|all] ".format(
+               os.path.basename(sys.argv[0])))
         sys.exit(1)
     else:
         command, vif_raw, net_type = sys.argv[1:4]

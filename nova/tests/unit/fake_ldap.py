@@ -233,7 +233,7 @@ class FakeLDAP(object):
         if server_fail:
             raise SERVER_DOWN()
 
-        key = "%s%s" % (self.__prefix, dn)
+        key = "{0!s}{1!s}".format(self.__prefix, dn)
         value_dict = {k: _to_json(v) for k, v in attr}
         Store.instance().hmset(key, value_dict)
 
@@ -242,7 +242,7 @@ class FakeLDAP(object):
         if server_fail:
             raise SERVER_DOWN()
 
-        Store.instance().delete("%s%s" % (self.__prefix, dn))
+        Store.instance().delete("{0!s}{1!s}".format(self.__prefix, dn))
 
     def modify_s(self, dn, attrs):
         """Modify the object at dn using the attribute list.
@@ -257,7 +257,7 @@ class FakeLDAP(object):
             raise SERVER_DOWN()
 
         store = Store.instance()
-        key = "%s%s" % (self.__prefix, dn)
+        key = "{0!s}{1!s}".format(self.__prefix, dn)
 
         for cmd, k, v in attrs:
             values = _from_json(store.hget(key, k))
@@ -273,7 +273,7 @@ class FakeLDAP(object):
         oldobj = self.search_s(dn, SCOPE_BASE)
         if not oldobj:
             raise NO_SUCH_OBJECT()
-        newdn = "%s,%s" % (newrdn, dn.partition(',')[2])
+        newdn = "{0!s},{1!s}".format(newrdn, dn.partition(',')[2])
         newattrs = oldobj[0][1]
 
         modlist = []
@@ -300,10 +300,10 @@ class FakeLDAP(object):
             raise NotImplementedError(str(scope))
         store = Store.instance()
         if scope == SCOPE_BASE:
-            pattern = "%s%s" % (self.__prefix, dn)
+            pattern = "{0!s}{1!s}".format(self.__prefix, dn)
             keys = store.keys(pattern)
         else:
-            keys = store.keys("%s*%s" % (self.__prefix, dn))
+            keys = store.keys("{0!s}*{1!s}".format(self.__prefix, dn))
 
         if not keys:
             raise NO_SUCH_OBJECT()

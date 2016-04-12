@@ -32,17 +32,17 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                      ':OUTPUT ACCEPT [2172501:140856656]',
                      ':iptables-top-rule - [0:0]',
                      ':iptables-bottom-rule - [0:0]',
-                     ':%s-FORWARD - [0:0]' % (binary_name),
-                     ':%s-INPUT - [0:0]' % (binary_name),
-                     ':%s-OUTPUT - [0:0]' % (binary_name),
-                     ':%s-local - [0:0]' % (binary_name),
+                     ':{0!s}-FORWARD - [0:0]'.format((binary_name)),
+                     ':{0!s}-INPUT - [0:0]'.format((binary_name)),
+                     ':{0!s}-OUTPUT - [0:0]'.format((binary_name)),
+                     ':{0!s}-local - [0:0]'.format((binary_name)),
                      ':nova-filter-top - [0:0]',
                      '[0:0] -A FORWARD -j nova-filter-top',
                      '[0:0] -A OUTPUT -j nova-filter-top',
-                     '[0:0] -A nova-filter-top -j %s-local' % (binary_name),
-                     '[0:0] -A INPUT -j %s-INPUT' % (binary_name),
-                     '[0:0] -A OUTPUT -j %s-OUTPUT' % (binary_name),
-                     '[0:0] -A FORWARD -j %s-FORWARD' % (binary_name),
+                     '[0:0] -A nova-filter-top -j {0!s}-local'.format((binary_name)),
+                     '[0:0] -A INPUT -j {0!s}-INPUT'.format((binary_name)),
+                     '[0:0] -A OUTPUT -j {0!s}-OUTPUT'.format((binary_name)),
+                     '[0:0] -A FORWARD -j {0!s}-FORWARD'.format((binary_name)),
                      '[0:0] -A INPUT -i virbr0 -p udp -m udp --dport 53 '
                      '-j ACCEPT',
                      '[0:0] -A INPUT -i virbr0 -p tcp -m tcp --dport 53 '
@@ -67,15 +67,15 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                   ':INPUT ACCEPT [2447:225266]',
                   ':OUTPUT ACCEPT [63491:4191863]',
                   ':POSTROUTING ACCEPT [63112:4108641]',
-                  ':%s-OUTPUT - [0:0]' % (binary_name),
-                  ':%s-POSTROUTING - [0:0]' % (binary_name),
-                  ':%s-PREROUTING - [0:0]' % (binary_name),
-                  ':%s-float-snat - [0:0]' % (binary_name),
-                  ':%s-snat - [0:0]' % (binary_name),
+                  ':{0!s}-OUTPUT - [0:0]'.format((binary_name)),
+                  ':{0!s}-POSTROUTING - [0:0]'.format((binary_name)),
+                  ':{0!s}-PREROUTING - [0:0]'.format((binary_name)),
+                  ':{0!s}-float-snat - [0:0]'.format((binary_name)),
+                  ':{0!s}-snat - [0:0]'.format((binary_name)),
                   ':nova-postrouting-bottom - [0:0]',
-                  '[0:0] -A PREROUTING -j %s-PREROUTING' % (binary_name),
-                  '[0:0] -A OUTPUT -j %s-OUTPUT' % (binary_name),
-                  '[0:0] -A POSTROUTING -j %s-POSTROUTING' % (binary_name),
+                  '[0:0] -A PREROUTING -j {0!s}-PREROUTING'.format((binary_name)),
+                  '[0:0] -A OUTPUT -j {0!s}-OUTPUT'.format((binary_name)),
+                  '[0:0] -A POSTROUTING -j {0!s}-POSTROUTING'.format((binary_name)),
                   '[0:0] -A nova-postrouting-bottom '
                   '-j %s-snat' % (binary_name),
                   '[0:0] -A %s-snat '
@@ -160,18 +160,18 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                                                self.manager.ipv4['nat'],
                                                'nat')
 
-        for line in [':%s-OUTPUT - [0:0]' % (self.binary_name),
-                     ':%s-float-snat - [0:0]' % (self.binary_name),
-                     ':%s-snat - [0:0]' % (self.binary_name),
-                     ':%s-PREROUTING - [0:0]' % (self.binary_name),
-                     ':%s-POSTROUTING - [0:0]' % (self.binary_name)]:
+        for line in [':{0!s}-OUTPUT - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-float-snat - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-snat - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-PREROUTING - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-POSTROUTING - [0:0]'.format((self.binary_name))]:
             self.assertIn(line, new_lines, "One of our chains went"
                                                " missing.")
 
         seen_lines = set()
         for line in new_lines:
             line = line.strip()
-            self.assertNotIn(line, seen_lines, "Duplicate line: %s" % line)
+            self.assertNotIn(line, seen_lines, "Duplicate line: {0!s}".format(line))
             seen_lines.add(line)
 
         last_postrouting_line = ''
@@ -185,9 +185,8 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                         "nova-postouting-bottom: %s" % last_postrouting_line)
 
         for chain in ['POSTROUTING', 'PREROUTING', 'OUTPUT']:
-            self.assertTrue('[0:0] -A %s -j %s-%s' %
-                            (chain, self.binary_name, chain) in new_lines,
-                            "Built-in chain %s not wrapped" % (chain,))
+            self.assertTrue('[0:0] -A {0!s} -j {1!s}-{2!s}'.format(chain, self.binary_name, chain) in new_lines,
+                            "Built-in chain {0!s} not wrapped".format(chain))
 
     def test_filter_rules(self):
         current_lines = self.sample_filter
@@ -195,22 +194,22 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                                                self.manager.ipv4['filter'],
                                                'nat')
 
-        for line in [':%s-FORWARD - [0:0]' % (self.binary_name),
-                     ':%s-INPUT - [0:0]' % (self.binary_name),
-                     ':%s-local - [0:0]' % (self.binary_name),
-                     ':%s-OUTPUT - [0:0]' % (self.binary_name)]:
+        for line in [':{0!s}-FORWARD - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-INPUT - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-local - [0:0]'.format((self.binary_name)),
+                     ':{0!s}-OUTPUT - [0:0]'.format((self.binary_name))]:
             self.assertIn(line, new_lines, "One of our chains went"
                                                " missing.")
 
         seen_lines = set()
         for line in new_lines:
             line = line.strip()
-            self.assertNotIn(line, seen_lines, "Duplicate line: %s" % line)
+            self.assertNotIn(line, seen_lines, "Duplicate line: {0!s}".format(line))
             seen_lines.add(line)
 
         for chain in ['FORWARD', 'OUTPUT']:
             for line in new_lines:
-                if line.startswith('[0:0] -A %s' % chain):
+                if line.startswith('[0:0] -A {0!s}'.format(chain)):
                     self.assertIn('-j nova-filter-top', line,
                                   "First %s rule does not "
                                   "jump to nova-filter-top" % chain)
@@ -221,9 +220,8 @@ class IptablesManagerTestCase(test.NoDBTestCase):
                         "nova-filter-top does not jump to wrapped local chain")
 
         for chain in ['INPUT', 'OUTPUT', 'FORWARD']:
-            self.assertTrue('[0:0] -A %s -j %s-%s' %
-                            (chain, self.binary_name, chain) in new_lines,
-                            "Built-in chain %s not wrapped" % (chain,))
+            self.assertTrue('[0:0] -A {0!s} -j {1!s}-{2!s}'.format(chain, self.binary_name, chain) in new_lines,
+                            "Built-in chain {0!s} not wrapped".format(chain))
 
     def test_missing_table(self):
         current_lines = []

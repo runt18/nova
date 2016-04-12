@@ -90,7 +90,7 @@ class PauseServerPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._pause, req, fakes.FAKE_UUID,
             body={'pause': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_unpause_policy_failed(self):
@@ -102,5 +102,5 @@ class PauseServerPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._unpause, req, fakes.FAKE_UUID,
             body={'unpause': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

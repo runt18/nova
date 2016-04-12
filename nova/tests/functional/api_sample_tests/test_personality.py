@@ -31,7 +31,7 @@ class PersonalitySampleJsonTest(test_servers.ServersSampleBase):
             'access_ip_v6': '80fe::'
         }
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-action-rebuild-req', subs)
         subs['hostid'] = '[a-f0-9]+'
         subs['id'] = uuid

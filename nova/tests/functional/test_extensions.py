@@ -43,5 +43,5 @@ class ExtensionsTest(integrated_helpers._IntegratedTestBase):
         # Simple check that fox-n-socks works.
         response = self.api.api_request('/foxnsocks')
         foxnsocks = response.content
-        LOG.debug("foxnsocks: %s" % foxnsocks)
+        LOG.debug("foxnsocks: {0!s}".format(foxnsocks))
         self.assertEqual('Try to say this Mr. Knox, sir...', foxnsocks)

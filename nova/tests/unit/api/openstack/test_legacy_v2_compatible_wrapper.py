@@ -73,7 +73,7 @@ class TestLegacyV2CompatibleWrapper(test.NoDBTestCase):
         def fake_app(req, *args, **kwargs):
             resp = webob.Response()
             resp.status_int = 204
-            resp.headers['Vary'] = '%s, %s, %s' % (
+            resp.headers['Vary'] = '{0!s}, {1!s}, {2!s}'.format(
                 wsgi.API_VERSION_REQUEST_HEADER, 'FAKE_HEADER1',
                 'FAKE_HEADER2')
             return resp

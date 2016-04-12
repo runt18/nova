@@ -122,13 +122,13 @@ class CellStubInfo(object):
 
 
 def _build_cell_transport_url(cur_db_id):
-    username = 'username%s' % cur_db_id
-    password = 'password%s' % cur_db_id
-    hostname = 'rpc_host%s' % cur_db_id
+    username = 'username{0!s}'.format(cur_db_id)
+    password = 'password{0!s}'.format(cur_db_id)
+    hostname = 'rpc_host{0!s}'.format(cur_db_id)
     port = 3090 + cur_db_id
-    virtual_host = 'rpc_vhost%s' % cur_db_id
+    virtual_host = 'rpc_vhost{0!s}'.format(cur_db_id)
 
-    return 'rabbit://%s:%s@%s:%s/%s' % (username, password, hostname, port,
+    return 'rabbit://{0!s}:{1!s}@{2!s}:{3!s}/{4!s}'.format(username, password, hostname, port,
                                         virtual_host)
 
 

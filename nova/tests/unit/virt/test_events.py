@@ -26,11 +26,10 @@ class TestEvents(test.NoDBTestCase):
         lifecycle = event.EVENT_LIFECYCLE_RESUMED
 
         e = event.Event(t)
-        self.assertEqual(str(e), "<Event: %s>" % t)
+        self.assertEqual(str(e), "<Event: {0!s}>".format(t))
 
         e = event.InstanceEvent(uuid, timestamp=t)
-        self.assertEqual(str(e), "<InstanceEvent: %s, %s>" % (t, uuid))
+        self.assertEqual(str(e), "<InstanceEvent: {0!s}, {1!s}>".format(t, uuid))
 
         e = event.LifecycleEvent(uuid, lifecycle, timestamp=t)
-        self.assertEqual(str(e), "<LifecycleEvent: %s, %s => Resumed>" %
-                         (t, uuid))
+        self.assertEqual(str(e), "<LifecycleEvent: {0!s}, {1!s} => Resumed>".format(t, uuid))

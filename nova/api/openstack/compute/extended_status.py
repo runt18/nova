@@ -33,7 +33,7 @@ class ExtendedStatusController(wsgi.Controller):
             # NOTE(mriedem): The OS-EXT-STS prefix should not be used for new
             # attributes after v2.1. They are only in v2.1 for backward compat
             # with v2.0.
-            key = "%s:%s" % ('OS-EXT-STS', state)
+            key = "{0!s}:{1!s}".format('OS-EXT-STS', state)
             server[key] = instance[state]
 
     @wsgi.extends

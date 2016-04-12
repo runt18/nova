@@ -61,7 +61,7 @@ def fake_get_flavor_by_flavor_id(flavorid, ctxt=None, read_deleted='yes'):
     if flavorid == 'failtest':
         raise exception.FlavorNotFound(flavor_id=flavorid)
     elif not str(flavorid) == '1234':
-        raise Exception("This test expects flavorid 1234, not %s" % flavorid)
+        raise Exception("This test expects flavorid 1234, not {0!s}".format(flavorid))
     if read_deleted != 'no':
         raise test.TestingException("Should not be reading deleted")
     return fake_db_flavor(flavorid=flavorid)
@@ -414,7 +414,7 @@ class PrivateFlavorManageTestV21(test.TestCase):
             body["flavor"]["id"])
         expected_flavor_access_body = {
             "tenant_id": 'fake',
-            "flavor_id": "%s" % body["flavor"]["id"]
+            "flavor_id": "{0!s}".format(body["flavor"]["id"])
         }
         self.assertNotIn(expected_flavor_access_body,
                          flavor_access_body["flavor_access"])
@@ -502,7 +502,7 @@ class FlavorManagerPolicyEnforcementV21(test.NoDBTestCase):
                 "rxtx_factor": 1,
             }})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_policy_failed(self):
@@ -514,5 +514,5 @@ class FlavorManagerPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._delete, req,
             fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

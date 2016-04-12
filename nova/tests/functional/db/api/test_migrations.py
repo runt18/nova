@@ -124,7 +124,7 @@ class NovaAPIMigrationsWalk(test_migrations.WalkVersionsMixin):
 
     def migrate_up(self, version, with_data=False):
         if with_data:
-            check = getattr(self, '_check_%03d' % version, None)
+            check = getattr(self, '_check_{0:03d}'.format(version), None)
             if version not in self._skippable_migrations():
                 self.assertIsNotNone(check,
                                      ('API DB Migration %i does not have a '
@@ -136,12 +136,11 @@ class NovaAPIMigrationsWalk(test_migrations.WalkVersionsMixin):
 
     def assertColumnExists(self, engine, table_name, column):
         self.assertTrue(db_utils.column_exists(engine, table_name, column),
-                'Column %s.%s does not exist' % (table_name, column))
+                'Column {0!s}.{1!s} does not exist'.format(table_name, column))
 
     def assertIndexExists(self, engine, table_name, index):
         self.assertTrue(db_utils.index_exists(engine, table_name, index),
-                        'Index %s on table %s does not exist' %
-                        (index, table_name))
+                        'Index {0!s} on table {1!s} does not exist'.format(index, table_name))
 
     def assertUniqueConstraintExists(self, engine, table_name, columns):
         inspector = reflection.Inspector.from_engine(engine)

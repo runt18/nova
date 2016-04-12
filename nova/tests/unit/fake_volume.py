@@ -184,7 +184,7 @@ class API(object):
 
     def check_attach(self, context, volume, instance=None):
         if volume['status'] != 'available':
-            msg = "Status of volume '%s' must be available" % volume
+            msg = "Status of volume '{0!s}' must be available".format(volume)
             raise exception.InvalidVolume(reason=msg)
         if volume['attach_status'] == 'attached':
             msg = "already attached"

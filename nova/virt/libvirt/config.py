@@ -1190,10 +1190,10 @@ class LibvirtConfigGuestInterface(LibvirtConfigGuestDevice):
             domain, bus, slot, func = \
                 pci_utils.get_pci_address_fields(self.source_dev)
             addr_elem = etree.Element("address", type='pci')
-            addr_elem.set("domain", "0x%s" % (domain))
-            addr_elem.set("bus", "0x%s" % (bus))
-            addr_elem.set("slot", "0x%s" % (slot))
-            addr_elem.set("function", "0x%s" % (func))
+            addr_elem.set("domain", "0x{0!s}".format((domain)))
+            addr_elem.set("bus", "0x{0!s}".format((bus)))
+            addr_elem.set("slot", "0x{0!s}".format((slot)))
+            addr_elem.set("function", "0x{0!s}".format((func)))
             source_elem.append(addr_elem)
             dev.append(source_elem)
         elif self.net_type == "vhostuser":

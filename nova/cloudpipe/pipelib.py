@@ -118,7 +118,7 @@ class CloudPipe(object):
         key_name = self.setup_key_pair(context)
         group_name = self.setup_security_group(context)
         flavor = flavors.get_flavor_by_name(CONF.vpn_flavor)
-        instance_name = '%s%s' % (context.project_id, CONF.vpn_key_suffix)
+        instance_name = '{0!s}{1!s}'.format(context.project_id, CONF.vpn_key_suffix)
         user_data = self.get_encoded_zip(context.project_id)
         return self.compute_api.create(context,
                                        flavor,
@@ -129,7 +129,7 @@ class CloudPipe(object):
                                        security_group=[group_name])
 
     def setup_security_group(self, context):
-        group_name = '%s%s' % (context.project_id, CONF.vpn_key_suffix)
+        group_name = '{0!s}{1!s}'.format(context.project_id, CONF.vpn_key_suffix)
         group = {'user_id': context.user_id,
                  'project_id': context.project_id,
                  'name': group_name,
@@ -155,7 +155,7 @@ class CloudPipe(object):
         return group_name
 
     def setup_key_pair(self, context):
-        key_name = '%s%s' % (context.project_id, CONF.vpn_key_suffix)
+        key_name = '{0!s}{1!s}'.format(context.project_id, CONF.vpn_key_suffix)
         try:
             keypair_api = compute.api.KeypairAPI()
             result, private_key = keypair_api.create_key_pair(context,
@@ -163,7 +163,7 @@ class CloudPipe(object):
                                                               key_name)
             key_dir = os.path.join(CONF.keys_path, context.user_id)
             fileutils.ensure_tree(key_dir)
-            key_path = os.path.join(key_dir, '%s.pem' % key_name)
+            key_path = os.path.join(key_dir, '{0!s}.pem'.format(key_name))
             with open(key_path, 'w') as f:
                 f.write(private_key)
         except (exception.KeyPairExists, os.error, IOError):

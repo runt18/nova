@@ -770,28 +770,28 @@ class LinuxNetworkTestCase(test.NoDBTestCase):
             fixedips = self._get_fixedips(network_ref)
             linux_net.restart_dhcp(self.context, dev, network_ref, fixedips)
             expected = ['env',
-            'CONFIG_FILE=%s' % jsonutils.dumps(CONF.dhcpbridge_flagfile),
+            'CONFIG_FILE={0!s}'.format(jsonutils.dumps(CONF.dhcpbridge_flagfile)),
             'NETWORK_ID=fake',
             'dnsmasq',
             '--strict-order',
             '--bind-interfaces',
-            '--conf-file=%s' % CONF.dnsmasq_config_file,
-            '--pid-file=%s' % linux_net._dhcp_file(dev, 'pid'),
-            '--dhcp-optsfile=%s' % linux_net._dhcp_file(dev, 'opts'),
-            '--listen-address=%s' % network_ref['dhcp_server'],
+            '--conf-file={0!s}'.format(CONF.dnsmasq_config_file),
+            '--pid-file={0!s}'.format(linux_net._dhcp_file(dev, 'pid')),
+            '--dhcp-optsfile={0!s}'.format(linux_net._dhcp_file(dev, 'opts')),
+            '--listen-address={0!s}'.format(network_ref['dhcp_server']),
             '--except-interface=lo',
-            "--dhcp-range=set:%s,%s,static,%s,%ss" % (network_ref['label'],
+            "--dhcp-range=set:{0!s},{1!s},static,{2!s},{3!s}s".format(network_ref['label'],
                                                     network_ref['dhcp_start'],
                                                     network_ref['netmask'],
                                                     CONF.dhcp_lease_time),
             '--dhcp-lease-max=256',
-            '--dhcp-hostsfile=%s' % linux_net._dhcp_file(dev, 'conf'),
-            '--dhcp-script=%s' % CONF.dhcpbridge,
+            '--dhcp-hostsfile={0!s}'.format(linux_net._dhcp_file(dev, 'conf')),
+            '--dhcp-script={0!s}'.format(CONF.dhcpbridge),
             '--no-hosts',
             '--leasefile-ro']
 
             if CONF.dhcp_domain:
-                expected.append('--domain=%s' % CONF.dhcp_domain)
+                expected.append('--domain={0!s}'.format(CONF.dhcp_domain))
 
             if extra_expected:
                 expected += extra_expected

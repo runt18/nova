@@ -98,7 +98,7 @@ class CryptsetupEncryptor(base.VolumeEncryptor):
 
         # modify the original symbolic link to refer to the decrypted device
         utils.execute('ln', '--symbolic', '--force',
-                      '/dev/mapper/%s' % self.dev_name, self.symlink_path,
+                      '/dev/mapper/{0!s}'.format(self.dev_name), self.symlink_path,
                       run_as_root=True, check_exit_code=True)
 
     def _close_volume(self, **kwargs):

@@ -302,7 +302,7 @@ class XenAPISession(object):
 
     def get_rec(self, record_type, ref):
         try:
-            return self.call_xenapi('%s.get_record' % record_type, ref)
+            return self.call_xenapi('{0!s}.get_record'.format(record_type), ref)
         except self.XenAPI.Failure as e:
             if e.details[0] != 'HANDLE_INVALID':
                 raise
@@ -316,4 +316,4 @@ class XenAPISession(object):
         the `get_all` call and the `get_record` call.
         """
 
-        return self.call_xenapi('%s.get_all_records' % record_type).items()
+        return self.call_xenapi('{0!s}.get_all_records'.format(record_type)).items()

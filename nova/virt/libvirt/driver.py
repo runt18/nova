@@ -322,7 +322,7 @@ CONF.import_group('workarounds', 'nova.utils')
 CONF.import_opt('iscsi_use_multipath', 'nova.virt.libvirt.volume.iscsi',
                 group='libvirt')
 
-DEFAULT_FIREWALL_DRIVER = "%s.%s" % (
+DEFAULT_FIREWALL_DRIVER = "{0!s}.{1!s}".format(
     libvirt_firewall.__name__,
     libvirt_firewall.IptablesFirewallDriver.__name__)
 
@@ -1165,7 +1165,7 @@ class LibvirtDriver(driver.ComputeDriver):
 
         # The 'serial' device is the base for x86 platforms. Other platforms
         # (e.g. kvm on system z = arch.S390X) can only use 'console' devices.
-        xpath_mode = "[@mode='%s']" % mode if mode else ""
+        xpath_mode = "[@mode='{0!s}']".format(mode) if mode else ""
         serial_tcp = "./devices/serial[@type='tcp']/source" + xpath_mode
         console_tcp = "./devices/console[@type='tcp']/source" + xpath_mode
 
@@ -1200,7 +1200,7 @@ class LibvirtDriver(driver.ComputeDriver):
             vg = os.path.join('/dev', CONF.libvirt.images_volume_group)
             if not os.path.exists(vg):
                 return []
-            pattern = '%s_' % instance.uuid
+            pattern = '{0!s}_'.format(instance.uuid)
 
             def belongs_to_instance(disk):
                 return disk.startswith(pattern)
@@ -1987,7 +1987,7 @@ class LibvirtDriver(driver.ComputeDriver):
             snap_disk.snapshot = 'external'
             snap_disk.source_path = new_filename
             old_dir = disk_info['source_name'].split('/')[0]
-            snap_disk.source_name = '%s/%s' % (old_dir, new_filename)
+            snap_disk.source_name = '{0!s}/{1!s}'.format(old_dir, new_filename)
             snap_disk.source_hosts = disk_info['source_hosts']
             snap_disk.source_ports = disk_info['source_ports']
 
@@ -2249,7 +2249,7 @@ class LibvirtDriver(driver.ComputeDriver):
 
             LOG.debug('index of match (%s) is %s', b.source_name, index)
 
-            my_snap_dev = '%s[%s]' % (my_dev, index)
+            my_snap_dev = '{0!s}[{1!s}]'.format(my_dev, index)
             return my_snap_dev
 
         if delete_info['merge_target_file'] is None:
@@ -2779,7 +2779,7 @@ class LibvirtDriver(driver.ComputeDriver):
 
     def _flush_libvirt_console(self, pty):
         out, err = utils.execute('dd',
-                                 'if=%s' % pty,
+                                 'if={0!s}'.format(pty),
                                  'iflag=nonblock',
                                  run_as_root=True,
                                  check_exit_code=False)
@@ -2964,7 +2964,7 @@ class LibvirtDriver(driver.ComputeDriver):
                           fs_label, os_type, is_block_dev=False,
                           max_size=None, context=None, specified_fs=None):
         if not is_block_dev:
-            libvirt_utils.create_image('raw', target, '%dG' % ephemeral_size)
+            libvirt_utils.create_image('raw', target, '{0:d}G'.format(ephemeral_size))
 
         # Run as root only for block devices.
         disk.mkfs(os_type, fs_label, target, run_as_root=is_block_dev,
@@ -2973,7 +2973,7 @@ class LibvirtDriver(driver.ComputeDriver):
     @staticmethod
     def _create_swap(target, swap_mb, max_size=None, context=None):
         """Create a swap file of specified size."""
-        libvirt_utils.create_image('raw', target, '%dM' % swap_mb)
+        libvirt_utils.create_image('raw', target, '{0:d}M'.format(swap_mb))
         utils.mkfs('swap', target)
 
     @staticmethod
@@ -3189,7 +3189,7 @@ class LibvirtDriver(driver.ComputeDriver):
                                    fs_label='ephemeral0',
                                    os_type=instance.os_type,
                                    is_block_dev=disk_image.is_block_dev)
-            fname = "ephemeral_%s_%s" % (ephemeral_gb, file_extension)
+            fname = "ephemeral_{0!s}_{1!s}".format(ephemeral_gb, file_extension)
             size = ephemeral_gb * units.Gi
             disk_image.cache(fetch_func=fn,
                              context=context,
@@ -3207,11 +3207,11 @@ class LibvirtDriver(driver.ComputeDriver):
                 raise exception.InvalidBDMFormat(details=msg)
 
             fn = functools.partial(self._create_ephemeral,
-                                   fs_label='ephemeral%d' % idx,
+                                   fs_label='ephemeral{0:d}'.format(idx),
                                    os_type=instance.os_type,
                                    is_block_dev=disk_image.is_block_dev)
             size = eph['size'] * units.Gi
-            fname = "ephemeral_%s_%s" % (eph['size'], file_extension)
+            fname = "ephemeral_{0!s}_{1!s}".format(eph['size'], file_extension)
             disk_image.cache(fetch_func=fn,
                              context=context,
                              filename=fname,
@@ -3235,7 +3235,7 @@ class LibvirtDriver(driver.ComputeDriver):
                 size = swap_mb * units.Mi
                 image('disk.swap').cache(fetch_func=self._create_swap,
                                          context=context,
-                                         filename="swap_%s" % swap_mb,
+                                         filename="swap_{0!s}".format(swap_mb),
                                          size=size,
                                          swap_mb=swap_mb)
 
@@ -4072,9 +4072,9 @@ class LibvirtDriver(driver.ComputeDriver):
         if rescue.get('kernel_id'):
             guest.os_kernel = os.path.join(inst_path, "kernel.rescue")
             if virt_type == "xen":
-                guest.os_cmdline = "ro root=%s" % root_device_name
+                guest.os_cmdline = "ro root={0!s}".format(root_device_name)
             else:
-                guest.os_cmdline = ("root=%s %s" % (root_device_name, CONSOLE))
+                guest.os_cmdline = ("root={0!s} {1!s}".format(root_device_name, CONSOLE))
                 if virt_type == "qemu":
                     guest.os_cmdline += " no_timer_check"
         if rescue.get('ramdisk_id'):
@@ -4084,9 +4084,9 @@ class LibvirtDriver(driver.ComputeDriver):
                                 root_device_name, image_meta):
         guest.os_kernel = os.path.join(inst_path, "kernel")
         if virt_type == "xen":
-            guest.os_cmdline = "ro root=%s" % root_device_name
+            guest.os_cmdline = "ro root={0!s}".format(root_device_name)
         else:
-            guest.os_cmdline = ("root=%s %s" % (root_device_name, CONSOLE))
+            guest.os_cmdline = ("root={0!s} {1!s}".format(root_device_name, CONSOLE))
             if virt_type == "qemu":
                 guest.os_cmdline += " no_timer_check"
         if instance.ramdisk_id:
@@ -4249,8 +4249,7 @@ class LibvirtDriver(driver.ComputeDriver):
         qga = vconfig.LibvirtConfigGuestChannel()
         qga.type = "unix"
         qga.target_name = "org.qemu.guest_agent.0"
-        qga.source_path = ("/var/lib/libvirt/qemu/%s.%s.sock" %
-                          ("org.qemu.guest_agent.0", instance.name))
+        qga.source_path = ("/var/lib/libvirt/qemu/{0!s}.{1!s}.sock".format("org.qemu.guest_agent.0", instance.name))
         guest.add_device(qga)
 
     def _add_rng_device(self, guest, flavor):
@@ -5084,7 +5083,7 @@ class LibvirtDriver(driver.ComputeDriver):
                     }
                 if (fun_cap.type == 'phys_function' and
                     len(fun_cap.device_addrs) != 0):
-                    phys_address = "%04x:%02x:%02x.%01x" % (
+                    phys_address = "{0:04x}:{1:02x}:{2:02x}.{3:01x}".format(
                         fun_cap.device_addrs[0][0],
                         fun_cap.device_addrs[0][1],
                         fun_cap.device_addrs[0][2],
@@ -5112,7 +5111,7 @@ class LibvirtDriver(driver.ComputeDriver):
         cfgdev = vconfig.LibvirtConfigNodeDevice()
         cfgdev.parse_str(xmlstr)
 
-        address = "%04x:%02x:%02x.%1x" % (
+        address = "{0:04x}:{1:02x}:{2:02x}.{3:1x}".format(
             cfgdev.pci_capability.domain,
             cfgdev.pci_capability.bus,
             cfgdev.pci_capability.slot,
@@ -5121,14 +5120,14 @@ class LibvirtDriver(driver.ComputeDriver):
         device = {
             "dev_id": cfgdev.name,
             "address": address,
-            "product_id": "%04x" % cfgdev.pci_capability.product_id,
-            "vendor_id": "%04x" % cfgdev.pci_capability.vendor_id,
+            "product_id": "{0:04x}".format(cfgdev.pci_capability.product_id),
+            "vendor_id": "{0:04x}".format(cfgdev.pci_capability.vendor_id),
             }
 
         device["numa_node"] = cfgdev.pci_capability.numa_node
 
         # requirement by DataBase Model
-        device['label'] = 'label_%(vendor_id)s_%(product_id)s' % device
+        device['label'] = 'label_{vendor_id!s}_{product_id!s}'.format(**device)
         device.update(_get_device_type(cfgdev, address))
         return device
 
@@ -6799,7 +6798,7 @@ class LibvirtDriver(driver.ComputeDriver):
                     inst_type = instance.get_flavor()
                     swap_mb = inst_type.swap
                     image.cache(fetch_func=self._create_swap,
-                                filename="swap_%s" % swap_mb,
+                                filename="swap_{0!s}".format(swap_mb),
                                 size=swap_mb * units.Mi,
                                 swap_mb=swap_mb)
                 else:

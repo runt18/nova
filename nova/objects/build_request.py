@@ -81,7 +81,7 @@ class BuildRequest(base.NovaObject):
         for key in req.fields:
             if isinstance(req.fields[key], fields.ObjectField):
                 try:
-                    getattr(req, '_load_%s' % key)(db_req[key])
+                    getattr(req, '_load_{0!s}'.format(key))(db_req[key])
                 except AttributeError:
                     LOG.exception(_LE('No load handler for %s'), key)
             elif key in JSON_FIELDS and db_req[key] is not None:

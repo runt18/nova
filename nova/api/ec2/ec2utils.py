@@ -43,7 +43,7 @@ def memoize(func):
         global _CACHE
         if not _CACHE:
             _CACHE = cache_utils.get_client(expiration_time=_CACHE_TIME)
-        key = "%s:%s" % (func.__name__, reqid)
+        key = "{0!s}:{1!s}".format(func.__name__, reqid)
         key = str(key)
         value = _CACHE.get(key)
         if value is None:
@@ -458,9 +458,9 @@ def regex_from_ec2_regex(ec2_re):
             except StopIteration:
                 next_char = ''
             if next_char == '*' or next_char == '?':
-                py_re += '[%s]' % next_char
+                py_re += '[{0!s}]'.format(next_char)
             else:
                 py_re += '\\\\' + next_char
         else:
             py_re += re.escape(char)
-    return '\A%s\Z(?s)' % py_re
+    return '\A{0!s}\Z(?s)'.format(py_re)

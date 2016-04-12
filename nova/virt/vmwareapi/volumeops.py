@@ -78,7 +78,7 @@ class VMwareVolumeOps(object):
 
     def _update_volume_details(self, vm_ref, volume_uuid, device_uuid):
         # Store the uuid of the volume_device
-        volume_option = 'volume-%s' % volume_uuid
+        volume_option = 'volume-{0!s}'.format(volume_uuid)
         extra_opts = {volume_option: device_uuid}
 
         client_factory = self._session.vim.client.factory
@@ -87,7 +87,7 @@ class VMwareVolumeOps(object):
         vm_util.reconfigure_vm(self._session, vm_ref, extra_config_specs)
 
     def _get_volume_uuid(self, vm_ref, volume_uuid):
-        prop = 'config.extraConfig["volume-%s"]' % volume_uuid
+        prop = 'config.extraConfig["volume-{0!s}"]'.format(volume_uuid)
         opt_val = self._session._call_method(vutil,
                                              'get_object_property',
                                              vm_ref,
@@ -222,7 +222,7 @@ class VMwareVolumeOps(object):
                     # Check if iscsi host is already in the send target host
                     # list
                     send_targets = getattr(hba, 'configuredSendTarget', [])
-                    send_tgt_portals = ['%s:%s' % (s.address, s.port) for s in
+                    send_tgt_portals = ['{0!s}:{1!s}'.format(s.address, s.port) for s in
                                         send_targets]
                     if target_portal not in send_tgt_portals:
                         self._iscsi_add_send_target_host(storage_system_mor,

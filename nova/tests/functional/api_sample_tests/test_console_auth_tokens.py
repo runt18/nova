@@ -43,7 +43,7 @@ class ConsoleAuthTokensSampleJsonTests(test_servers.ServersSampleBase):
         return jsonutils.loads(data)["console"]["url"]
 
     def _get_console_token(self, uuid):
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'get-rdp-console-post-req',
                                  {'action': 'os-getRDPConsole'})
 
@@ -56,7 +56,7 @@ class ConsoleAuthTokensSampleJsonTests(test_servers.ServersSampleBase):
         uuid = self._post_server()
         token = self._get_console_token(uuid)
 
-        response = self._do_get('os-console-auth-tokens/%s' % token)
+        response = self._do_get('os-console-auth-tokens/{0!s}'.format(token))
 
         subs = {}
         subs["uuid"] = uuid

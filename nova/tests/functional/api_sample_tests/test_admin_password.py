@@ -28,7 +28,7 @@ class AdminPasswordJsonTest(test_servers.ServersSampleBase):
     def test_server_password(self):
         uuid = self._post_server()
         subs = {"password": "foo"}
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'admin-password-change-password',
                                  subs)
         self.assertEqual(202, response.status_code)

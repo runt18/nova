@@ -85,10 +85,10 @@ class ConfigDriveBuilder(object):
             self._add_file(basedir, data[0], data[1])
 
     def _make_iso9660(self, path, tmpdir):
-        publisher = "%(product)s %(version)s" % {
+        publisher = "{product!s} {version!s}".format(**{
             'product': version.product_string(),
             'version': version.version_string_with_package()
-            }
+            })
 
         utils.execute(CONF.mkisofs_cmd,
                       '-o', path,
@@ -118,7 +118,7 @@ class ConfigDriveBuilder(object):
             mounted = False
             try:
                 _, err = utils.trycmd(
-                    'mount', '-o', 'loop,uid=%d,gid=%d' % (os.getuid(),
+                    'mount', '-o', 'loop,uid={0:d},gid={1:d}'.format(os.getuid(),
                                                            os.getgid()),
                     path,
                     mountdir,

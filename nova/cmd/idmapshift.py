@@ -101,7 +101,7 @@ def find_target_id(fsid, mappings, nobody, memo):
 
 
 def print_chown(path, uid, gid, target_uid, target_gid):
-    print('%s %s:%s -> %s:%s' % (path, uid, gid, target_uid, target_gid))
+    print('{0!s} {1!s}:{2!s} -> {3!s}:{4!s}'.format(path, uid, gid, target_uid, target_gid))
 
 
 def shift_path(path, uid_mappings, gid_mappings, nobody, uid_memo, gid_memo,
@@ -195,7 +195,7 @@ def id_map_type(val):
         try:
             vals = [int(i) for i in map_vals]
         except ValueError:
-            msg = 'Invalid id map %s, values must be integers' % val
+            msg = 'Invalid id map {0!s}, values must be integers'.format(val)
             raise argparse.ArgumentTypeError(msg)
 
         id_maps.append(tuple(vals))

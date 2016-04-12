@@ -912,7 +912,7 @@ class _ComputeAPIUnitTestMixIn(object):
     def _test_downed_host_part(self, inst, updates, delete_time, delete_type):
         compute_utils.notify_about_instance_usage(
             self.compute_api.notifier, self.context, inst,
-            '%s.start' % delete_type)
+            '{0!s}.start'.format(delete_type))
         self.context.elevated().AndReturn(self.context)
         self.compute_api.network_api.deallocate_for_instance(
             self.context, inst)
@@ -931,7 +931,7 @@ class _ComputeAPIUnitTestMixIn(object):
                             constraint=None).AndReturn(fake_inst)
         compute_utils.notify_about_instance_usage(
             self.compute_api.notifier,
-            self.context, inst, '%s.end' % delete_type,
+            self.context, inst, '{0!s}.end'.format(delete_type),
             system_metadata=inst.system_metadata)
 
     def _test_delete(self, delete_type, **attrs):
@@ -2282,7 +2282,7 @@ class _ComputeAPIUnitTestMixIn(object):
             return {'id': volume_id, 'display_description': ''}
 
         def fake_volume_create_snapshot(context, volume_id, name, description):
-            return {'id': '%s-snapshot' % volume_id}
+            return {'id': '{0!s}-snapshot'.format(volume_id)}
 
         def fake_quiesce_instance(context, instance):
             if quiesce_fails:
@@ -3465,7 +3465,7 @@ class _ComputeAPIUnitTestMixIn(object):
         params = dict(display_name=u'\u865a\u62df\u673a\u662f\u4e2d\u6587')
         instance = self._create_instance_obj(params=params)
         self.compute_api._populate_instance_names(instance, 1)
-        self.assertEqual('Server-%s' % instance.uuid, instance.hostname)
+        self.assertEqual('Server-{0!s}'.format(instance.uuid), instance.hostname)
 
     def test_populate_instance_names_host_name_multi(self):
         params = dict(display_name="vm")
@@ -3481,7 +3481,7 @@ class _ComputeAPIUnitTestMixIn(object):
         with mock.patch.object(instance, 'save'):
             self.compute_api._apply_instance_name_template(self.context,
                                                            instance, 1)
-            self.assertEqual('Server-%s' % instance.uuid, instance.hostname)
+            self.assertEqual('Server-{0!s}'.format(instance.uuid), instance.hostname)
 
     def test_host_statuses(self):
         instances = [

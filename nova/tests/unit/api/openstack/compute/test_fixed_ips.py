@@ -76,7 +76,7 @@ fake_fixed_ips = [{'id': 1,
 
 def fake_fixed_ip_get_by_address(context, address, columns_to_join=None):
     if address == 'inv.ali.d.ip':
-        msg = "Invalid fixed IP Address %s in request" % address
+        msg = "Invalid fixed IP Address {0!s} in request".format(address)
         raise exception.FixedIpInvalid(msg)
     for fixed_ip in fake_fixed_ips:
         if fixed_ip['address'] == address and not fixed_ip['deleted']:
@@ -108,7 +108,7 @@ class FakeModel(object):
             raise NotImplementedError()
 
     def __repr__(self):
-        return '<FakeModel: %s>' % self.values
+        return '<FakeModel: {0!s}>'.format(self.values)
 
 
 def fake_network_get_all(context):
@@ -146,7 +146,7 @@ class FixedIpTestV21(test.NoDBTestCase):
         return {}
 
     def test_fixed_ips_get(self):
-        req = fakes.HTTPRequest.blank('%s/192.168.1.1' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/192.168.1.1'.format(self.url))
         req.api_version_request = api_version_request.APIVersionRequest(
                                         self.wsgi_api_version)
         res_dict = self.controller.show(req, '192.168.1.1')
@@ -158,24 +158,24 @@ class FixedIpTestV21(test.NoDBTestCase):
         self.assertEqual(response, res_dict, self.wsgi_api_version)
 
     def test_fixed_ips_get_bad_ip_fail(self):
-        req = fakes.HTTPRequest.blank('%s/10.0.0.1' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.1'.format(self.url))
         self.assertRaises(webob.exc.HTTPNotFound, self.controller.show, req,
                           '10.0.0.1')
 
     def test_fixed_ips_get_invalid_ip_address(self):
-        req = fakes.HTTPRequest.blank('%s/inv.ali.d.ip' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/inv.ali.d.ip'.format(self.url))
         self.assertRaises(webob.exc.HTTPBadRequest, self.controller.show, req,
                           'inv.ali.d.ip')
 
     def test_fixed_ips_get_deleted_ip_fail(self):
-        req = fakes.HTTPRequest.blank('%s/10.0.0.2' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.2'.format(self.url))
         self.assertRaises(webob.exc.HTTPNotFound, self.controller.show, req,
                           '10.0.0.2')
 
     def test_fixed_ip_reserve(self):
         fake_fixed_ips[0]['reserved'] = False
         body = {'reserve': None}
-        req = fakes.HTTPRequest.blank('%s/192.168.1.1/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/192.168.1.1/action'.format(self.url))
         action = self._get_reserve_action()
         result = action(req, "192.168.1.1", body=body)
 
@@ -184,7 +184,7 @@ class FixedIpTestV21(test.NoDBTestCase):
 
     def test_fixed_ip_reserve_bad_ip(self):
         body = {'reserve': None}
-        req = fakes.HTTPRequest.blank('%s/10.0.0.1/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.1/action'.format(self.url))
         action = self._get_reserve_action()
 
         self.assertRaises(webob.exc.HTTPNotFound, action, req,
@@ -192,7 +192,7 @@ class FixedIpTestV21(test.NoDBTestCase):
 
     def test_fixed_ip_reserve_invalid_ip_address(self):
         body = {'reserve': None}
-        req = fakes.HTTPRequest.blank('%s/inv.ali.d.ip/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/inv.ali.d.ip/action'.format(self.url))
         action = self._get_reserve_action()
 
         self.assertRaises(webob.exc.HTTPBadRequest,
@@ -202,14 +202,14 @@ class FixedIpTestV21(test.NoDBTestCase):
         body = {'reserve': None}
         action = self._get_reserve_action()
 
-        req = fakes.HTTPRequest.blank('%s/10.0.0.2/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.2/action'.format(self.url))
         self.assertRaises(webob.exc.HTTPNotFound, action, req,
                           '10.0.0.2', body=body)
 
     def test_fixed_ip_unreserve(self):
         fake_fixed_ips[0]['reserved'] = True
         body = {'unreserve': None}
-        req = fakes.HTTPRequest.blank('%s/192.168.1.1/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/192.168.1.1/action'.format(self.url))
         action = self._get_unreserve_action()
         result = action(req, "192.168.1.1", body=body)
 
@@ -218,7 +218,7 @@ class FixedIpTestV21(test.NoDBTestCase):
 
     def test_fixed_ip_unreserve_bad_ip(self):
         body = {'unreserve': None}
-        req = fakes.HTTPRequest.blank('%s/10.0.0.1/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.1/action'.format(self.url))
         action = self._get_unreserve_action()
 
         self.assertRaises(webob.exc.HTTPNotFound, action, req,
@@ -226,14 +226,14 @@ class FixedIpTestV21(test.NoDBTestCase):
 
     def test_fixed_ip_unreserve_invalid_ip_address(self):
         body = {'unreserve': None}
-        req = fakes.HTTPRequest.blank('%s/inv.ali.d.ip/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/inv.ali.d.ip/action'.format(self.url))
         action = self._get_unreserve_action()
         self.assertRaises(webob.exc.HTTPBadRequest,
                           action, req, 'inv.ali.d.ip', body=body)
 
     def test_fixed_ip_unreserve_deleted_ip(self):
         body = {'unreserve': None}
-        req = fakes.HTTPRequest.blank('%s/10.0.0.2/action' % self.url)
+        req = fakes.HTTPRequest.blank('{0!s}/10.0.0.2/action'.format(self.url))
         action = self._get_unreserve_action()
         self.assertRaises(webob.exc.HTTPNotFound, action, req,
                           '10.0.0.2', body=body)
@@ -261,4 +261,4 @@ class FixedIpTestV24(FixedIpTestV21):
         for fixed_ip in fake_fixed_ips:
             if address == fixed_ip['address']:
                 return {'reserved': fixed_ip['reserved']}
-        self.fail('Invalid address: %s' % address)
+        self.fail('Invalid address: {0!s}'.format(address))

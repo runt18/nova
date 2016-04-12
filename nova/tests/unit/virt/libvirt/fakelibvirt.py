@@ -632,30 +632,30 @@ class Domain(object):
     def XMLDesc(self, flags):
         disks = ''
         for disk in self._def['devices']['disks']:
-            disks += '''<disk type='%(type)s' device='%(device)s'>
-      <driver name='%(driver_name)s' type='%(driver_type)s'/>
-      <source file='%(source)s'/>
-      <target dev='%(target_dev)s' bus='%(target_bus)s'/>
+            disks += '''<disk type='{type!s}' device='{device!s}'>
+      <driver name='{driver_name!s}' type='{driver_type!s}'/>
+      <source file='{source!s}'/>
+      <target dev='{target_dev!s}' bus='{target_bus!s}'/>
       <address type='drive' controller='0' bus='0' unit='0'/>
-    </disk>''' % disk
+    </disk>'''.format(**disk)
 
         nics = ''
         for nic in self._def['devices']['nics']:
-            nics += '''<interface type='%(type)s'>
-      <mac address='%(mac)s'/>
-      <source %(type)s='%(source)s'/>
+            nics += '''<interface type='{type!s}'>
+      <mac address='{mac!s}'/>
+      <source {type!s}='{source!s}'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03'
                function='0x0'/>
-    </interface>''' % nic
+    </interface>'''.format(**nic)
 
         return '''<domain type='kvm'>
-  <name>%(name)s</name>
-  <uuid>%(uuid)s</uuid>
-  <memory>%(memory)s</memory>
-  <currentMemory>%(memory)s</currentMemory>
-  <vcpu>%(vcpu)s</vcpu>
+  <name>{name!s}</name>
+  <uuid>{uuid!s}</uuid>
+  <memory>{memory!s}</memory>
+  <currentMemory>{memory!s}</currentMemory>
+  <vcpu>{vcpu!s}</vcpu>
   <os>
-    <type arch='%(arch)s' machine='pc-0.12'>hvm</type>
+    <type arch='{arch!s}' machine='pc-0.12'>hvm</type>
     <boot dev='hd'/>
   </os>
   <features>
@@ -669,12 +669,12 @@ class Domain(object):
   <on_crash>restart</on_crash>
   <devices>
     <emulator>/usr/bin/kvm</emulator>
-    %(disks)s
+    {disks!s}
     <controller type='ide' index='0'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01'
                function='0x1'/>
     </controller>
-    %(nics)s
+    {nics!s}
     <serial type='file'>
       <source path='dummy.log'/>
       <target port='0'/>
@@ -704,13 +704,13 @@ class Domain(object):
                function='0x0'/>
     </memballoon>
   </devices>
-</domain>''' % {'name': self._def['name'],
+</domain>'''.format(**{'name': self._def['name'],
                 'uuid': self._def['uuid'],
                 'memory': self._def['memory'],
                 'vcpu': self._def['vcpu'],
                 'arch': self._def['os']['arch'],
                 'disks': disks,
-                'nics': nics}
+                'nics': nics})
 
     def managedSave(self, flags):
         self._connection._mark_not_running(self)
@@ -889,7 +889,7 @@ class Connection(object):
             return self._running_vms[id]
         raise make_libvirtError(
                 libvirtError,
-                'Domain not found: no domain with matching id %d' % id,
+                'Domain not found: no domain with matching id {0:d}'.format(id),
                 error_code=VIR_ERR_NO_DOMAIN,
                 error_domain=VIR_FROM_QEMU)
 
@@ -898,7 +898,7 @@ class Connection(object):
             return self._vms[name]
         raise make_libvirtError(
                 libvirtError,
-                'Domain not found: no domain with matching name "%s"' % name,
+                'Domain not found: no domain with matching name "{0!s}"'.format(name),
                 error_code=VIR_ERR_NO_DOMAIN,
                 error_domain=VIR_FROM_QEMU)
 
@@ -976,7 +976,7 @@ class Connection(object):
       <arch>x86_64</arch>
       <model>Penryn</model>
       <vendor>Intel</vendor>
-      <topology sockets='%(sockets)s' cores='%(cores)s' threads='%(threads)s'/>
+      <topology sockets='{sockets!s}' cores='{cores!s}' threads='{threads!s}'/>
       <feature name='xtpr'/>
       <feature name='tm2'/>
       <feature name='est'/>
@@ -997,7 +997,7 @@ class Connection(object):
         <uri_transport>tcp</uri_transport>
       </uri_transports>
     </migration_features>
-    %(topology)s
+    {topology!s}
     <secmodel>
       <model>apparmor</model>
       <doi>0</doi>
@@ -1195,10 +1195,10 @@ class Connection(object):
     </features>
   </guest>
 
-</capabilities>''' % {'sockets': self.host_info.cpu_sockets,
+</capabilities>'''.format(**{'sockets': self.host_info.cpu_sockets,
                       'cores': self.host_info.cpu_cores,
                       'threads': self.host_info.cpu_threads,
-                      'topology': numa_topology}
+                      'topology': numa_topology})
 
     def compareCPU(self, xml, flags):
         tree = etree.fromstring(xml)
@@ -1243,7 +1243,7 @@ class Connection(object):
         except KeyError:
             raise make_libvirtError(
                     libvirtError,
-                    "no nwfilter with matching name %s" % name,
+                    "no nwfilter with matching name {0!s}".format(name),
                     error_code=VIR_ERR_NO_NWFILTER,
                     error_domain=VIR_FROM_NWFILTER)
 
@@ -1257,7 +1257,7 @@ class Connection(object):
         except KeyError:
             raise make_libvirtError(
                     libvirtError,
-                    "no nodedev with matching name %s" % name,
+                    "no nodedev with matching name {0!s}".format(name),
                     error_code=VIR_ERR_NO_NODE_DEVICE,
                     error_domain=VIR_FROM_NODEDEV)
 

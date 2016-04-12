@@ -648,11 +648,11 @@ class Controller(wsgi.Controller):
             raise exc.HTTPForbidden(
                 explanation=error.format_message())
         except messaging.RemoteError as err:
-            msg = "%(err_type)s: %(err_msg)s" % {'err_type': err.exc_type,
-                                                 'err_msg': err.value}
+            msg = "{err_type!s}: {err_msg!s}".format(**{'err_type': err.exc_type,
+                                                 'err_msg': err.value})
             raise exc.HTTPBadRequest(explanation=msg)
         except UnicodeDecodeError as error:
-            msg = "UnicodeError: %s" % error
+            msg = "UnicodeError: {0!s}".format(error)
             raise exc.HTTPBadRequest(explanation=msg)
         except Exception:
             # The remaining cases can be handled in a standard fashion.

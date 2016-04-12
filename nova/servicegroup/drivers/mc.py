@@ -61,17 +61,17 @@ class MemcachedDriver(base.Driver):
         """Moved from nova.utils
         Check whether a service is up based on last heartbeat.
         """
-        key = "%(topic)s:%(host)s" % service_ref
+        key = "{topic!s}:{host!s}".format(**service_ref)
         is_up = self.mc.get(str(key)) is not None
         if not is_up:
-            LOG.debug('Seems service %s is down' % key)
+            LOG.debug('Seems service {0!s} is down'.format(key))
 
         return is_up
 
     def _report_state(self, service):
         """Update the state of this service in the datastore."""
         try:
-            key = "%(topic)s:%(host)s" % service.service_ref
+            key = "{topic!s}:{host!s}".format(**service.service_ref)
             # memcached has data expiration time capability.
             # set(..., time=CONF.service_down_time) uses it and
             # reduces key-deleting code.

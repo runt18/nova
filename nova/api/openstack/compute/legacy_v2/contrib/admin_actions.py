@@ -37,7 +37,7 @@ state_map = dict(active=vm_states.ACTIVE, error=vm_states.ERROR)
 
 
 def authorize(context, action_name):
-    action = 'admin_actions:%s' % action_name
+    action = 'admin_actions:{0!s}'.format(action_name)
     extensions.extension_authorizer('compute', action)(context)
 
 

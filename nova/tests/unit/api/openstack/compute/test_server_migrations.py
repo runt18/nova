@@ -339,7 +339,7 @@ class ServerMigrationsPolicyEnforcementV21(test.NoDBTestCase):
                                 fakes.FAKE_UUID, fakes.FAKE_UUID,
                                 body=body_args)
         self.assertEqual(
-                      "Policy doesn't allow %s to be performed." % rule_name,
+                      "Policy doesn't allow {0!s} to be performed.".format(rule_name),
                       exc.format_message())
 
 
@@ -357,8 +357,8 @@ class ServerMigrationsPolicyEnforcementV223(
         exc = self.assertRaises(exception.PolicyNotAuthorized,
                                 self.controller.index, self.req,
                                 fakes.FAKE_UUID)
-        self.assertEqual("Policy doesn't allow %s to be performed." %
-                         rule_name, exc.format_message())
+        self.assertEqual("Policy doesn't allow {0!s} to be performed.".format(
+                         rule_name), exc.format_message())
 
     def test_migration_show_failed(self):
         rule_name = "os_compute_api:servers:migrations:show"
@@ -366,8 +366,8 @@ class ServerMigrationsPolicyEnforcementV223(
         exc = self.assertRaises(exception.PolicyNotAuthorized,
                                 self.controller.show, self.req,
                                 fakes.FAKE_UUID, 1)
-        self.assertEqual("Policy doesn't allow %s to be performed." %
-                         rule_name, exc.format_message())
+        self.assertEqual("Policy doesn't allow {0!s} to be performed.".format(
+                         rule_name), exc.format_message())
 
 
 class ServerMigrationsPolicyEnforcementV224(

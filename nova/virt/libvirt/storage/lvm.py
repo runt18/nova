@@ -85,11 +85,11 @@ def create_volume(vg, lv, size, sparse=False):
                          'size': size,
                          'lv': lv})
 
-        cmd = ('lvcreate', '-L', '%db' % preallocated_space,
-                '--virtualsize', '%db' % size, '-n', lv, vg)
+        cmd = ('lvcreate', '-L', '{0:d}b'.format(preallocated_space),
+                '--virtualsize', '{0:d}b'.format(size), '-n', lv, vg)
     else:
         check_size(vg, lv, size)
-        cmd = ('lvcreate', '-L', '%db' % size, '-n', lv, vg)
+        cmd = ('lvcreate', '-L', '{0:d}b'.format(size), '-n', lv, vg)
     utils.execute(*cmd, run_as_root=True, attempts=3)
 
 
@@ -194,9 +194,9 @@ def _zero_volume(path, volume_size):
     while remaining_bytes:
         zero_blocks = remaining_bytes / bs
         seek_blocks = (volume_size - remaining_bytes) / bs
-        zero_cmd = ('dd', 'bs=%s' % bs,
-                    'if=/dev/zero', 'of=%s' % path,
-                    'seek=%s' % seek_blocks, 'count=%s' % zero_blocks)
+        zero_cmd = ('dd', 'bs={0!s}'.format(bs),
+                    'if=/dev/zero', 'of={0!s}'.format(path),
+                    'seek={0!s}'.format(seek_blocks), 'count={0!s}'.format(zero_blocks))
         zero_cmd += direct_flags
         zero_cmd += sync_flags
         if zero_blocks:
@@ -235,7 +235,7 @@ def clear_volume(path):
         # with -n0 -z, however only versions >= 8.22 perform as well as dd
         _zero_volume(path, volume_size)
     elif volume_clear == 'shred':
-        utils.execute('shred', '-n3', '-s%d' % volume_size, path,
+        utils.execute('shred', '-n3', '-s{0:d}'.format(volume_size), path,
                       run_as_root=True)
 
 

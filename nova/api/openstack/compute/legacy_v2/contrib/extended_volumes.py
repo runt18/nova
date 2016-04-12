@@ -27,7 +27,7 @@ class ExtendedVolumesController(wsgi.Controller):
 
     def _extend_server(self, context, server, bdms):
         volume_ids = [bdm.volume_id for bdm in bdms if bdm.volume_id]
-        key = "%s:volumes_attached" % Extended_volumes.alias
+        key = "{0!s}:volumes_attached".format(Extended_volumes.alias)
         server[key] = [{'id': volume_id} for volume_id in volume_ids]
 
     @wsgi.extends

@@ -83,7 +83,7 @@ class SerialTestCase(test.NoDBTestCase):
     def test_acquire_port(self):
         start, stop = 15, 20
         self.flags(
-            port_range='%d:%d' % (start, stop),
+            port_range='{0:d}:{1:d}'.format(start, stop),
             group='serial_console')
 
         for port in six.moves.range(start, stop):
@@ -115,7 +115,7 @@ class SerialTestCase(test.NoDBTestCase):
     def test_acquire_port_not_ble_to_bind_at_any_port(self, fake_verify_port):
         start, stop = 15, 20
         self.flags(
-            port_range='%d:%d' % (start, stop),
+            port_range='{0:d}:{1:d}'.format(start, stop),
             group='serial_console')
 
         fake_verify_port.side_effect = (

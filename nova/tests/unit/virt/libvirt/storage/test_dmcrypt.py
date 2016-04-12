@@ -31,7 +31,7 @@ class LibvirtDmcryptTestCase(test.NoDBTestCase):
         self.TARGET = dmcrypt.volume_name(self.NAME)
         self.PATH = '/dev/nova-lvm/instance_disk'
         self.KEY = range(0, self.KEY_SIZE)
-        self.KEY_STR = ''.join(["%02x" % x for x in range(0, self.KEY_SIZE)])
+        self.KEY_STR = ''.join(["{0:02x}".format(x) for x in range(0, self.KEY_SIZE)])
 
     @mock.patch('nova.utils.execute')
     def test_create_volume(self, mock_execute):

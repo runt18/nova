@@ -226,10 +226,10 @@ class VirtDriverLoaderTestCase(_FakeDriverBackendTestCase, test.TestCase):
             try:
                 cm = manager.ComputeManager()
             except Exception as e:
-                self.fail("Couldn't load driver %s - %s" % (cls, e))
+                self.fail("Couldn't load driver {0!s} - {1!s}".format(cls, e))
 
             self.assertEqual(cm.driver.__class__.__name__, driver,
-                             "Could't load driver %s" % cls)
+                             "Could't load driver {0!s}".format(cls))
 
     def test_fail_to_load_new_drivers(self):
         self.flags(compute_driver='nova.virt.amiga')

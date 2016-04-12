@@ -58,7 +58,7 @@ def fake_call_xenapi(method, *args):
             return "fake_vif_ref"
         else:
             raise exception.Exception("VIF existed")
-    return "Unexpected call_xenapi: %s.%s" % (method, args)
+    return "Unexpected call_xenapi: {0!s}.{1!s}".format(method, args)
 
 
 class XenVIFDriverTestBase(stubs.XenAPITestBaseNoDB):

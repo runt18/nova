@@ -101,7 +101,7 @@ class ExtendedAvailabilityZoneTestV21(test.TestCase):
         return jsonutils.loads(body).get('servers')
 
     def assertAvailabilityZone(self, server, az):
-        self.assertEqual(server.get('%savailability_zone' % self.prefix),
+        self.assertEqual(server.get('{0!s}availability_zone'.format(self.prefix)),
                          az)
 
     def test_show_no_host_az(self):

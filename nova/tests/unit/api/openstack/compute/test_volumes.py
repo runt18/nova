@@ -910,8 +910,8 @@ class AssistedSnapshotDeleteTestCaseV21(test.NoDBTestCase):
             'delete_info': jsonutils.dumps({'volume_id': '1'}),
         }
         req = fakes.HTTPRequest.blank(
-                '/v2/fake/os-assisted-volume-snapshots?%s' %
-                urllib.parse.urlencode(params))
+                '/v2/fake/os-assisted-volume-snapshots?{0!s}'.format(
+                urllib.parse.urlencode(params)))
         req.method = 'DELETE'
         result = self.controller.delete(req, '5')
         self._check_status(204, result, self.controller.delete)
@@ -950,7 +950,7 @@ class TestAssistedVolumeSnapshotsPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.create, self.req, body=body)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_assisted_volumes_snapshots_policy_failed(self):
@@ -961,7 +961,7 @@ class TestAssistedVolumeSnapshotsPolicyEnforcementV21(test.NoDBTestCase):
             self.controller.delete, self.req, '5')
 
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
 
@@ -977,7 +977,7 @@ class TestVolumeAttachPolicyEnforcementV21(test.NoDBTestCase):
         exc = self.assertRaises(
              exception.PolicyNotAuthorized, func, *arg, **kwarg)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_index_volume_attach_policy_failed(self):

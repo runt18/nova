@@ -54,7 +54,7 @@ class DiskConfigJsonTest(test_servers.ServersSampleBase):
 
     def test_get_server(self):
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {}
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = ''
@@ -64,7 +64,7 @@ class DiskConfigJsonTest(test_servers.ServersSampleBase):
     def test_resize_server(self):
         self.flags(allow_resize_to_same_host=True)
         uuid = self._post_server(use_common_server_api_samples=False)
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-resize-post-req', {})
         self.assertEqual(202, response.status_code)
         # NOTE(tmello): Resize does not return response body
@@ -77,7 +77,7 @@ class DiskConfigJsonTest(test_servers.ServersSampleBase):
             'image_id': fake.get_valid_image_id(),
             'compute_endpoint': self._get_compute_endpoint(),
         }
-        response = self._do_post('servers/%s/action' % uuid,
+        response = self._do_post('servers/{0!s}/action'.format(uuid),
                                  'server-action-rebuild-req', subs)
         subs['hostid'] = '[a-f0-9]+'
         subs['access_ip_v4'] = ''

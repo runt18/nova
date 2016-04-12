@@ -114,7 +114,7 @@ class VirtualMachineInstanceConfigInfo(object):
     def cache_image_path(self):
         if self.ii.image_id is None:
             return
-        cached_image_file_name = "%s.%s" % (self.ii.image_id,
+        cached_image_file_name = "{0!s}.{1!s}".format(self.ii.image_id,
                                             self.ii.file_type)
         return self.cache_image_folder.join(cached_image_file_name)
 
@@ -166,11 +166,11 @@ class VMwareVMOps(object):
     def _get_base_folder(self):
         # Enable more than one compute node to run on the same host
         if CONF.vmware.cache_prefix:
-            base_folder = '%s%s' % (CONF.vmware.cache_prefix,
+            base_folder = '{0!s}{1!s}'.format(CONF.vmware.cache_prefix,
                                     CONF.image_cache_subdirectory_name)
         # Ensure that the base folder is unique per compute node
         elif CONF.remove_unused_base_images:
-            base_folder = '%s%s' % (CONF.my_ip,
+            base_folder = '{0!s}{1!s}'.format(CONF.my_ip,
                                     CONF.image_cache_subdirectory_name)
         else:
             # Aging disable ensures backward compatibility
@@ -289,7 +289,7 @@ class VMwareVMOps(object):
         # Maximum folder length must be less than 80 characters.
         # The 'id' length is 36. The maximum prefix for name is 40.
         # We cannot truncate the 'id' as this is unique across OpenStack.
-        return '%s (%s)' % (name[:40], id[:36])
+        return '{0!s} ({1!s})'.format(name[:40], id[:36])
 
     def build_virtual_machine(self, instance, image_info,
                               dc_info, datastore, network_info, extra_specs,
@@ -318,7 +318,7 @@ class VMwareVMOps(object):
 
         folder_name = self._get_folder_name('Project',
                                             instance.project_id)
-        folder_path = 'OpenStack/%s/Instances' % folder_name
+        folder_path = 'OpenStack/{0!s}/Instances'.format(folder_name)
         folder = self._create_folders(dc_info.vmFolder, folder_path)
 
         # Create the VM
@@ -474,10 +474,10 @@ class VMwareVMOps(object):
         return tmp_dir_loc, flat_vmdk_ds_loc
 
     def _prepare_stream_optimized_image(self, vi):
-        vm_name = "%s_%s" % (constants.IMAGE_VM_PREFIX,
+        vm_name = "{0!s}_{1!s}".format(constants.IMAGE_VM_PREFIX,
                              uuidutils.generate_uuid())
         tmp_dir_loc = vi.datastore.build_path(vm_name)
-        tmp_image_ds_loc = tmp_dir_loc.join("%s.vmdk" % tmp_dir_loc.basename)
+        tmp_image_ds_loc = tmp_dir_loc.join("{0!s}.vmdk".format(tmp_dir_loc.basename))
         return tmp_dir_loc, tmp_image_ds_loc
 
     def _prepare_iso_image(self, vi):
@@ -528,7 +528,7 @@ class VMwareVMOps(object):
                             vi.cache_image_folder)
 
     def _cache_stream_optimized_image(self, vi, tmp_image_ds_loc):
-        dst_path = vi.cache_image_folder.join("%s.vmdk" % vi.ii.image_id)
+        dst_path = vi.cache_image_folder.join("{0!s}.vmdk".format(vi.ii.image_id))
         ds_util.mkdir(self._session, vi.cache_image_folder, vi.dc_info.ref)
         try:
             ds_util.disk_move(self._session, vi.dc_info.ref,
@@ -692,7 +692,7 @@ class VMwareVMOps(object):
         # image. This ensures that further operations involving size checks
         # and disk resizing will work as expected.
         ds_browser = self._get_ds_browser(vi.datastore.ref)
-        flat_file = "%s-flat.vmdk" % vi.ii.image_id
+        flat_file = "{0!s}-flat.vmdk".format(vi.ii.image_id)
         new_size = ds_util.file_size(self._session, ds_browser,
                                      vi.cache_image_folder, flat_file)
         if new_size is not None:
@@ -755,7 +755,7 @@ class VMwareVMOps(object):
                 self._use_disk_image_as_full_clone(vm_ref, vi)
 
         if block_device_mapping:
-            msg = "Block device information present: %s" % block_device_info
+            msg = "Block device information present: {0!s}".format(block_device_info)
             # NOTE(mriedem): block_device_info can contain an auth_password
             # so we have to scrub the message before logging it.
             LOG.debug(strutils.mask_password(msg), instance=instance)
@@ -833,8 +833,8 @@ class VMwareVMOps(object):
                 with utils.tempdir() as tmp_path:
                     tmp_file = os.path.join(tmp_path, 'configdrive.iso')
                     cdb.make_drive(tmp_file)
-                    upload_iso_path = "%s/configdrive.iso" % (
-                        upload_folder)
+                    upload_iso_path = "{0!s}/configdrive.iso".format((
+                        upload_folder))
                     images.upload_iso_to_datastore(
                         tmp_file, instance,
                         host=self._session._host,
@@ -879,7 +879,7 @@ class VMwareVMOps(object):
         snapshot_task = self._session._call_method(
                     self._session.vim,
                     "CreateSnapshot_Task", vm_ref,
-                    name="%s-snapshot" % instance.uuid,
+                    name="{0!s}-snapshot".format(instance.uuid),
                     description="Taking Snapshot of the VM",
                     memory=False,
                     quiesce=True)
@@ -914,7 +914,7 @@ class VMwareVMOps(object):
                 disk_move_type="createNewChildDiskBacking")
         clone_spec = vm_util.clone_vm_spec(client_factory, rel_spec,
                 power_on=False, snapshot=snapshot_ref, template=True)
-        vm_name = "%s_%s" % (constants.SNAPSHOT_VM_PREFIX,
+        vm_name = "{0!s}_{1!s}".format(constants.SNAPSHOT_VM_PREFIX,
                              uuidutils.generate_uuid())
 
         LOG.debug("Creating linked-clone VM from snapshot", instance=instance)
@@ -1194,7 +1194,7 @@ class VMwareVMOps(object):
 
         # Get the rescue disk path
         rescue_disk_path = datastore.build_path(instance.uuid,
-                "%s-rescue.%s" % (image_info.image_id, image_info.file_type))
+                "{0!s}-rescue.{1!s}".format(image_info.image_id, image_info.file_type))
 
         # Copy the cached image to the be the rescue disk. This will be used
         # as the rescue disk for the instance.
@@ -1791,7 +1791,7 @@ class VMwareVMOps(object):
         """Uses cached image disk by copying it into the VM directory."""
 
         instance_folder = vi.instance.uuid
-        root_disk_name = "%s.vmdk" % vi.instance.uuid
+        root_disk_name = "{0!s}.vmdk".format(vi.instance.uuid)
         root_disk_ds_loc = vi.datastore.build_path(instance_folder,
                                                    root_disk_name)
 
@@ -1820,9 +1820,9 @@ class VMwareVMOps(object):
     def _use_disk_image_as_linked_clone(self, vm_ref, vi):
         """Uses cached image as parent of a COW child in the VM directory."""
 
-        sized_image_disk_name = "%s.vmdk" % vi.ii.image_id
+        sized_image_disk_name = "{0!s}.vmdk".format(vi.ii.image_id)
         if vi.root_gb > 0:
-            sized_image_disk_name = "%s.%s.vmdk" % (vi.ii.image_id, vi.root_gb)
+            sized_image_disk_name = "{0!s}.{1!s}.vmdk".format(vi.ii.image_id, vi.root_gb)
         sized_disk_ds_loc = vi.cache_image_folder.join(sized_image_disk_name)
 
         # Ensure only a single thread extends the image at once.
@@ -1895,7 +1895,7 @@ class VMwareVMOps(object):
         # Optionally create and attach blank disk
         if vi.root_gb > 0:
             instance_folder = vi.instance.uuid
-            root_disk_name = "%s.vmdk" % vi.instance.uuid
+            root_disk_name = "{0!s}.vmdk".format(vi.instance.uuid)
             root_disk_ds_loc = vi.datastore.build_path(instance_folder,
                                                        root_disk_name)
 

@@ -105,7 +105,7 @@ class APIValidationTestCase(test.NoDBTestCase):
                 self.assertEqual(expected_detail, ex.kwargs['detail'],
                                  'Exception details did not match expected')
         except Exception as ex:
-            self.fail('An unexpected exception happens: %s' % ex)
+            self.fail('An unexpected exception happens: {0!s}'.format(ex))
         else:
             self.fail('Any exception does not happen.')
 

@@ -45,7 +45,7 @@ class _TestBandwidthUsage(test.TestCase):
             if obj_field == 'uuid':
                 obj_field = 'instance_uuid'
             test.assertEqual(db[field], obj[obj_field],
-                    'Field %s is not equal' % field)
+                    'Field {0!s} is not equal'.format(field))
 
     @staticmethod
     def _fake_bw_usage(time=None, start_period=None, bw_in=100,

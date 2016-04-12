@@ -79,7 +79,7 @@ class ExtensionDescriptor(object):
         return controller_exts
 
     def __repr__(self):
-        return "<Extension: name=%s, alias=%s, updated=%s>" % (
+        return "<Extension: name={0!s}, alias={1!s}, updated={2!s}>".format(
             self.name, self.alias, self.updated)
 
     def is_valid(self):
@@ -89,7 +89,7 @@ class ExtensionDescriptor(object):
         """
         for attr in ('name', 'alias', 'updated', 'namespace'):
             if getattr(self, attr) is None:
-                raise AttributeError("%s is None, needs to be defined" % attr)
+                raise AttributeError("{0!s} is None, needs to be defined".format(attr))
         return True
 
 
@@ -155,8 +155,7 @@ class ExtensionManager(object):
 
         alias = ext.alias
         if alias in self.extensions:
-            raise exception.NovaException("Found duplicate extension: %s"
-                                          % alias)
+            raise exception.NovaException("Found duplicate extension: {0!s}".format(alias))
         self.extensions[alias] = ext
         self.sorted_ext_list = None
 
@@ -284,7 +283,7 @@ def load_standard_extensions(ext_mgr, logger, path, package, ext_list=None):
         if relpath == '.':
             relpkg = ''
         else:
-            relpkg = '.%s' % '.'.join(relpath.split(os.sep))
+            relpkg = '.{0!s}'.format('.'.join(relpath.split(os.sep)))
 
         # Now, consider each file in turn, only considering .py files
         for fname in filenames:
@@ -295,12 +294,11 @@ def load_standard_extensions(ext_mgr, logger, path, package, ext_list=None):
                 continue
 
             # Try loading it
-            classname = "%s%s" % (root[0].upper(), root[1:])
-            classpath = ("%s%s.%s.%s" %
-                         (package, relpkg, root, classname))
+            classname = "{0!s}{1!s}".format(root[0].upper(), root[1:])
+            classpath = ("{0!s}{1!s}.{2!s}.{3!s}".format(package, relpkg, root, classname))
 
             if ext_list is not None and classname not in ext_list:
-                logger.debug("Skipping extension: %s" % classpath)
+                logger.debug("Skipping extension: {0!s}".format(classpath))
                 continue
 
             try:
@@ -318,7 +316,7 @@ def load_standard_extensions(ext_mgr, logger, path, package, ext_list=None):
                 continue
 
             # If it has extension(), delegate...
-            ext_name = "%s%s.%s.extension" % (package, relpkg, dname)
+            ext_name = "{0!s}{1!s}.{2!s}.extension".format(package, relpkg, dname)
             try:
                 ext = importutils.import_class(ext_name)
             except ImportError:
@@ -348,9 +346,9 @@ def core_authorizer(api_name, extension_name):
             target = {'project_id': context.project_id,
                       'user_id': context.user_id}
         if action is None:
-            act = '%s:%s' % (api_name, extension_name)
+            act = '{0!s}:{1!s}'.format(api_name, extension_name)
         else:
-            act = '%s:%s:%s' % (api_name, extension_name, action)
+            act = '{0!s}:{1!s}:{2!s}'.format(api_name, extension_name, action)
         nova.policy.enforce(context, act, target)
     return authorize
 
@@ -358,7 +356,7 @@ def core_authorizer(api_name, extension_name):
 # This is only used for Nova V2 API, after v2 API depreciated, this will be
 # deprecated also.
 def extension_authorizer(api_name, extension_name):
-    return core_authorizer('%s_extension' % api_name, extension_name)
+    return core_authorizer('{0!s}_extension'.format(api_name), extension_name)
 
 
 def _soft_authorizer(hard_authorizer, api_name, extension_name):
@@ -386,7 +384,7 @@ def soft_core_authorizer(api_name, extension_name):
 
 # This will be deprecated after ec2 old style policy removed in later release
 def check_compute_policy(context, action, target, scope='compute'):
-    _action = '%s:%s' % (scope, action)
+    _action = '{0!s}:{1!s}'.format(scope, action)
     nova.policy.enforce(context, _action, target)
 
 
@@ -450,7 +448,7 @@ class V21APIExtensionBase(object):
         pass
 
     def __repr__(self):
-        return "<Extension: name=%s, alias=%s, version=%s>" % (
+        return "<Extension: name={0!s}, alias={1!s}, version={2!s}>".format(
             self.name, self.alias, self.version)
 
     def is_valid(self):
@@ -460,7 +458,7 @@ class V21APIExtensionBase(object):
         """
         for attr in ('name', 'alias', 'version'):
             if getattr(self, attr) is None:
-                raise AttributeError("%s is None, needs to be defined" % attr)
+                raise AttributeError("{0!s} is None, needs to be defined".format(attr))
         return True
 
 

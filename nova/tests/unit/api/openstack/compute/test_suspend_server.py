@@ -74,7 +74,7 @@ class SuspendServerPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._suspend, self.req, fakes.FAKE_UUID,
             body={'suspend': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_resume_policy_failed(self):
@@ -85,5 +85,5 @@ class SuspendServerPolicyEnforcementV21(test.NoDBTestCase):
             self.controller._resume, self.req, fakes.FAKE_UUID,
             body={'resume': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

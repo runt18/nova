@@ -194,7 +194,7 @@ class VolumeController(wsgi.Controller):
         retval = _translate_volume_detail_view(context, dict(new_volume))
         result = {'volume': retval}
 
-        location = '%s/%s' % (req.url, new_volume['id'])
+        location = '{0!s}/{1!s}'.format(req.url, new_volume['id'])
 
         return wsgi.ResponseObject(result, headers=dict(location=location))
 

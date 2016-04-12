@@ -86,7 +86,7 @@ def create_cow_image(backing_file, path, size=None):
     base_cmd = ['qemu-img', 'create', '-f', 'qcow2']
     cow_opts = []
     if backing_file:
-        cow_opts += ['backing_file=%s' % backing_file]
+        cow_opts += ['backing_file={0!s}'.format(backing_file)]
         base_details = images.qemu_img_info(backing_file)
     else:
         base_details = None
@@ -96,9 +96,9 @@ def create_cow_image(backing_file, path, size=None):
     # value or cases when images were created with very old QEMU
     # versions which had a different default 'cluster_size'.
     if base_details and base_details.cluster_size is not None:
-        cow_opts += ['cluster_size=%s' % base_details.cluster_size]
+        cow_opts += ['cluster_size={0!s}'.format(base_details.cluster_size)]
     if size is not None:
-        cow_opts += ['size=%s' % size]
+        cow_opts += ['size={0!s}'.format(size)]
     if cow_opts:
         # Format as a comma separated list
         csv_opts = ",".join(cow_opts)
@@ -211,9 +211,9 @@ def copy_image(src, dest, host=None, receive=False,
         execute('cp', src, dest)
     else:
         if receive:
-            src = "%s:%s" % (utils.safe_ip_format(host), src)
+            src = "{0!s}:{1!s}".format(utils.safe_ip_format(host), src)
         else:
-            dest = "%s:%s" % (utils.safe_ip_format(host), dest)
+            dest = "{0!s}:{1!s}".format(utils.safe_ip_format(host), dest)
 
         remote_filesystem_driver = remotefs.RemoteFilesystem()
         remote_filesystem_driver.copy_file(src, dest,
@@ -257,7 +257,7 @@ def update_mtime(path):
 
 
 def _id_map_to_config(id_map):
-    return "%s:%s:%s" % (id_map.start, id_map.target, id_map.count)
+    return "{0!s}:{1!s}:{2!s}".format(id_map.start, id_map.target, id_map.count)
 
 
 def chown_for_id_maps(path, id_maps):

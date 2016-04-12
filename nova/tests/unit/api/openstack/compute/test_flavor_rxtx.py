@@ -46,7 +46,7 @@ FAKE_FLAVORS = {
 
 
 def fake_flavor_get_by_flavor_id(flavorid, ctxt=None):
-    return FAKE_FLAVORS['flavor %s' % flavorid]
+    return FAKE_FLAVORS['flavor {0!s}'.format(flavorid)]
 
 
 def fake_get_all_flavors_sorted_list(context=None, inactive=False,

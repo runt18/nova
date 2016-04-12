@@ -87,7 +87,7 @@ class HypervisorsSampleJsonTests(api_sample_base.ApiSampleTestBaseV21):
         subs = {
             'hypervisor_id': hypervisor_id
         }
-        response = self._do_get('os-hypervisors/%s' % hypervisor_id)
+        response = self._do_get('os-hypervisors/{0!s}'.format(hypervisor_id))
         self._verify_response('hypervisors-show-resp', subs, response, 200)
 
     def test_hypervisors_statistics(self):
@@ -102,7 +102,7 @@ class HypervisorsSampleJsonTests(api_sample_base.ApiSampleTestBaseV21):
         self.stub_out('nova.compute.api.HostAPI.get_host_uptime',
                       fake_get_host_uptime)
         hypervisor_id = '1'
-        response = self._do_get('os-hypervisors/%s/uptime' % hypervisor_id)
+        response = self._do_get('os-hypervisors/{0!s}/uptime'.format(hypervisor_id))
         subs = {
             'hypervisor_id': hypervisor_id,
         }
@@ -156,6 +156,6 @@ class HypervisorsCellsSampleJsonTests(api_sample_base.ApiSampleTestBaseV21):
             fake_get_host_uptime)
 
         hypervisor_id = fake_hypervisor.id
-        response = self._do_get('os-hypervisors/%s/uptime' % hypervisor_id)
+        response = self._do_get('os-hypervisors/{0!s}/uptime'.format(hypervisor_id))
         subs = {'hypervisor_id': str(hypervisor_id)}
         self._verify_response('hypervisors-uptime-resp', subs, response, 200)

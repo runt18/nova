@@ -70,7 +70,7 @@ def _expected_cols(expected_attrs):
     simple_cols = [attr for attr in expected_attrs
                    if attr in _INSTANCE_OPTIONAL_JOINED_FIELDS]
 
-    complex_cols = ['extra.%s' % field
+    complex_cols = ['extra.{0!s}'.format(field)
                     for field in _INSTANCE_EXTRA_FIELDS
                     if field in expected_attrs]
     if complex_cols:
@@ -644,7 +644,7 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
             if (self.obj_attr_is_set(field) and
                     isinstance(self.fields[field], fields.ObjectField)):
                 try:
-                    getattr(self, '_save_%s' % field)(context)
+                    getattr(self, '_save_{0!s}'.format(field))(context)
                 except AttributeError:
                     LOG.exception(_LE('No save handler for %s'), field,
                                   instance=self)
@@ -758,7 +758,7 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
         else:
             raise exception.ObjectActionError(
                 action='obj_load_attr',
-                reason='loading %s requires recursion' % attrname)
+                reason='loading {0!s} requires recursion'.format(attrname))
 
     def _load_fault(self):
         self.fault = objects.InstanceFault.get_latest_for_instance(
@@ -883,7 +883,7 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
         if attrname not in INSTANCE_OPTIONAL_ATTRS:
             raise exception.ObjectActionError(
                 action='obj_load_attr',
-                reason='attribute %s not lazy-loadable' % attrname)
+                reason='attribute {0!s} not lazy-loadable'.format(attrname))
 
         if not self._context:
             raise exception.OrphanedObjectError(method='obj_load_attr',
@@ -926,8 +926,8 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
         self.obj_reset_changes([attrname])
 
     def get_flavor(self, namespace=None):
-        prefix = ('%s_' % namespace) if namespace is not None else ''
-        attr = '%sflavor' % prefix
+        prefix = ('{0!s}_'.format(namespace)) if namespace is not None else ''
+        attr = '{0!s}flavor'.format(prefix)
         try:
             return getattr(self, attr)
         except exception.FlavorNotFound:
@@ -991,7 +991,7 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
         cn_changed = 'cell_name' in self.obj_what_changed()
         if not self.obj_attr_is_set('cell_name') or self.cell_name is None:
             self.cell_name = ''
-        self.cell_name = '%s%s' % (cells_utils.BLOCK_SYNC_FLAG, self.cell_name)
+        self.cell_name = '{0!s}{1!s}'.format(cells_utils.BLOCK_SYNC_FLAG, self.cell_name)
         if not cn_changed:
             self.obj_reset_changes(['cell_name'])
         try:

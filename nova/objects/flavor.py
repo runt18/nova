@@ -353,7 +353,7 @@ class Flavor(base.NovaPersistentObject, base.NovaObject,
         # NOTE(danms): Only projects could be lazy-loaded right now
         if attrname != 'projects':
             raise exception.ObjectActionError(
-                action='obj_load_attr', reason='unable to load %s' % attrname)
+                action='obj_load_attr', reason='unable to load {0!s}'.format(attrname))
 
         self._load_projects()
 
@@ -739,8 +739,8 @@ def _adjust_autoincrement(context, value):
         # primary key. MySQL does not care about this, but since postgres does,
         # we need to reset this to avoid a failure on the next flavor creation.
         engine.execute(
-            text('ALTER SEQUENCE flavors_id_seq RESTART WITH %i;' % (
-                value)))
+            text('ALTER SEQUENCE flavors_id_seq RESTART WITH {0:d};'.format((
+                value))))
 
 
 @db_api.api_context_manager.reader

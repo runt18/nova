@@ -31,7 +31,7 @@ def to_global(prefix, mac, project_id):
 
     try:
         mac_suffix = netaddr.EUI(mac).words[3:]
-        int_addr = int(''.join(['%02x' % i for i in mac_suffix]), 16)
+        int_addr = int(''.join(['{0:02x}'.format(i) for i in mac_suffix]), 16)
         mac_addr = netaddr.IPAddress(int_addr)
         maskIP = netaddr.IPNetwork(prefix).ip
         return (project_hash ^ static_num ^ mac_addr | maskIP).format()
@@ -48,4 +48,4 @@ def to_mac(ipv6_address):
     address = netaddr.IPAddress(ipv6_address)
     mask1 = netaddr.IPAddress('::ff:ffff')
     mac = netaddr.EUI(int(address & mask1)).words
-    return ':'.join(['02', '16', '3e'] + ['%02x' % i for i in mac[3:6]])
+    return ':'.join(['02', '16', '3e'] + ['{0:02x}'.format(i) for i in mac[3:6]])

@@ -67,7 +67,7 @@ class CryptsetupEncryptorTestCase(test_base.VolumeEncryptorTestCase):
                       self.dev_path, process_input='0' * 32,
                       run_as_root=True, check_exit_code=True),
             mock.call('ln', '--symbolic', '--force',
-                      '/dev/mapper/%s' % self.dev_name, self.symlink_path,
+                      '/dev/mapper/{0!s}'.format(self.dev_name), self.symlink_path,
                       run_as_root=True, check_exit_code=True),
         ])
         self.assertEqual(2, mock_execute.call_count)

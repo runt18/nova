@@ -44,7 +44,7 @@ FAKE_FLAVORS = {
 
 
 def fake_flavor_get_by_flavor_id(flavorid, ctxt=None):
-    return FAKE_FLAVORS['flavor %s' % flavorid]
+    return FAKE_FLAVORS['flavor {0!s}'.format(flavorid)]
 
 
 def fake_get_all_flavors_sorted_list(context=None, inactive=False,
@@ -86,7 +86,7 @@ class FlavorDisabledTestV21(test.NoDBTestCase):
         return jsonutils.loads(body).get('flavors')
 
     def assertFlavorDisabled(self, flavor, disabled):
-        self.assertEqual(str(flavor.get('%sdisabled' % self.prefix)), disabled)
+        self.assertEqual(str(flavor.get('{0!s}disabled'.format(self.prefix))), disabled)
 
     def test_show(self):
         url = self.base_url + '/1'

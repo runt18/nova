@@ -1024,7 +1024,7 @@ class GetSystemMetadataFromImageTestCase(test.NoDBTestCase):
         # Verify that we inherit all the needed keys
         sys_meta = utils.get_system_metadata_from_image(image)
         for key in utils.SM_INHERITABLE_KEYS:
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             self.assertEqual(image[key], sys_meta.get(sys_key))
 
         # Verify that everything else is ignored
@@ -1038,7 +1038,7 @@ class GetSystemMetadataFromImageTestCase(test.NoDBTestCase):
 
         # Verify that we inherit all the image properties
         for key, expected in six.iteritems(image["properties"]):
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             self.assertEqual(sys_meta[sys_key], expected)
 
     def test_skip_image_properties(self):
@@ -1052,7 +1052,7 @@ class GetSystemMetadataFromImageTestCase(test.NoDBTestCase):
 
         # Verify that we inherit all the image properties
         for key, expected in six.iteritems(image["properties"]):
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
 
             if key in utils.SM_SKIP_KEYS:
                 self.assertNotIn(sys_key, sys_meta)
@@ -1069,7 +1069,7 @@ class GetSystemMetadataFromImageTestCase(test.NoDBTestCase):
 
         # Verify that the min_disk property is taken from
         # flavor's root_gb when using vhd disk format
-        sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, "min_disk")
+        sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, "min_disk")
         self.assertEqual(sys_meta[sys_key], flavor["root_gb"])
 
     def test_dont_inherit_empty_values(self):
@@ -1082,7 +1082,7 @@ class GetSystemMetadataFromImageTestCase(test.NoDBTestCase):
 
         # Verify that the empty properties have not been inherited
         for key in utils.SM_INHERITABLE_KEYS:
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             self.assertNotIn(sys_key, sys_meta)
 
 
@@ -1099,23 +1099,23 @@ class GetImageFromSystemMetadataTestCase(test.NoDBTestCase):
 
     def test_image_from_system_metadata(self):
         sys_meta = self.get_system_metadata()
-        sys_meta["%soo1" % utils.SM_IMAGE_PROP_PREFIX] = "bar"
-        sys_meta["%soo2" % utils.SM_IMAGE_PROP_PREFIX] = "baz"
-        sys_meta["%simg_block_device_mapping" %
-                 utils.SM_IMAGE_PROP_PREFIX] = "eek"
+        sys_meta["{0!s}oo1".format(utils.SM_IMAGE_PROP_PREFIX)] = "bar"
+        sys_meta["{0!s}oo2".format(utils.SM_IMAGE_PROP_PREFIX)] = "baz"
+        sys_meta["{0!s}img_block_device_mapping".format(
+                 utils.SM_IMAGE_PROP_PREFIX)] = "eek"
 
         image = utils.get_image_from_system_metadata(sys_meta)
 
         # Verify that we inherit all the needed keys
         for key in utils.SM_INHERITABLE_KEYS:
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             self.assertEqual(image[key], sys_meta.get(sys_key))
 
         # Verify that we inherit the rest of metadata as properties
         self.assertIn("properties", image)
 
         for key, value in six.iteritems(image["properties"]):
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             self.assertEqual(image["properties"][key], sys_meta[sys_key])
 
         self.assertNotIn("img_block_device_mapping", image["properties"])
@@ -1124,7 +1124,7 @@ class GetImageFromSystemMetadataTestCase(test.NoDBTestCase):
         sys_meta = self.get_system_metadata()
 
         for key in utils.SM_INHERITABLE_KEYS:
-            sys_key = "%s%s" % (utils.SM_IMAGE_PROP_PREFIX, key)
+            sys_key = "{0!s}{1!s}".format(utils.SM_IMAGE_PROP_PREFIX, key)
             sys_meta[sys_key] = None
 
         image = utils.get_image_from_system_metadata(sys_meta)

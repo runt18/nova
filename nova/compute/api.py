@@ -177,7 +177,7 @@ wrap_check_security_groups_policy = policy_decorator(
 
 
 def check_policy(context, action, target, scope='compute'):
-    _action = '%s:%s' % (scope, action)
+    _action = '{0!s}:{1!s}'.format(scope, action)
     nova.policy.enforce(context, _action, target)
 
 
@@ -354,7 +354,7 @@ class API(base.Base):
                        allowed)
 
             num_instances = (str(min_count) if min_count == max_count else
-                "%s-%s" % (min_count, max_count))
+                "{0!s}-{1!s}".format(min_count, max_count))
             requested = dict(instances=num_instances, cores=req_cores,
                              ram=req_ram)
             (overs, reqs, total_alloweds, useds) = self._get_over_quota_detail(
@@ -1384,10 +1384,10 @@ class API(base.Base):
                                                         default_hostname)
 
     def _default_display_name(self, instance_uuid):
-        return "Server %s" % instance_uuid
+        return "Server {0!s}".format(instance_uuid)
 
     def _default_host_name(self, instance_uuid):
-        return "Server-%s" % instance_uuid
+        return "Server-{0!s}".format(instance_uuid)
 
     def _populate_instance_for_create(self, context, instance, image,
                                       index, security_groups, instance_type):
@@ -1652,11 +1652,11 @@ class API(base.Base):
                 try:
                     compute_utils.notify_about_instance_usage(
                             self.notifier, context, instance,
-                            "%s.start" % delete_type)
+                            "{0!s}.start".format(delete_type))
                     instance.destroy()
                     compute_utils.notify_about_instance_usage(
                             self.notifier, context, instance,
-                            "%s.end" % delete_type,
+                            "{0!s}.end".format(delete_type),
                             system_metadata=instance.system_metadata)
                     quotas.commit()
                     return
@@ -1822,7 +1822,7 @@ class API(base.Base):
             LOG.warning(_LW("instance's host %s is down, deleting from "
                             "database"), instance.host, instance=instance)
         compute_utils.notify_about_instance_usage(
-            self.notifier, context, instance, "%s.start" % delete_type)
+            self.notifier, context, instance, "{0!s}.start".format(delete_type))
 
         elevated = context.elevated()
         if self.cell_type != 'api':
@@ -1851,7 +1851,7 @@ class API(base.Base):
         sys_meta = instance.system_metadata
         instance.destroy()
         compute_utils.notify_about_instance_usage(
-            self.notifier, context, instance, "%s.end" % delete_type,
+            self.notifier, context, instance, "{0!s}.end".format(delete_type),
             system_metadata=sys_meta)
 
     def _do_delete(self, context, instance, bdms, reservations=None,
@@ -2077,7 +2077,7 @@ class API(base.Base):
         def _remap_fixed_ip_filter(fixed_ip):
             # Turn fixed_ip into a regexp match. Since '.' matches
             # any character, we need to use regexp escaping for it.
-            filters['ip'] = '^%s$' % fixed_ip.replace('.', '\\.')
+            filters['ip'] = '^{0!s}$'.format(fixed_ip.replace('.', '\\.'))
 
         def _remap_metadata_filter(metadata):
             filters['metadata'] = jsonutils.loads(metadata)
@@ -2722,7 +2722,7 @@ class API(base.Base):
         self._record_action_start(context, instance, instance_actions.SHELVE)
 
         if not self.is_volume_backed_instance(context, instance):
-            name = '%s-shelved' % instance.display_name
+            name = '{0!s}-shelved'.format(instance.display_name)
             image_meta = self._create_image(context, instance, name,
                     'snapshot')
             image_id = image_meta['id']
@@ -3278,7 +3278,7 @@ class API(base.Base):
                                                    sort_dirs=['desc'])
         for instance in instances:
             try:
-                check_policy(context, 'get_all_instance_%s' % metadata_type,
+                check_policy(context, 'get_all_instance_{0!s}'.format(metadata_type),
                              instance)
             except exception.PolicyNotAuthorized:
                 # failed policy check - not allowed to
@@ -3968,7 +3968,7 @@ class KeypairAPI(base.Base):
             'key_name': keypair_name,
         }
         notify = self.get_notifier()
-        notify.info(context, 'keypair.%s' % event_suffix, payload)
+        notify.info(context, 'keypair.{0!s}'.format(event_suffix), payload)
 
     def _validate_new_key_pair(self, context, user_id, key_name, key_type):
         safe_chars = "_- " + string.digits + string.ascii_letters

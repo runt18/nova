@@ -98,7 +98,7 @@ class ImageSizeTestV21(test.NoDBTestCase):
         return jsonutils.loads(body).get('images')
 
     def assertImageSize(self, image, size):
-        self.assertEqual(image.get('%s:size' % self.prefix), size)
+        self.assertEqual(image.get('{0!s}:size'.format(self.prefix)), size)
 
     def test_show(self):
         url = '/v2/fake/images/1'

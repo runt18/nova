@@ -109,7 +109,7 @@ class ImageCacheTestCase(test_base.HyperVBaseTestCase):
 
         expected_path = os.path.join(self.FAKE_BASE_DIR,
                                      self.FAKE_IMAGE_REF)
-        expected_vhd_path = "%s.%s" % (expected_path,
+        expected_vhd_path = "{0!s}.{1!s}".format(expected_path,
                                        constants.DISK_FORMAT_VHD.lower())
         return (expected_path, expected_vhd_path)
 

@@ -288,7 +288,7 @@ class TenantNetworksEnforcementV21(test.NoDBTestCase):
             self.req, body={'network': {'label': 'test',
                                         'cidr': '10.0.0.0/32'}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_index_policy_failed(self):
@@ -299,7 +299,7 @@ class TenantNetworksEnforcementV21(test.NoDBTestCase):
             self.controller.index,
             self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_delete_policy_failed(self):
@@ -310,7 +310,7 @@ class TenantNetworksEnforcementV21(test.NoDBTestCase):
             self.controller.delete,
             self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_show_policy_failed(self):
@@ -321,5 +321,5 @@ class TenantNetworksEnforcementV21(test.NoDBTestCase):
             self.controller.show,
             self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

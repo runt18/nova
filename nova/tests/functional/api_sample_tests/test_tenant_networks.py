@@ -63,7 +63,7 @@ class TenantNetworksJsonTests(api_sample_base.ApiSampleTestBaseV21):
     def test_delete_network(self):
         response = self._do_post('os-tenant-networks', "networks-post-req", {})
         net = jsonutils.loads(response.content)
-        response = self._do_delete('os-tenant-networks/%s' %
-                                                net["network"]["id"])
+        response = self._do_delete('os-tenant-networks/{0!s}'.format(
+                                                net["network"]["id"]))
         self.assertEqual(202, response.status_code)
         self.assertEqual("", response.content)

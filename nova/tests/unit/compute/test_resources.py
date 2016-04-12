@@ -72,8 +72,8 @@ class FakeResource(base.Resource):
         if requested <= free:
             return
         else:
-            return ('Free %(free)d < requested %(requested)d ' %
-                    {'free': free, 'requested': requested})
+            return ('Free {free:d} < requested {requested:d} '.format(**
+                    {'free': free, 'requested': requested}))
 
     def add_instance(self, usage):
         requested = self._get_requested(usage)
@@ -89,7 +89,7 @@ class FakeResource(base.Resource):
         pass
 
     def report_free(self):
-        return "Free %s" % (self.total_res - self.used_res)
+        return "Free {0!s}".format((self.total_res - self.used_res))
 
 
 class ResourceA(FakeResource):

@@ -170,8 +170,8 @@ class LibvirtGenericVIFDriver(object):
         return ("qbr" + iface_id)[:network_model.NIC_NAME_LEN]
 
     def get_veth_pair_names(self, iface_id):
-        return (("qvb%s" % iface_id)[:network_model.NIC_NAME_LEN],
-                ("qvo%s" % iface_id)[:network_model.NIC_NAME_LEN])
+        return (("qvb{0!s}".format(iface_id))[:network_model.NIC_NAME_LEN],
+                ("qvo{0!s}".format(iface_id))[:network_model.NIC_NAME_LEN])
 
     def get_firewall_required(self, vif):
         if vif.is_neutron_filtering_enabled():
@@ -448,7 +448,7 @@ class LibvirtGenericVIFDriver(object):
                 _("vif_type parameter must be present "
                   "for this vif_driver implementation"))
         vif_slug = self._normalize_vif_type(vif_type)
-        func = getattr(self, 'get_config_%s' % vif_slug, None)
+        func = getattr(self, 'get_config_{0!s}'.format(vif_slug), None)
         if not func:
             raise exception.NovaException(
                 _("Unexpected vif_type=%s") % vif_type)
@@ -494,12 +494,12 @@ class LibvirtGenericVIFDriver(object):
             utils.execute('brctl', 'setfd', br_name, 0, run_as_root=True)
             utils.execute('brctl', 'stp', br_name, 'off', run_as_root=True)
             utils.execute('tee',
-                          ('/sys/class/net/%s/bridge/multicast_snooping' %
-                           br_name),
+                          ('/sys/class/net/{0!s}/bridge/multicast_snooping'.format(
+                           br_name)),
                           process_input='0',
                           run_as_root=True,
                           check_exit_code=[0, 1])
-            disv6 = '/proc/sys/net/ipv6/conf/%s/disable_ipv6' % br_name
+            disv6 = '/proc/sys/net/ipv6/conf/{0!s}/disable_ipv6'.format(br_name)
             if os.path.exists(disv6):
                 utils.execute('tee',
                               disv6,
@@ -636,8 +636,8 @@ class LibvirtGenericVIFDriver(object):
             utils.execute('ifc_ctl', 'gateway', 'ifup', dev,
                           'access_vm',
                           vif['network']['label'] + "_" + iface_id,
-                          vif['address'], 'pgtag2=%s' % net_id,
-                          'pgtag1=%s' % tenant_id, run_as_root=True)
+                          vif['address'], 'pgtag2={0!s}'.format(net_id),
+                          'pgtag1={0!s}'.format(tenant_id), run_as_root=True)
         except processutils.ProcessExecutionError:
             LOG.exception(_LE("Failed while plugging vif"), instance=instance)
 
@@ -758,7 +758,7 @@ class LibvirtGenericVIFDriver(object):
                 _("vif_type parameter must be present "
                   "for this vif_driver implementation"))
         vif_slug = self._normalize_vif_type(vif_type)
-        func = getattr(self, 'plug_%s' % vif_slug, None)
+        func = getattr(self, 'plug_{0!s}'.format(vif_slug), None)
         if not func:
             raise exception.VirtualInterfacePlugException(
                 _("Plug vif failed because of unexpected "
@@ -957,7 +957,7 @@ class LibvirtGenericVIFDriver(object):
         Unbind the vif from a Contrail virtual port.
         """
         dev = self.get_vif_devname(vif)
-        cmd_args = ("--oper=delete --uuid=%s" % (vif['id']))
+        cmd_args = ("--oper=delete --uuid={0!s}".format((vif['id'])))
         try:
             utils.execute('vrouter-port-control', cmd_args, run_as_root=True)
             linux_net.delete_net_dev(dev)
@@ -978,7 +978,7 @@ class LibvirtGenericVIFDriver(object):
                 _("vif_type parameter must be present "
                   "for this vif_driver implementation"))
         vif_slug = self._normalize_vif_type(vif_type)
-        func = getattr(self, 'unplug_%s' % vif_slug, None)
+        func = getattr(self, 'unplug_{0!s}'.format(vif_slug), None)
         if not func:
             raise exception.NovaException(
                 _("Unexpected vif_type=%s") % vif_type)

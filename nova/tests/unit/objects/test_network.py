@@ -67,7 +67,7 @@ class _TestNetworkObject(object):
             if isinstance(obj_val, netaddr.IPNetwork):
                 obj_val = str(obj_val)
             if field == 'netmask_v6':
-                db_val = str(netaddr.IPNetwork('1::/%i' % db_val).netmask)
+                db_val = str(netaddr.IPNetwork('1::/{0:d}'.format(db_val)).netmask)
             self.assertEqual(db_val, obj_val)
 
     @mock.patch('nova.db.network_get')

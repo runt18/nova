@@ -162,7 +162,7 @@ class DeferredDeletePolicyEnforcementV21(test.NoDBTestCase):
             self.controller._restore, self.req, fakes.FAKE_UUID,
             body={'restore': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_force_delete_policy_failed(self):
@@ -173,5 +173,5 @@ class DeferredDeletePolicyEnforcementV21(test.NoDBTestCase):
             self.controller._force_delete, self.req, fakes.FAKE_UUID,
             body={'forceDelete': {}})
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

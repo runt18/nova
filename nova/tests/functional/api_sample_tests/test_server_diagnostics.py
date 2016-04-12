@@ -35,6 +35,6 @@ class ServerDiagnosticsSamplesJsonTest(test_servers.ServersSampleBase):
 
     def test_server_diagnostics_get(self):
         uuid = self._post_server()
-        response = self._do_get('servers/%s/diagnostics' % uuid)
+        response = self._do_get('servers/{0!s}/diagnostics'.format(uuid))
         self._verify_response('server-diagnostics-get-resp', {},
                               response, 200)

@@ -46,7 +46,7 @@ class ServerDiagnosticsTestV21(test.NoDBTestCase):
 
     def _get_request(self):
         return fakes.HTTPRequest.blank(
-                   '/fake/servers/%s/diagnostics' % UUID)
+                   '/fake/servers/{0!s}/diagnostics'.format(UUID))
 
     def setUp(self):
         super(ServerDiagnosticsTestV21, self).setUp()
@@ -115,5 +115,5 @@ class ServerDiagnosticsEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req, fakes.FAKE_UUID)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

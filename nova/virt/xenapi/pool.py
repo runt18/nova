@@ -240,4 +240,4 @@ class ResourcePool(object):
 def swap_xapi_host(url, host_addr):
     """Replace the XenServer address present in 'url' with 'host_addr'."""
     temp_url = urlparse.urlparse(url)
-    return url.replace(temp_url.hostname, '%s' % host_addr)
+    return url.replace(temp_url.hostname, '{0!s}'.format(host_addr))

@@ -4635,7 +4635,7 @@ class ComputeTestCase(BaseTestCase):
 
         orig_connection_data = {
             'target_discovered': True,
-            'target_iqn': 'iqn.2010-10.org.openstack:%s.1' % uuids.volume_id,
+            'target_iqn': 'iqn.2010-10.org.openstack:{0!s}.1'.format(uuids.volume_id),
             'target_portal': '127.0.0.0.1:3260',
             'volume_id': uuids.volume_id,
         }
@@ -4728,7 +4728,7 @@ class ComputeTestCase(BaseTestCase):
 
         # new initialize connection
         new_connection_data = dict(orig_connection_data)
-        new_iqn = 'iqn.2010-10.org.openstack:%s.2' % uuids.volume_id,
+        new_iqn = 'iqn.2010-10.org.openstack:{0!s}.2'.format(uuids.volume_id),
         new_connection_data['target_iqn'] = new_iqn
 
         def fake_init_conn_with_data(self, context, volume, session):
@@ -6257,7 +6257,7 @@ class ComputeTestCase(BaseTestCase):
         instance_map = {}
         instances = []
         for x in range(8):
-            inst_uuid = getattr(uuids, 'db_instance_%i' % x)
+            inst_uuid = getattr(uuids, 'db_instance_{0:d}'.format(x))
             instance_map[inst_uuid] = fake_instance.fake_db_instance(
                 uuid=inst_uuid, host=CONF.host, created_at=None)
             # These won't be in our instance since they're not requested
@@ -7766,7 +7766,7 @@ class ComputeAPITestCase(BaseTestCase):
                 '_populate_instance_for_create',
                 _fake_populate)
 
-        cases = [(None, 'server-%s' % fake_uuids[0]),
+        cases = [(None, 'server-{0!s}'.format(fake_uuids[0])),
                  ('Hello, Server!', 'hello-server'),
                  ('<}\x1fh\x10e\x08l\x02l\x05o\x12!{>', 'hello'),
                  ('hello_server', 'hello-server')]
@@ -9108,10 +9108,10 @@ class ComputeAPITestCase(BaseTestCase):
                 flavors.get_default_flavor(),
                 image_href=uuids.image_href_id,
                 min_count=2, max_count=2, display_name='x')
-        self.assertEqual(refs[0]['display_name'], 'x-%s' % refs[0]['uuid'])
-        self.assertEqual(refs[0]['hostname'], 'x-%s' % refs[0]['uuid'])
-        self.assertEqual(refs[1]['display_name'], 'x-%s' % refs[1]['uuid'])
-        self.assertEqual(refs[1]['hostname'], 'x-%s' % refs[1]['uuid'])
+        self.assertEqual(refs[0]['display_name'], 'x-{0!s}'.format(refs[0]['uuid']))
+        self.assertEqual(refs[0]['hostname'], 'x-{0!s}'.format(refs[0]['uuid']))
+        self.assertEqual(refs[1]['display_name'], 'x-{0!s}'.format(refs[1]['uuid']))
+        self.assertEqual(refs[1]['hostname'], 'x-{0!s}'.format(refs[1]['uuid']))
 
     def test_multi_instance_display_name_default(self):
         self._multi_instance_display_name_default()
@@ -9146,16 +9146,15 @@ class ComputeAPITestCase(BaseTestCase):
         # Test the instance_name template.
         self.flags(instance_name_template='instance-%d')
         i_ref = self._create_fake_instance_obj()
-        self.assertEqual(i_ref['name'], 'instance-%d' % i_ref['id'])
+        self.assertEqual(i_ref['name'], 'instance-{0:d}'.format(i_ref['id']))
 
         self.flags(instance_name_template='instance-%(uuid)s')
         i_ref = self._create_fake_instance_obj()
-        self.assertEqual(i_ref['name'], 'instance-%s' % i_ref['uuid'])
+        self.assertEqual(i_ref['name'], 'instance-{0!s}'.format(i_ref['uuid']))
 
         self.flags(instance_name_template='%(id)d-%(uuid)s')
         i_ref = self._create_fake_instance_obj()
-        self.assertEqual(i_ref['name'], '%d-%s' %
-                (i_ref['id'], i_ref['uuid']))
+        self.assertEqual(i_ref['name'], '{0:d}-{1!s}'.format(i_ref['id'], i_ref['uuid']))
 
         # not allowed.. default is uuid
         self.flags(instance_name_template='%(name)s')

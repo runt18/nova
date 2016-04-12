@@ -179,7 +179,7 @@ class S3ImageService(object):
         #             checked in nova-objectstore
         access = CONF.s3_access_key
         if CONF.s3_affix_tenant:
-            access = '%s:%s' % (access, context.project_id)
+            access = '{0!s}:{1!s}'.format(access, context.project_id)
         secret = CONF.s3_secret_key
         calling = boto.s3.connection.OrdinaryCallingFormat()
         return boto.s3.connection.S3Connection(aws_access_key_id=access,
@@ -411,10 +411,10 @@ class S3ImageService(object):
         try:
             utils.execute('openssl', 'enc',
                           '-d', '-aes-128-cbc',
-                          '-in', '%s' % (encrypted_filename,),
-                          '-K', '%s' % (key,),
-                          '-iv', '%s' % (iv,),
-                          '-out', '%s' % (decrypted_filename,))
+                          '-in', '{0!s}'.format(encrypted_filename),
+                          '-K', '{0!s}'.format(key),
+                          '-iv', '{0!s}'.format(iv),
+                          '-out', '{0!s}'.format(decrypted_filename))
         except processutils.ProcessExecutionError as exc:
             raise exception.NovaException(_('Failed to decrypt image file '
                                     '%(image_file)s: %(err)s') %

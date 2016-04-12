@@ -205,7 +205,7 @@ class MetadataTestCase(test.TestCase):
         md = fake_InstanceMetadata(self.stubs, self.instance.obj_clone())
         data = md.get_ec2_metadata(version='2009-04-04')
         self.assertEqual(data['meta-data']['local-hostname'],
-            "%s.%s" % (self.instance['hostname'], CONF.dhcp_domain))
+            "{0!s}.{1!s}".format(self.instance['hostname'], CONF.dhcp_domain))
 
     def test_format_instance_mapping(self):
         # Make sure that _format_instance_mappings works.
@@ -269,7 +269,7 @@ class MetadataTestCase(test.TestCase):
         pubkey_ent = md.lookup("/2009-04-04/meta-data/public-keys")
 
         self.assertEqual(base.ec2_md_print(pubkey_ent),
-            "0=%s" % self.instance['key_name'])
+            "0={0!s}".format(self.instance['key_name']))
         self.assertEqual(base.ec2_md_print(pubkey_ent['0']['openssh-key']),
             self.instance['key_data'])
 
@@ -548,7 +548,7 @@ class OpenStackMetadataTestCase(test.TestCase):
             fent = [f for f in mddict['files'] if f['path'] == path]
             self.assertEqual(1, len(fent))
             fent = fent[0]
-            found = mdinst.lookup("/openstack%s" % fent['content_path'])
+            found = mdinst.lookup("/openstack{0!s}".format(fent['content_path']))
             self.assertEqual(found, content)
 
     def test_x509_keypair(self):
@@ -820,8 +820,7 @@ class MetadataHandlerTestCase(test.TestCase):
             if address == expected_addr:
                 return self.mdinst
             else:
-                raise Exception("Expected addr of %s, got %s" %
-                                (expected_addr, address))
+                raise Exception("Expected addr of {0!s}, got {1!s}".format(expected_addr, address))
 
         self.flags(use_forwarded_for=True)
         response = fake_request(self.stubs, self.mdinst,
@@ -866,8 +865,7 @@ class MetadataHandlerTestCase(test.TestCase):
             return self.mdinst
         else:
             # raise the exception to aid with 500 response code test
-            raise Exception("Expected instance_id of %s, got %s" %
-                            (self.expected_instance_id, instance_id))
+            raise Exception("Expected instance_id of {0!s}, got {1!s}".format(self.expected_instance_id, instance_id))
 
     def test_user_data_with_neutron_instance_id(self):
         self.expected_instance_id = 'a-b-c-d'

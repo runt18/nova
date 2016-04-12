@@ -941,7 +941,7 @@ class VMOpsTestCase(test_base.HyperVBaseTestCase):
                                          fake_instance_uuid)
 
         if not (worker_exists and worker_running):
-            expected_pipe_path = r'\\.\pipe\%s' % fake_instance_uuid
+            expected_pipe_path = r'\\.\pipe\{0!s}'.format(fake_instance_uuid)
             expected_current_worker = mock_io_thread.return_value
             expected_current_worker.start.assert_called_once_with()
             mock_io_thread.assert_called_once_with(
@@ -995,7 +995,7 @@ class VMOpsTestCase(test_base.HyperVBaseTestCase):
         self._vmops.log_vm_serial_output(mock.sentinel.FAKE_VM_NAME,
                                          self.FAKE_UUID)
 
-        pipe_path = r'\\.\pipe\%s' % self.FAKE_UUID
+        pipe_path = r'\\.\pipe\{0!s}'.format(self.FAKE_UUID)
         fake_iothread.assert_called_once_with(
             pipe_path, mock.sentinel.FAKE_PATH,
             self._vmops._MAX_CONSOLE_LOG_FILE_SIZE)
@@ -1051,7 +1051,7 @@ class VMOpsTestCase(test_base.HyperVBaseTestCase):
 
     def test_create_vm_com_port_pipe(self):
         mock_instance = fake_instance.fake_instance_obj(self.context)
-        pipe_path = r'\\.\pipe\%s' % mock_instance['uuid']
+        pipe_path = r'\\.\pipe\{0!s}'.format(mock_instance['uuid'])
 
         self._vmops._create_vm_com_port_pipe(mock_instance)
 

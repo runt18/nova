@@ -482,7 +482,7 @@ class InstanceEvents(object):
 
     @staticmethod
     def _lock_name(instance):
-        return '%s-%s' % (instance.uuid, 'events')
+        return '{0!s}-{1!s}'.format(instance.uuid, 'events')
 
     def prepare_for_instance_event(self, instance, event_name):
         """Prepare to receive an event for an instance.
@@ -1352,7 +1352,7 @@ class ComputeManager(manager.Manager):
 
         """
         # TODO(mdragon): perhaps make this variable by console_type?
-        return '%s.%s' % (CONF.console_topic, CONF.console_host)
+        return '{0!s}.{1!s}'.format(CONF.console_topic, CONF.console_host)
 
     @wrap_exception()
     def get_console_pool_info(self, context, console_type):
@@ -4497,9 +4497,9 @@ class ComputeManager(manager.Manager):
         if console_type == 'novnc':
             # For essex, novncproxy_base_url must include the full path
             # including the html file (like http://myhost/vnc_auto.html)
-            access_url = '%s?token=%s' % (CONF.vnc.novncproxy_base_url, token)
+            access_url = '{0!s}?token={1!s}'.format(CONF.vnc.novncproxy_base_url, token)
         elif console_type == 'xvpvnc':
-            access_url = '%s?token=%s' % (CONF.vnc.xvpvncproxy_base_url, token)
+            access_url = '{0!s}?token={1!s}'.format(CONF.vnc.xvpvncproxy_base_url, token)
         else:
             raise exception.ConsoleTypeInvalid(console_type=console_type)
 
@@ -4534,7 +4534,7 @@ class ComputeManager(manager.Manager):
         if console_type == 'spice-html5':
             # For essex, spicehtml5proxy_base_url must include the full path
             # including the html file (like http://myhost/spice_auto.html)
-            access_url = '%s?token=%s' % (CONF.spice.html5proxy_base_url,
+            access_url = '{0!s}?token={1!s}'.format(CONF.spice.html5proxy_base_url,
                                           token)
         else:
             raise exception.ConsoleTypeInvalid(console_type=console_type)
@@ -4568,7 +4568,7 @@ class ComputeManager(manager.Manager):
             raise exception.ConsoleTypeUnavailable(console_type=console_type)
 
         if console_type == 'rdp-html5':
-            access_url = '%s?token=%s' % (CONF.rdp.html5_proxy_base_url,
+            access_url = '{0!s}?token={1!s}'.format(CONF.rdp.html5_proxy_base_url,
                                           token)
         else:
             raise exception.ConsoleTypeInvalid(console_type=console_type)
@@ -4602,7 +4602,7 @@ class ComputeManager(manager.Manager):
             raise exception.ConsoleTypeUnavailable(console_type=console_type)
 
         if console_type == 'webmks':
-            access_url = '%s?token=%s' % (CONF.mks.mksproxy_base_url,
+            access_url = '{0!s}?token={1!s}'.format(CONF.mks.mksproxy_base_url,
                                           token)
         else:
             raise exception.ConsoleTypeInvalid(console_type=console_type)
@@ -4641,7 +4641,7 @@ class ComputeManager(manager.Manager):
         context = context.elevated()
 
         token = str(uuid.uuid4())
-        access_url = '%s?token=%s' % (CONF.serial_console.base_url, token)
+        access_url = '{0!s}?token={1!s}'.format(CONF.serial_console.base_url, token)
 
         try:
             # Retrieve connect info from driver, and then decorate with our
@@ -5219,7 +5219,7 @@ class ComputeManager(manager.Manager):
                                        network_info,
                                        disk,
                                        migrate_data)
-        LOG.debug('driver pre_live_migration data is %s' % migrate_data)
+        LOG.debug('driver pre_live_migration data is {0!s}'.format(migrate_data))
 
         # NOTE(tr3buchet): setup networks on destination host
         self.network_api.setup_networks_on_host(context, instance,
@@ -6014,8 +6014,7 @@ class ComputeManager(manager.Manager):
                 errors += 1
         task_log.errors = errors
         task_log.message = (
-            'Instance usage audit ran for host %s, %s instances in %s seconds.'
-            % (self.host, num_instances, time.time() - start_time))
+            'Instance usage audit ran for host {0!s}, {1!s} instances in {2!s} seconds.'.format(self.host, num_instances, time.time() - start_time))
         task_log.end_task()
 
     @periodic_task.periodic_task(spacing=CONF.bandwidth_poll_interval)
@@ -6207,9 +6206,9 @@ class ComputeManager(manager.Manager):
             # block entire periodic task thread
             uuid = db_instance.uuid
             if uuid in self._syncs_in_progress:
-                LOG.debug('Sync already in progress for %s' % uuid)
+                LOG.debug('Sync already in progress for {0!s}'.format(uuid))
             else:
-                LOG.debug('Triggering sync for uuid %s' % uuid)
+                LOG.debug('Triggering sync for uuid {0!s}'.format(uuid))
                 self._syncs_in_progress[uuid] = True
                 self._sync_power_pool.spawn_n(_sync, db_instance)
 

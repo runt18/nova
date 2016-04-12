@@ -75,7 +75,7 @@ class ExtendedServerPciSampleJsonTest(test_servers.ServersSampleBase):
 
     def test_show(self):
         uuid = self._post_server()
-        response = self._do_get('servers/%s' % uuid)
+        response = self._do_get('servers/{0!s}'.format(uuid))
         subs = {'hostid': '[a-f0-9]+'}
         self._verify_response('server-get-resp', subs, response, 200)
 
@@ -147,7 +147,7 @@ class ExtendedHyervisorPciSampleJsonTest(api_sample_base.ApiSampleTestBaseV21):
         mock_obj.return_value = self.fake_compute_node
         mock_svc_get.return_value = self.fake_service
         hypervisor_id = 1
-        response = self._do_get('os-hypervisors/%s' % hypervisor_id)
+        response = self._do_get('os-hypervisors/{0!s}'.format(hypervisor_id))
         subs = {
             'hypervisor_id': hypervisor_id,
         }

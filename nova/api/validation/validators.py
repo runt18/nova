@@ -218,7 +218,7 @@ class FormatChecker(jsonschema.FormatChecker):
         except raises as e:
             cause = e
         if not result:
-            msg = "%r is not a %r" % (instance, format)
+            msg = "{0!r} is not a {1!r}".format(instance, format)
             raise jsonschema_exc.FormatError(msg, cause=cause)
 
 

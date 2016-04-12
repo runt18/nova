@@ -41,7 +41,7 @@ class NoAuthMiddlewareBase(base_wsgi.Middleware):
             # NOTE(vish): This is expecting and returning Auth(1.1), whereas
             #             keystone uses 2.0 auth.  We should probably allow
             #             2.0 auth here as well.
-            res.headers['X-Auth-Token'] = '%s:%s' % (user_id, project_id)
+            res.headers['X-Auth-Token'] = '{0!s}:{1!s}'.format(user_id, project_id)
             res.headers['X-Server-Management-Url'] = os_url
             res.content_type = 'text/plain'
             res.status = '204'

@@ -623,8 +623,8 @@ class NetworkModel(FieldType):
         return network_model.NetworkInfo.hydrate(value)
 
     def stringify(self, value):
-        return 'NetworkModel(%s)' % (
-            ','.join([str(vif['id']) for vif in value]))
+        return 'NetworkModel({0!s})'.format((
+            ','.join([str(vif['id']) for vif in value])))
 
 
 class NonNegativeFloat(FieldType):

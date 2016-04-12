@@ -25,7 +25,7 @@ class FlavorDisabledController(wsgi.Controller):
     def _extend_flavors(self, req, flavors):
         for flavor in flavors:
             db_flavor = req.get_db_flavor(flavor['id'])
-            key = "%s:disabled" % Flavor_disabled.alias
+            key = "{0!s}:disabled".format(Flavor_disabled.alias)
             flavor[key] = db_flavor['disabled']
 
     def _show(self, req, resp_obj):

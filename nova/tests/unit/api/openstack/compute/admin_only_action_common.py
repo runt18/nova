@@ -136,9 +136,8 @@ class CommonMixin(object):
                                controller_function,
                                self.req, instance.uuid,
                                body=body_map)
-        self.assertIn("Cannot \'%(action)s\' instance %(id)s"
-                      % {'action': exception_arg or method,
-                         'id': instance.uuid}, ex.explanation)
+        self.assertIn("Cannot \'{action!s}\' instance {id!s}".format(**{'action': exception_arg or method,
+                         'id': instance.uuid}), ex.explanation)
         # Do these here instead of tearDown because this method is called
         # more than once for the same test case
         self.mox.VerifyAll()

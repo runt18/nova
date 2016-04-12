@@ -179,8 +179,7 @@ class SupportMatrixDirective(rst.Directive):
                                              name[1],
                                              name[2])
             else:
-                raise Exception("'%s' field is malformed in '[%s]' section" %
-                                (item, "DEFAULT"))
+                raise Exception("'{0!s}' field is malformed in '[{1!s}]' section".format(item, "DEFAULT"))
 
             targets[key] = target
 
@@ -197,7 +196,7 @@ class SupportMatrixDirective(rst.Directive):
                 continue
             if not cfg.has_option(section, "title"):
                 raise Exception(
-                    "'title' field missing in '[%s]' section" % section)
+                    "'title' field missing in '[{0!s}]' section".format(section))
 
             title = cfg.get(section, "title")
 
@@ -241,14 +240,12 @@ class SupportMatrixDirective(rst.Directive):
                 key = item[12:]
                 if key not in targets:
                     raise Exception(
-                        "Driver impl '%s' in '[%s]' not declared" %
-                        (item, section))
+                        "Driver impl '{0!s}' in '[{1!s}]' not declared".format(item, section))
 
                 status = cfg.get(section, item)
                 if status not in SupportMatrixImplementation.STATUS_ALL:
                     raise Exception(
-                        "'%s' value '%s' in '[%s]' section must be %s" %
-                        (item, status, section,
+                        "'{0!s}' value '{1!s}' in '[{2!s}]' section must be {3!s}".format(item, status, section,
                          ",".join(SupportMatrixImplementation.STATUS_ALL)))
 
                 noteskey = "driver-notes-" + item[12:]
@@ -263,8 +260,7 @@ class SupportMatrixDirective(rst.Directive):
 
             for key in targets:
                 if key not in feature.implementations:
-                    raise Exception("'%s' missing in '[%s]' section" %
-                                    (target.key, section))
+                    raise Exception("'{0!s}' missing in '[{1!s}]' section".format(target.key, section))
 
             features.append(feature)
 

@@ -82,7 +82,7 @@ class TestServerGet(test.TestCase):
             except client.OpenStackApiNotFoundException:
                 break
         else:
-            self.fail('Timed out waiting to delete server: %s' % server['id'])
+            self.fail('Timed out waiting to delete server: {0!s}'.format(server['id']))
         servers = self.admin_api.get_servers(search_opts={'deleted': 1})
         self.assertEqual(1, len(servers))
         self.assertEqual(server['id'], servers[0]['id'])

@@ -72,8 +72,8 @@ class CellsAPITestCase(test.NoDBTestCase):
         if version is not None:
             self.assertIn('version', call_info)
             self.assertIsInstance(call_info['version'], six.string_types,
-                                  msg="Message version %s is not a string" %
-                                  call_info['version'])
+                                  msg="Message version {0!s} is not a string".format(
+                                  call_info['version']))
             self.assertEqual(version, call_info['version'])
         else:
             self.assertNotIn('version', call_info)

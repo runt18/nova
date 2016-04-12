@@ -470,7 +470,7 @@ class XenAPIVMTestCase(stubs.XenAPITestBase):
         # Note(sulo): We don't care about session id in test
         # they will always differ so strip that out
         actual_path = console.internal_access_path.split('&')[0]
-        expected_path = "/console?ref=%s" % str(vm_ref)
+        expected_path = "/console?ref={0!s}".format(str(vm_ref))
 
         self.assertEqual(expected_path, actual_path)
 
@@ -487,7 +487,7 @@ class XenAPIVMTestCase(stubs.XenAPITestBase):
         # Note(sulo): We don't care about session id in test
         # they will always differ so strip that out
         actual_path = console.internal_access_path.split('&')[0]
-        expected_path = "/console?ref=%s" % str(rescue_vm)
+        expected_path = "/console?ref={0!s}".format(str(rescue_vm))
 
         self.assertEqual(expected_path, actual_path)
 
@@ -708,9 +708,9 @@ class XenAPIVMTestCase(stubs.XenAPITestBase):
                 # there even after the cleanup
                 if 'other_config' in vdi_rec:
                     if 'image-id' not in vdi_rec['other_config']:
-                        self.fail('Found unexpected VDI:%s' % vdi_ref)
+                        self.fail('Found unexpected VDI:{0!s}'.format(vdi_ref))
                 else:
-                    self.fail('Found unexpected VDI:%s' % vdi_ref)
+                    self.fail('Found unexpected VDI:{0!s}'.format(vdi_ref))
 
     def _test_spawn(self, image_ref, kernel_id, ramdisk_id,
                     instance_type_id="3", os_type="linux",
@@ -1284,7 +1284,7 @@ iface eth0 inet6 static
         conn.rescue(self.context, instance, [], image_meta, '')
 
         vm = xenapi_fake.get_record('VM', vm_ref)
-        rescue_name = "%s-rescue" % vm["name_label"]
+        rescue_name = "{0!s}-rescue".format(vm["name_label"])
         rescue_ref = vm_utils.lookup(session, rescue_name)
         rescue_vm = xenapi_fake.get_record('VM', rescue_ref)
 
@@ -2717,7 +2717,7 @@ class XenAPIDom0IptablesFirewallTestCase(stubs.XenAPITestBase):
         for rule in in_rules:
             if 'nova' not in rule:
                 self.assertIn(rule, self._out_rules,
-                              'Rule went missing: %s' % rule)
+                              'Rule went missing: {0!s}'.format(rule))
 
         instance_chain = None
         for rule in self._out_rules:
@@ -2730,7 +2730,7 @@ class XenAPIDom0IptablesFirewallTestCase(stubs.XenAPITestBase):
         security_group_chain = None
         for rule in self._out_rules:
             # This is pretty crude, but it'll do for now
-            if '-A %s -j' % instance_chain in rule:
+            if '-A {0!s} -j'.format(instance_chain) in rule:
                 security_group_chain = rule.split(' ')[-1]
                 break
         self.assertTrue(security_group_chain,
@@ -4145,7 +4145,7 @@ class XenAPIFakeTestCase(test.NoDBTestCase):
 
         for query in tests.keys():
             expected = tests[query]
-            fail_msg = "for test '%s'" % query
+            fail_msg = "for test '{0!s}'".format(query)
             self.assertEqual(xenapi_fake._query_matches(record, query),
                              expected, fail_msg)
 
@@ -4157,6 +4157,6 @@ class XenAPIFakeTestCase(test.NoDBTestCase):
                  ]
 
         for query in tests:
-            fail_msg = "for test '%s'" % query
+            fail_msg = "for test '{0!s}'".format(query)
             self.assertFalse(xenapi_fake._query_matches(record, query),
                              fail_msg)

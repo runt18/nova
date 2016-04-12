@@ -71,8 +71,8 @@ class XCPVNCProxy(object):
 
         # Handshake as necessary
         if connect_info.get('internal_access_path'):
-            server.sendall("CONNECT %s HTTP/1.1\r\n\r\n" %
-                        connect_info['internal_access_path'])
+            server.sendall("CONNECT {0!s} HTTP/1.1\r\n\r\n".format(
+                        connect_info['internal_access_path']))
 
             data = ""
             while True:

@@ -45,7 +45,7 @@ class PciAddressTestCase(test.NoDBTestCase):
             devspec.PciDeviceSpec, pci_info)
 
     def test_max_func(self):
-        pci_info = {"address": "0000:0a:00.%s" % (devspec.MAX_FUNC + 1),
+        pci_info = {"address": "0000:0a:00.{0!s}".format((devspec.MAX_FUNC + 1)),
                     "physical_network": "hr_net"}
         exc = self.assertRaises(exception.PciDeviceInvalidAddressField,
                   devspec.PciDeviceSpec, pci_info)
@@ -55,30 +55,27 @@ class PciAddressTestCase(test.NoDBTestCase):
         self.assertEqual(msg, six.text_type(exc))
 
     def test_max_domain(self):
-        pci_info = {"address": "%x:0a:00.5" % (devspec.MAX_DOMAIN + 1),
+        pci_info = {"address": "{0:x}:0a:00.5".format((devspec.MAX_DOMAIN + 1)),
                     "physical_network": "hr_net"}
         exc = self.assertRaises(exception.PciConfigInvalidWhitelist,
                   devspec.PciDeviceSpec, pci_info)
-        msg = ('Invalid PCI devices Whitelist config invalid domain %x'
-               % (devspec.MAX_DOMAIN + 1))
+        msg = ('Invalid PCI devices Whitelist config invalid domain {0:x}'.format((devspec.MAX_DOMAIN + 1)))
         self.assertEqual(msg, six.text_type(exc))
 
     def test_max_bus(self):
-        pci_info = {"address": "0000:%x:00.5" % (devspec.MAX_BUS + 1),
+        pci_info = {"address": "0000:{0:x}:00.5".format((devspec.MAX_BUS + 1)),
                     "physical_network": "hr_net"}
         exc = self.assertRaises(exception.PciConfigInvalidWhitelist,
                   devspec.PciDeviceSpec, pci_info)
-        msg = ('Invalid PCI devices Whitelist config invalid bus %x'
-               % (devspec.MAX_BUS + 1))
+        msg = ('Invalid PCI devices Whitelist config invalid bus {0:x}'.format((devspec.MAX_BUS + 1)))
         self.assertEqual(msg, six.text_type(exc))
 
     def test_max_slot(self):
-        pci_info = {"address": "0000:0a:%x.5" % (devspec.MAX_SLOT + 1),
+        pci_info = {"address": "0000:0a:{0:x}.5".format((devspec.MAX_SLOT + 1)),
                     "physical_network": "hr_net"}
         exc = self.assertRaises(exception.PciConfigInvalidWhitelist,
                   devspec.PciDeviceSpec, pci_info)
-        msg = ('Invalid PCI devices Whitelist config invalid slot %x'
-               % (devspec.MAX_SLOT + 1))
+        msg = ('Invalid PCI devices Whitelist config invalid slot {0:x}'.format((devspec.MAX_SLOT + 1)))
         self.assertEqual(msg, six.text_type(exc))
 
     def test_address_is_undefined(self):

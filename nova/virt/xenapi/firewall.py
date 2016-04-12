@@ -49,8 +49,8 @@ class Dom0IptablesFirewallDriver(firewall.IptablesFirewallDriver):
 
     def _build_tcp_udp_rule(self, rule, version):
         if rule.from_port == rule.to_port:
-            return ['--dport', '%s' % (rule.from_port,)]
+            return ['--dport', '{0!s}'.format(rule.from_port)]
         else:
             #  No multiport needed for XS!
-            return ['--dport', '%s:%s' % (rule.from_port,
+            return ['--dport', '{0!s}:{1!s}'.format(rule.from_port,
                                            rule.to_port)]

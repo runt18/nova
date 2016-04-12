@@ -184,7 +184,7 @@ def get_server(target, endpoints, serializer=None):
 def get_notifier(service, host=None, publisher_id=None):
     assert LEGACY_NOTIFIER is not None
     if not publisher_id:
-        publisher_id = "%s.%s" % (service, host or CONF.host)
+        publisher_id = "{0!s}.{1!s}".format(service, host or CONF.host)
     return LegacyValidatingNotifier(
             LEGACY_NOTIFIER.prepare(publisher_id=publisher_id))
 

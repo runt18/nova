@@ -133,8 +133,8 @@ class CachingSchedulerTestCase(test_scheduler.SchedulerTestCase):
 
     def _get_fake_host_state(self, index=0):
         host_state = host_manager.HostState(
-            'host_%s' % index,
-            'node_%s' % index)
+            'host_{0!s}'.format(index),
+            'node_{0!s}'.format(index))
         host_state.free_ram_mb = 50000
         host_state.total_usable_ram_mb = 50000
         host_state.free_disk_mb = 4096

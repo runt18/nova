@@ -95,7 +95,7 @@ def fake_task_log_get_all(context, task_name, begin, end,
         return TEST_LOGS2
     if begin == begin3 and end == end3:
         return TEST_LOGS3
-    raise AssertionError("Invalid date %s to %s" % (begin, end))
+    raise AssertionError("Invalid date {0!s} to {1!s}".format(begin, end))
 
 
 def fake_last_completed_audit_period(unit=None, before=None):
@@ -106,7 +106,7 @@ def fake_last_completed_audit_period(unit=None, before=None):
         for begin, end in audit_periods:
             if before > end:
                 return begin, end
-        raise AssertionError("Invalid before date %s" % (before))
+        raise AssertionError("Invalid before date {0!s}".format((before)))
     return begin1, end1
 
 
@@ -221,7 +221,7 @@ class InstanceUsageAuditPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.index, self.req)
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())
 
     def test_show_policy_failed(self):
@@ -231,5 +231,5 @@ class InstanceUsageAuditPolicyEnforcementV21(test.NoDBTestCase):
             exception.PolicyNotAuthorized,
             self.controller.show, self.req, '2012-07-05 10:00:00')
         self.assertEqual(
-            "Policy doesn't allow %s to be performed." % rule_name,
+            "Policy doesn't allow {0!s} to be performed.".format(rule_name),
             exc.format_message())

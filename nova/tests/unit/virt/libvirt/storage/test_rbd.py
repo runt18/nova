@@ -188,7 +188,7 @@ class RbdTestCase(test.NoDBTestCase):
         pool = u'images'
         image = u'image-name'
         snap = u'snapshot-name'
-        location = {'url': u'rbd://fsid/%s/%s/%s' % (pool, image, snap)}
+        location = {'url': u'rbd://fsid/{0!s}/{1!s}/{2!s}'.format(pool, image, snap)}
 
         client_stack = []
 
@@ -219,7 +219,7 @@ class RbdTestCase(test.NoDBTestCase):
         pool = u'images'
         image = u'image-name'
         snap = u'snapshot-name'
-        location = {'url': u'rbd://fsid/%s/%s/%s' % (pool, image, snap)}
+        location = {'url': u'rbd://fsid/{0!s}/{1!s}/{2!s}'.format(pool, image, snap)}
 
         client_stack = []
 

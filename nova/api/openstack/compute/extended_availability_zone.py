@@ -29,7 +29,7 @@ class ExtendedAZController(wsgi.Controller):
         # NOTE(mriedem): The OS-EXT-AZ prefix should not be used for new
         # attributes after v2.1. They are only in v2.1 for backward compat
         # with v2.0.
-        key = "%s:availability_zone" % PREFIX
+        key = "{0!s}:availability_zone".format(PREFIX)
         az = avail_zone.get_instance_availability_zone(context, instance)
         server[key] = az or ''
 

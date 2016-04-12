@@ -67,7 +67,7 @@ class EvacuateJsonTest(test_servers.ServersSampleBase):
             'nova.compute.manager.ComputeManager._check_instance_exists',
             fake_check_instance_exists)
 
-        response = self._do_post('servers/%s/action' % self.uuid,
+        response = self._do_post('servers/{0!s}/action'.format(self.uuid),
                                  server_req, req_subs)
         if server_resp:
             self._verify_response(server_resp, {}, response,

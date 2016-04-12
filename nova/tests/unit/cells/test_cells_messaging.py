@@ -539,7 +539,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
         direction = 'down'
 
         def our_fake_method(message, **kwargs):
-            return 'response-%s' % message.routing_path
+            return 'response-{0!s}'.format(message.routing_path)
 
         fakes.stub_bcast_methods(self, 'our_fake_method', our_fake_method)
 
@@ -553,7 +553,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
         self.assertEqual(8, len(responses))
         for response in responses:
             self.assertFalse(response.failure)
-            self.assertEqual('response-%s' % response.cell_name,
+            self.assertEqual('response-{0!s}'.format(response.cell_name),
                     response.value_or_raise())
 
     def test_broadcast_routing_with_response_max_hops(self):
@@ -563,7 +563,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
         direction = 'down'
 
         def our_fake_method(message, **kwargs):
-            return 'response-%s' % message.routing_path
+            return 'response-{0!s}'.format(message.routing_path)
 
         fakes.stub_bcast_methods(self, 'our_fake_method', our_fake_method)
 
@@ -579,7 +579,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
         self.assertEqual(5, len(responses))
         for response in responses:
             self.assertFalse(response.failure)
-            self.assertEqual('response-%s' % response.cell_name,
+            self.assertEqual('response-{0!s}'.format(response.cell_name),
                     response.value_or_raise())
 
     def test_broadcast_routing_with_all_erroring(self):
@@ -613,7 +613,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
             raise test.TestingException('fake failure')
 
         def our_fake_method(message, **kwargs):
-            return 'response-%s' % message.routing_path
+            return 'response-{0!s}'.format(message.routing_path)
 
         fakes.stub_bcast_methods(self, 'our_fake_method', our_fake_method)
         fakes.stub_bcast_method(self, 'child-cell2', 'our_fake_method',
@@ -636,7 +636,7 @@ class CellsMessageClassesTestCase(test.NoDBTestCase):
 
         for response in success_responses:
             self.assertFalse(response.failure)
-            self.assertEqual('response-%s' % response.cell_name,
+            self.assertEqual('response-{0!s}'.format(response.cell_name),
                     response.value_or_raise())
 
         for response in failure_responses:
@@ -1251,7 +1251,7 @@ class CellsTargetedMethodsTestCase(test.NoDBTestCase):
                                'set_admin_password': 'set_admin_password',
                               }
         tgt_method = method_translations.get(method,
-                                             '%s_instance' % method)
+                                             '{0!s}_instance'.format(method))
         result = getattr(meth_cls, tgt_method)(
                 message, 'fake-instance', *args, **kwargs)
         if expect_result:

@@ -71,14 +71,14 @@ def get_pci_address_fields(pci_addr):
 
 
 def get_pci_address(domain, bus, slot, func):
-    return '%s:%s:%s.%s' % (domain, bus, slot, func)
+    return '{0!s}:{1!s}:{2!s}.{3!s}'.format(domain, bus, slot, func)
 
 
 def get_function_by_ifname(ifname):
     """Given the device name, returns the PCI address of a device
     and returns True if the address in a physical function.
     """
-    dev_path = "/sys/class/net/%s/device" % ifname
+    dev_path = "/sys/class/net/{0!s}/device".format(ifname)
     sriov_totalvfs = 0
     if os.path.isdir(dev_path):
         try:
@@ -93,8 +93,8 @@ def get_function_by_ifname(ifname):
 
 
 def is_physical_function(domain, bus, slot, function):
-    dev_path = "/sys/bus/pci/devices/%(d)s:%(b)s:%(s)s.%(f)s/" % {
-        "d": domain, "b": bus, "s": slot, "f": function}
+    dev_path = "/sys/bus/pci/devices/{d!s}:{b!s}:{s!s}.{f!s}/".format(**{
+        "d": domain, "b": bus, "s": slot, "f": function})
     if os.path.isdir(dev_path):
         sriov_totalvfs = 0
         try:
@@ -112,8 +112,8 @@ def _get_sysfs_netdev_path(pci_addr, pf_interface):
     Assumes a networking device - will not check for the existence of the path.
     """
     if pf_interface:
-        return "/sys/bus/pci/devices/%s/physfn/net" % (pci_addr)
-    return "/sys/bus/pci/devices/%s/net" % (pci_addr)
+        return "/sys/bus/pci/devices/{0!s}/physfn/net".format((pci_addr))
+    return "/sys/bus/pci/devices/{0!s}/net".format((pci_addr))
 
 
 def get_ifname_by_pci_address(pci_addr, pf_interface=False):
@@ -158,7 +158,7 @@ def get_vf_num_by_pci_address(pci_addr):
     configure it. This number can be obtained from the PCI device filesystem.
     """
     VIRTFN_RE = re.compile("virtfn(\d+)")
-    virtfns_path = "/sys/bus/pci/devices/%s/physfn/virtfn*" % (pci_addr)
+    virtfns_path = "/sys/bus/pci/devices/{0!s}/physfn/virtfn*".format((pci_addr))
     vf_num = None
     try:
         for vf_path in glob.iglob(virtfns_path):

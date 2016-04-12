@@ -167,8 +167,8 @@ class StatsTestCase(test.NoDBTestCase):
         self.assertEqual(1, self.stats.num_instances)
         self.assertEqual(1, self.stats.num_instances_for_project(1234))
         self.assertEqual(1, self.stats["num_os_type_Linux"])
-        self.assertEqual(0, self.stats["num_vm_%s" % vm_states.BUILDING])
-        self.assertEqual(1, self.stats["num_vm_%s" % vm_states.PAUSED])
+        self.assertEqual(0, self.stats["num_vm_{0!s}".format(vm_states.BUILDING)])
+        self.assertEqual(1, self.stats["num_vm_{0!s}".format(vm_states.PAUSED)])
 
     def test_update_stats_for_instance_task_change(self):
         instance = self._create_instance()
@@ -180,7 +180,7 @@ class StatsTestCase(test.NoDBTestCase):
         self.assertEqual(1, self.stats.num_instances_for_project("1234"))
         self.assertEqual(1, self.stats["num_os_type_Linux"])
         self.assertEqual(0, self.stats["num_task_None"])
-        self.assertEqual(1, self.stats["num_task_%s" % task_states.REBUILDING])
+        self.assertEqual(1, self.stats["num_task_{0!s}".format(task_states.REBUILDING)])
 
     def test_update_stats_for_instance_deleted(self):
         instance = self._create_instance()

@@ -22,7 +22,7 @@ authorize = extensions.soft_extension_authorizer('compute', 'image_size')
 class ImageSizeController(wsgi.Controller):
 
     def _extend_image(self, image, image_cache):
-        key = "%s:size" % Image_size.alias
+        key = "{0!s}:size".format(Image_size.alias)
         image[key] = image_cache['size']
 
     @wsgi.extends

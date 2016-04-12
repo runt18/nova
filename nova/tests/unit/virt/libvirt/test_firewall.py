@@ -74,8 +74,7 @@ class NWFilterFakes(object):
         else:
             if self.filters[name].uuid != u:
                 raise fakelibvirt.libvirtError(
-                    "Mismatching name '%s' with uuid '%s' vs '%s'"
-                    % (name, self.filters[name].uuid, u))
+                    "Mismatching name '{0!s}' with uuid '{1!s}' vs '{2!s}'".format(name, self.filters[name].uuid, u))
             self.filters[name].xml = xml
         return True
 
@@ -259,7 +258,7 @@ class IptablesFirewallTestCase(test.NoDBTestCase):
         for rule in in_rules:
             if 'nova' not in rule:
                 self.assertIn(rule, self.out_rules,
-                              'Rule went missing: %s' % rule)
+                              'Rule went missing: {0!s}'.format(rule))
 
         instance_chain = None
         for rule in self.out_rules:
@@ -273,7 +272,7 @@ class IptablesFirewallTestCase(test.NoDBTestCase):
         security_group_chain = None
         for rule in self.out_rules:
             # This is pretty crude, but it'll do for now
-            if '-A %s -j' % instance_chain in rule:
+            if '-A {0!s} -j'.format(instance_chain) in rule:
                 security_group_chain = rule.split(' ')[-1]
                 break
         self.assertTrue(security_group_chain,
@@ -492,7 +491,7 @@ class NWFilterTestCase(test.NoDBTestCase):
         self._create_security_group(instance_ref)
 
         def _ensure_all_called(mac, allow_dhcp):
-            instance_filter = 'nova-instance-%s-%s' % (instance_ref['name'],
+            instance_filter = 'nova-instance-{0!s}-{1!s}'.format(instance_ref['name'],
                     mac.translate({ord(':'): None}))
             requiredlist = ['no-arp-spoofing', 'no-ip-spoofing',
                              'no-mac-spoofing']
@@ -504,12 +503,12 @@ class NWFilterTestCase(test.NoDBTestCase):
             for required in requiredlist:
                 self.assertIn(required,
                               self.recursive_depends[instance_filter],
-                              "Instance's filter does not include %s" %
-                              required)
+                              "Instance's filter does not include {0!s}".format(
+                              required))
             for required_not in required_not_list:
                 self.assertNotIn(required_not,
                                  self.recursive_depends[instance_filter],
-                                 "Instance filter includes %s" % required_not)
+                                 "Instance filter includes {0!s}".format(required_not))
 
         network_info = _fake_network_info(self, 1)
         # since there is one (network_info) there is one vif

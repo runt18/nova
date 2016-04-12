@@ -61,15 +61,15 @@ class HostManagerTestCase(test.NoDBTestCase):
     @mock.patch.object(host_manager.HostManager, '_init_aggregates')
     def setUp(self, mock_init_agg, mock_init_inst):
         super(HostManagerTestCase, self).setUp()
-        self.flags(scheduler_available_filters=['%s.%s' % (__name__, cls) for
+        self.flags(scheduler_available_filters=['{0!s}.{1!s}'.format(__name__, cls) for
                                                 cls in ['FakeFilterClass1',
                                                         'FakeFilterClass2']])
         self.flags(scheduler_default_filters=['FakeFilterClass1'])
         self.host_manager = host_manager.HostManager()
-        self.fake_hosts = [host_manager.HostState('fake_host%s' % x,
+        self.fake_hosts = [host_manager.HostState('fake_host{0!s}'.format(x),
                 'fake-node') for x in range(1, 5)]
         self.fake_hosts += [host_manager.HostState('fake_multihost',
-                'fake-node%s' % x) for x in range(1, 5)]
+                'fake-node{0!s}'.format(x)) for x in range(1, 5)]
 
         self.useFixture(fixtures.SpawnIsSynchronousFixture())
 
@@ -83,7 +83,7 @@ class HostManagerTestCase(test.NoDBTestCase):
                                         mock_get_by_filters):
         cn_list = objects.ComputeNodeList()
         for num in range(22):
-            host_name = 'host_%s' % num
+            host_name = 'host_{0!s}'.format(num)
             cn_list.objects.append(objects.ComputeNode(host=host_name))
         mock_get_all.return_value = cn_list
         self.host_manager._init_instance_info()
@@ -847,10 +847,10 @@ class HostStateTestCase(test.NoDBTestCase):
             'num_instances': '5',
             'num_proj_12345': '3',
             'num_proj_23456': '1',
-            'num_vm_%s' % vm_states.BUILDING: '2',
-            'num_vm_%s' % vm_states.SUSPENDED: '1',
-            'num_task_%s' % task_states.RESIZE_MIGRATING: '1',
-            'num_task_%s' % task_states.MIGRATING: '2',
+            'num_vm_{0!s}'.format(vm_states.BUILDING): '2',
+            'num_vm_{0!s}'.format(vm_states.SUSPENDED): '1',
+            'num_task_{0!s}'.format(task_states.RESIZE_MIGRATING): '1',
+            'num_task_{0!s}'.format(task_states.MIGRATING): '2',
             'num_os_type_linux': '4',
             'num_os_type_windoze': '1',
             'io_workload': '42',
@@ -890,10 +890,10 @@ class HostStateTestCase(test.NoDBTestCase):
             'num_instances': '5',
             'num_proj_12345': '3',
             'num_proj_23456': '1',
-            'num_vm_%s' % vm_states.BUILDING: '2',
-            'num_vm_%s' % vm_states.SUSPENDED: '1',
-            'num_task_%s' % task_states.RESIZE_MIGRATING: '1',
-            'num_task_%s' % task_states.MIGRATING: '2',
+            'num_vm_{0!s}'.format(vm_states.BUILDING): '2',
+            'num_vm_{0!s}'.format(vm_states.SUSPENDED): '1',
+            'num_task_{0!s}'.format(task_states.RESIZE_MIGRATING): '1',
+            'num_task_{0!s}'.format(task_states.MIGRATING): '2',
             'num_os_type_linux': '4',
             'num_os_type_windoze': '1',
             'io_workload': '42',
@@ -923,10 +923,10 @@ class HostStateTestCase(test.NoDBTestCase):
             'num_instances': '5',
             'num_proj_12345': '3',
             'num_proj_23456': '1',
-            'num_vm_%s' % vm_states.BUILDING: '2',
-            'num_vm_%s' % vm_states.SUSPENDED: '1',
-            'num_task_%s' % task_states.UNSHELVING: '1',
-            'num_task_%s' % task_states.RESCUING: '2',
+            'num_vm_{0!s}'.format(vm_states.BUILDING): '2',
+            'num_vm_{0!s}'.format(vm_states.SUSPENDED): '1',
+            'num_task_{0!s}'.format(task_states.UNSHELVING): '1',
+            'num_task_{0!s}'.format(task_states.RESCUING): '2',
             'num_os_type_linux': '4',
             'num_os_type_windoze': '1',
             'io_workload': '42',

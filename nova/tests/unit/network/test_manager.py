@@ -203,32 +203,32 @@ class FlatNetworkTestCase(test.TestCase):
 
         for i, vif in enumerate(nw_info):
             nid = i + 1
-            check = {'bridge': 'fake_br%d' % nid,
-                     'cidr': '192.168.%s.0/24' % nid,
-                     'cidr_v6': '2001:db8:0:%x::/64' % nid,
-                     'id': getattr(uuids, 'vif%i' % nid),
+            check = {'bridge': 'fake_br{0:d}'.format(nid),
+                     'cidr': '192.168.{0!s}.0/24'.format(nid),
+                     'cidr_v6': '2001:db8:0:{0:x}::/64'.format(nid),
+                     'id': getattr(uuids, 'vif{0:d}'.format(nid)),
                      'multi_host': False,
                      'injected': False,
                      'bridge_interface': None,
                      'vlan': None,
-                     'broadcast': '192.168.%d.255' % nid,
+                     'broadcast': '192.168.{0:d}.255'.format(nid),
                      'dhcp_server': '192.168.1.1',
-                     'dns': ['192.168.%d.3' % nid, '192.168.%d.4' % nid],
-                     'gateway': '192.168.%d.1' % nid,
+                     'dns': ['192.168.{0:d}.3'.format(nid), '192.168.{0:d}.4'.format(nid)],
+                     'gateway': '192.168.{0:d}.1'.format(nid),
                      'gateway_v6': '2001:db8:0:1::1',
-                     'label': 'test%d' % nid,
-                     'mac': 'DE:AD:BE:EF:00:%02x' % nid,
+                     'label': 'test{0:d}'.format(nid),
+                     'mac': 'DE:AD:BE:EF:00:{0:02x}'.format(nid),
                      'rxtx_cap': 30,
                      'vif_type': net_model.VIF_TYPE_BRIDGE,
                      'vif_devname': None,
-                     'vif_uuid': getattr(uuids, 'vif%i' % nid),
+                     'vif_uuid': getattr(uuids, 'vif{0:d}'.format(nid)),
                      'ovs_interfaceid': None,
                      'qbh_params': None,
                      'qbg_params': None,
                      'should_create_vlan': False,
                      'should_create_bridge': False,
-                     'ip': '192.168.%d.%03d' % (nid, nid + 99),
-                     'ip_v6': '2001:db8:0:1:dcad:beff:feef:%x' % nid,
+                     'ip': '192.168.{0:d}.{1:03d}'.format(nid, nid + 99),
+                     'ip_v6': '2001:db8:0:1:dcad:beff:feef:{0:x}'.format(nid),
                      'netmask': '255.255.255.0',
                      'netmask_v6': 64,
                      'physical_network': None,
@@ -445,14 +445,14 @@ class FlatNetworkTestCase(test.TestCase):
                                       broadcast_v6=None,
                                       netmask_v6=None,
                                       rxtx_base=None,
-                                      gateway='192.168.%s.1' % index,
-                                      dhcp_server='192.168.%s.1' % index,
-                                      broadcast='192.168.%s.255' % index,
-                                      cidr='192.168.%s.0/24' % index)
+                                      gateway='192.168.{0!s}.1'.format(index),
+                                      dhcp_server='192.168.{0!s}.1'.format(index),
+                                      broadcast='192.168.{0!s}.255'.format(index),
+                                      cidr='192.168.{0!s}.0/24'.format(index))
             return objects.FixedIP(virtual_interface=vif,
                                    network=network,
                                    floating_ips=objects.FloatingIPList(),
-                                   address='192.168.%s.2' % index)
+                                   address='192.168.{0!s}.2'.format(index))
         objs = [make_ip(index) for index in ('3', '1', '2')]
         get.return_value = objects.FixedIPList(objects=objs)
         nw_info = self.network.get_instance_nw_info(self.context, None,
@@ -2495,11 +2495,9 @@ class CommonNetworkTestCase(test.TestCase):
                           % (binary_name, networks[0]['cidr'],
                                           CONF.routing_source_ip,
                                           CONF.public_interface),
-                          '[0:0] -A %s-POSTROUTING -s %s -d %s/32 -j ACCEPT'
-                          % (binary_name, networks[0]['cidr'],
+                          '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s}/32 -j ACCEPT'.format(binary_name, networks[0]['cidr'],
                                           CONF.metadata_host),
-                          '[0:0] -A %s-POSTROUTING -s %s -d %s -j ACCEPT'
-                          % (binary_name, networks[0]['cidr'],
+                          '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s} -j ACCEPT'.format(binary_name, networks[0]['cidr'],
                                           CONF.dmz_cidr[0]),
                           '[0:0] -A %s-POSTROUTING -s %s -d %s -m conntrack ! '
                           '--ctstate DNAT -j ACCEPT' % (binary_name,
@@ -2510,11 +2508,9 @@ class CommonNetworkTestCase(test.TestCase):
                           % (binary_name, networks[1]['cidr'],
                                           CONF.routing_source_ip,
                                           CONF.public_interface),
-                          '[0:0] -A %s-POSTROUTING -s %s -d %s/32 -j ACCEPT'
-                          % (binary_name, networks[1]['cidr'],
+                          '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s}/32 -j ACCEPT'.format(binary_name, networks[1]['cidr'],
                                           CONF.metadata_host),
-                          '[0:0] -A %s-POSTROUTING -s %s -d %s -j ACCEPT'
-                          % (binary_name, networks[1]['cidr'],
+                          '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s} -j ACCEPT'.format(binary_name, networks[1]['cidr'],
                                           CONF.dmz_cidr[0]),
                           '[0:0] -A %s-POSTROUTING -s %s -d %s -m conntrack ! '
                           '--ctstate DNAT -j ACCEPT' % (binary_name,
@@ -2568,11 +2564,9 @@ class CommonNetworkTestCase(test.TestCase):
                            % (binary_name, new_network['cidr'],
                                            CONF.routing_source_ip,
                                            CONF.public_interface),
-                           '[0:0] -A %s-POSTROUTING -s %s -d %s/32 -j ACCEPT'
-                           % (binary_name, new_network['cidr'],
+                           '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s}/32 -j ACCEPT'.format(binary_name, new_network['cidr'],
                                            CONF.metadata_host),
-                           '[0:0] -A %s-POSTROUTING -s %s -d %s -j ACCEPT'
-                           % (binary_name, new_network['cidr'],
+                           '[0:0] -A {0!s}-POSTROUTING -s {1!s} -d {2!s} -j ACCEPT'.format(binary_name, new_network['cidr'],
                                            CONF.dmz_cidr[0]),
                            '[0:0] -A %s-POSTROUTING -s %s -d %s -m conntrack '
                            '! --ctstate DNAT -j ACCEPT' % (binary_name,
@@ -3429,7 +3423,7 @@ class LdapDNSTestCase(test.NoDBTestCase):
 
         self.driver.delete_entry(name1, domain1)
         entries = self.driver.get_entries_by_address(address1, domain1)
-        LOG.debug("entries: %s" % entries)
+        LOG.debug("entries: {0!s}".format(entries))
         self.assertEqual(1, len(entries))
         self.assertEqual(name2, entries[0])
 

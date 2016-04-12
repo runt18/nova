@@ -80,7 +80,7 @@ CONF = nova.conf.CONF
 CONF.register_opts(xenapi_vmops_opts, 'xenserver')
 CONF.import_opt('host', 'nova.netconf')
 
-DEFAULT_FIREWALL_DRIVER = "%s.%s" % (
+DEFAULT_FIREWALL_DRIVER = "{0!s}.{1!s}".format(
     firewall.__name__,
     firewall.IptablesFirewallDriver.__name__)
 
@@ -372,7 +372,7 @@ class VMOps(object):
         vdis = {}
 
         if block_device_info:
-            msg = "block device info: %s" % block_device_info
+            msg = "block device info: {0!s}".format(block_device_info)
             # NOTE(mriedem): block_device_info can contain an auth_password
             # so we have to scrub the message before logging it.
             LOG.debug(strutils.mask_password(msg), instance=instance)
@@ -910,7 +910,7 @@ class VMOps(object):
 
         """
         vm_ref = self._get_vm_opaque_ref(instance)
-        label = "%s-snapshot" % instance['name']
+        label = "{0!s}-snapshot".format(instance['name'])
 
         start_time = timeutils.utcnow()
         with vm_utils.snapshot_attached_here(
@@ -1159,7 +1159,7 @@ class VMOps(object):
 
         self._apply_orig_vm_name_label(instance, vm_ref)
         try:
-            label = "%s-snapshot" % instance['name']
+            label = "{0!s}-snapshot".format(instance['name'])
 
             if volume_utils.is_booted_from_volume(self._session, vm_ref):
                 LOG.debug('Not snapshotting root disk since it is a volume',
@@ -1388,7 +1388,7 @@ class VMOps(object):
             for key, value in data_dict.items():
                 key = self._sanitize_xenstore_key(key)
                 value = value or ''
-                self._add_to_param_xenstore(vm_ref, '%s/%s' % (topdir, key),
+                self._add_to_param_xenstore(vm_ref, '{0!s}/{1!s}'.format(topdir, key),
                                             jsonutils.dumps(value))
 
         # Store user metadata
@@ -1444,7 +1444,7 @@ class VMOps(object):
         def update_meta():
             for key, change in diff.items():
                 key = self._sanitize_xenstore_key(key)
-                location = 'vm-data/user-metadata/%s' % key
+                location = 'vm-data/user-metadata/{0!s}'.format(key)
                 process_change(location, change)
         update_meta()
 
@@ -1542,7 +1542,7 @@ class VMOps(object):
         vm_ref = vm_utils.lookup(self._session, instance['name'])
 
         rescue_vm_ref = vm_utils.lookup(self._session,
-                                        "%s-rescue" % instance['name'])
+                                        "{0!s}-rescue".format(instance['name']))
         if rescue_vm_ref:
             self._destroy_rescue_instance(rescue_vm_ref, vm_ref)
 
@@ -1580,7 +1580,7 @@ class VMOps(object):
                 # Note(bobba): Check for the old-style SR first; if this
                 # doesn't find the SR, also look for the new-style from
                 # parse_sr_info
-                sr_uuid = 'FA15E-D15C-%s' % volume_id
+                sr_uuid = 'FA15E-D15C-{0!s}'.format(volume_id)
                 sr_ref = None
                 try:
                     sr_ref = volume_utils.find_sr_by_uuid(self._session,
@@ -1658,7 +1658,7 @@ class VMOps(object):
             - spawn a rescue VM (the vm name-label will be instance-N-rescue).
 
         """
-        rescue_name_label = '%s-rescue' % instance.name
+        rescue_name_label = '{0!s}-rescue'.format(instance.name)
         rescue_vm_ref = vm_utils.lookup(self._session, rescue_name_label)
         if rescue_vm_ref:
             raise RuntimeError(_("Instance is already in Rescue Mode: %s")
@@ -1687,7 +1687,7 @@ class VMOps(object):
 
         """
         rescue_vm_ref = vm_utils.lookup(self._session,
-                                        "%s-rescue" % instance.name)
+                                        "{0!s}-rescue".format(instance.name))
         if not rescue_vm_ref:
             raise exception.InstanceNotInRescueMode(
                     instance_id=instance.uuid)
@@ -1820,7 +1820,7 @@ class VMOps(object):
     def get_vnc_console(self, instance):
         """Return connection info for a vnc console."""
         if instance.vm_state == vm_states.RESCUED:
-            name = '%s-rescue' % instance.name
+            name = '{0!s}-rescue'.format(instance.name)
             vm_ref = vm_utils.lookup(self._session, name)
             if vm_ref is None:
                 # The rescue instance might not be ready at this point.
@@ -1832,7 +1832,7 @@ class VMOps(object):
                 raise exception.InstanceNotFound(instance_id=instance.uuid)
 
         session_id = self._session.get_session_id()
-        path = "/console?ref=%s&session_id=%s" % (str(vm_ref), session_id)
+        path = "/console?ref={0!s}&session_id={1!s}".format(str(vm_ref), session_id)
 
         # NOTE: XS5.6sp2+ use http over port 80 for xenapi com
         return ctype.ConsoleVNC(
@@ -1917,8 +1917,8 @@ class VMOps(object):
         def update_nwinfo():
             for vif in network_info:
                 xs_data = self._vif_xenstore_data(vif)
-                location = ('vm-data/networking/%s' %
-                            vif['address'].replace(':', ''))
+                location = ('vm-data/networking/{0!s}'.format(
+                            vif['address'].replace(':', '')))
                 self._add_to_param_xenstore(vm_ref,
                                             location,
                                             jsonutils.dumps(xs_data))
@@ -1968,7 +1968,7 @@ class VMOps(object):
         """Inject the hostname of the instance into the xenstore."""
         hostname = instance['hostname']
         if rescue:
-            hostname = 'RESCUE-%s' % hostname
+            hostname = 'RESCUE-{0!s}'.format(hostname)
 
         if instance['os_type'] == "windows":
             # NOTE(jk0): Windows host names can only be <= 15 chars.
@@ -2301,7 +2301,7 @@ class VMOps(object):
         # device status as connected (status=4) we take that as the presence
         # of pv driver. Any other status will likely cause migration to fail.
         for device in net_devices:
-            xs_path = "device/vif/%s/state" % device
+            xs_path = "device/vif/{0!s}/state".format(device)
             ret = self._read_from_xenstore(instance, xs_path, vm_ref=vm_ref)
             LOG.debug("PV Device vif.%(vif_ref)s reporting state %(ret)s",
                       {'vif_ref': device, 'ret': ret}, instance=instance)

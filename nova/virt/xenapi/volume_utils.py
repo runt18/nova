@@ -53,7 +53,7 @@ def parse_sr_info(connection_data, description=''):
     params = {}
     if 'sr_uuid' not in connection_data:
         params = _parse_volume_info(connection_data)
-        sr_identity = "%s/%s/%s" % (params['target'], params['port'],
+        sr_identity = "{0!s}/{1!s}/{2!s}".format(params['target'], params['port'],
                                     params['targetIQN'])
         # PY2 can only support taking an ascii string to uuid5
         if six.PY2 and isinstance(sr_identity, unicode):
@@ -65,7 +65,7 @@ def parse_sr_info(connection_data, description=''):
             params[k] = connection_data[k]
 
     label = connection_data.pop('name_label',
-                                'tempSR-%s' % sr_uuid)
+                                'tempSR-{0!s}'.format(sr_uuid))
     params['name_description'] = connection_data.get('name_description',
                                                      description)
 
@@ -345,7 +345,7 @@ def find_vbd_by_number(session, vm_ref, dev_number):
                 if user_device == requested_device:
                     return vbd_ref
             except session.XenAPI.Failure:
-                msg = "Error looking up VBD %s for %s" % (vbd_ref, vm_ref)
+                msg = "Error looking up VBD {0!s} for {1!s}".format(vbd_ref, vm_ref)
                 LOG.debug(msg, exc_info=True)
 
 

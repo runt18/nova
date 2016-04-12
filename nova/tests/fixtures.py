@@ -53,7 +53,7 @@ class ServiceFixture(fixtures.Fixture):
         # this is stable.
         host = host or name
         kwargs.setdefault('host', host)
-        kwargs.setdefault('binary', 'nova-%s' % name)
+        kwargs.setdefault('binary', 'nova-{0!s}'.format(name))
         self.kwargs = kwargs
 
     def setUp(self):
@@ -414,9 +414,9 @@ class OSAPIFixture(fixtures.Fixture):
         self.osapi = service.WSGIService("osapi_compute")
         self.osapi.start()
         self.addCleanup(self.osapi.stop)
-        self.auth_url = 'http://%(host)s:%(port)s/%(api_version)s' % ({
+        self.auth_url = 'http://{host!s}:{port!s}/{api_version!s}'.format(**({
             'host': self.osapi.host, 'port': self.osapi.port,
-            'api_version': self.api_version})
+            'api_version': self.api_version}))
         self.api = client.TestOpenStackClient('fake', 'fake', self.auth_url,
                                               self.project_id)
         self.admin_api = client.TestOpenStackClient(
@@ -523,17 +523,17 @@ class BannedDBSchemaOperations(fixtures.Fixture):
     @staticmethod
     def _explode(resource, op):
         raise exception.DBNotAllowed(
-            'Operation %s.%s() is not allowed in a database migration' % (
+            'Operation {0!s}.{1!s}() is not allowed in a database migration'.format(
                 resource, op))
 
     def setUp(self):
         super(BannedDBSchemaOperations, self).setUp()
         for thing in self._banned_resources:
             self.useFixture(fixtures.MonkeyPatch(
-                'sqlalchemy.%s.drop' % thing,
+                'sqlalchemy.{0!s}.drop'.format(thing),
                 lambda *a, **k: self._explode(thing, 'drop')))
             self.useFixture(fixtures.MonkeyPatch(
-                'sqlalchemy.%s.alter' % thing,
+                'sqlalchemy.{0!s}.alter'.format(thing),
                 lambda *a, **k: self._explode(thing, 'alter')))
 
 

@@ -115,9 +115,9 @@ class _ImageTestCase(object):
         image.cache(fake_fetch, self.TEMPLATE_PATH, self.SIZE)
 
         self.assertEqual(fake_processutils.fake_execute_get_log(),
-            ['fallocate -l 1 %s.fallocate_test' % self.PATH,
-             'fallocate -n -l %s %s' % (self.SIZE, self.PATH),
-             'fallocate -n -l %s %s' % (self.SIZE, self.PATH)])
+            ['fallocate -l 1 {0!s}.fallocate_test'.format(self.PATH),
+             'fallocate -n -l {0!s} {1!s}'.format(self.SIZE, self.PATH),
+             'fallocate -n -l {0!s} {1!s}'.format(self.SIZE, self.PATH)])
 
     def test_prealloc_image_without_write_access(self):
         CONF.set_override('preallocate_images', 'space')
@@ -355,7 +355,7 @@ class Qcow2TestCase(_ImageTestCase, test.NoDBTestCase):
         self.image_class = imagebackend.Qcow2
         super(Qcow2TestCase, self).setUp()
         self.QCOW2_BASE = (self.TEMPLATE_PATH +
-                           '_%d' % (self.SIZE / units.Gi))
+                           '_{0:d}'.format((self.SIZE / units.Gi)))
 
     def prepare_mocks(self):
         fn = self.mox.CreateMockAnything()
@@ -578,7 +578,7 @@ class LvmTestCase(_ImageTestCase, test.NoDBTestCase):
         self.flags(images_volume_group=self.VG, group='libvirt')
         self.flags(enabled=False, group='ephemeral_storage_encryption')
         self.INSTANCE['ephemeral_key_uuid'] = None
-        self.LV = '%s_%s' % (self.INSTANCE['uuid'], self.NAME)
+        self.LV = '{0!s}_{1!s}'.format(self.INSTANCE['uuid'], self.NAME)
         self.OLD_STYLE_INSTANCE_PATH = None
         self.PATH = os.path.join('/dev', self.VG, self.LV)
         self.disk = imagebackend.disk
@@ -790,7 +790,7 @@ class EncryptedLvmTestCase(_ImageTestCase, test.NoDBTestCase):
                              '00000000000000000000000000000000',
                    group='keymgr')
         self.flags(images_volume_group=self.VG, group='libvirt')
-        self.LV = '%s_%s' % (self.INSTANCE['uuid'], self.NAME)
+        self.LV = '{0!s}_{1!s}'.format(self.INSTANCE['uuid'], self.NAME)
         self.OLD_STYLE_INSTANCE_PATH = None
         self.LV_PATH = os.path.join('/dev', self.VG, self.LV)
         self.PATH = os.path.join('/dev/mapper',
@@ -1256,7 +1256,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
         image.create_image(fn, self.TEMPLATE_PATH, None)
 
-        rbd_name = "%s_%s" % (self.INSTANCE['uuid'], self.NAME)
+        rbd_name = "{0!s}_{1!s}".format(self.INSTANCE['uuid'], self.NAME)
         cmd = ('rbd', 'import', '--pool', self.POOL, self.TEMPLATE_PATH,
                rbd_name, '--image-format=2', '--id', self.USER,
                '--conf', self.CONF)
@@ -1278,7 +1278,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
         self.mox.StubOutWithMock(image, 'check_image_exists')
         image.check_image_exists().AndReturn(False)
         image.check_image_exists().AndReturn(False)
-        rbd_name = "%s_%s" % (self.INSTANCE['uuid'], self.NAME)
+        rbd_name = "{0!s}_{1!s}".format(self.INSTANCE['uuid'], self.NAME)
         cmd = ('rbd', 'import', '--pool', self.POOL, self.TEMPLATE_PATH,
                rbd_name, '--image-format=2', '--id', self.USER,
                '--conf', self.CONF)
@@ -1306,7 +1306,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
         self.mox.StubOutWithMock(image, 'get_disk_size')
         image.get_disk_size(self.TEMPLATE_PATH).AndReturn(self.SIZE)
         image.check_image_exists().AndReturn(True)
-        rbd_name = "%s_%s" % (self.INSTANCE['uuid'], self.NAME)
+        rbd_name = "{0!s}_{1!s}".format(self.INSTANCE['uuid'], self.NAME)
         image.get_disk_size(rbd_name).AndReturn(self.SIZE)
 
         self.mox.ReplayAll()
@@ -1348,7 +1348,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
         self.flags(images_rbd_ceph_conf=conf, group='libvirt')
         self.flags(rbd_user=user, group='libvirt')
         image = self.image_class(self.INSTANCE, self.NAME)
-        rbd_path = "rbd:%s/%s:id=%s:conf=%s" % (pool, image.rbd_name,
+        rbd_path = "rbd:{0!s}/{1!s}:id={2!s}:conf={3!s}".format(pool, image.rbd_name,
                                                 user, conf)
 
         self.assertEqual(image.path, rbd_path)
@@ -1418,7 +1418,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
             mock_exists.return_value = True
             image.import_file(self.INSTANCE, mock.sentinel.file,
                               mock.sentinel.remote_name)
-            name = '%s_%s' % (self.INSTANCE.uuid,
+            name = '{0!s}_{1!s}'.format(self.INSTANCE.uuid,
                               mock.sentinel.remote_name)
             mock_exists.assert_called_once_with()
             mock_remove.assert_called_once_with(name)
@@ -1435,7 +1435,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
             mock_exists.return_value = False
             image.import_file(self.INSTANCE, mock.sentinel.file,
                               mock.sentinel.remote_name)
-            name = '%s_%s' % (self.INSTANCE.uuid,
+            name = '{0!s}_{1!s}'.format(self.INSTANCE.uuid,
                               mock.sentinel.remote_name)
             mock_exists.assert_called_once_with()
             self.assertFalse(mock_remove.called)
@@ -1452,7 +1452,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
     def test_get_parent_pool_no_parent_info(self):
         image = self.image_class(self.INSTANCE, self.NAME)
-        rbd_uri = 'rbd://%s/%s/fake-image/fake-snap' % (self.FSID, self.POOL)
+        rbd_uri = 'rbd://{0!s}/{1!s}/fake-image/fake-snap'.format(self.FSID, self.POOL)
         with test.nested(mock.patch.object(rbd_utils.RBDDriver, 'parent_info'),
                          mock.patch.object(imagebackend.IMAGE_API, 'get'),
                          ) as (mock_pi, mock_get):
@@ -1479,7 +1479,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
     def test_direct_snapshot(self):
         image = self.image_class(self.INSTANCE, self.NAME)
-        test_snap = 'rbd://%s/%s/fake-image-id/snap' % (self.FSID, self.POOL)
+        test_snap = 'rbd://{0!s}/{1!s}/fake-image-id/snap'.format(self.FSID, self.POOL)
         with test.nested(
                 mock.patch.object(rbd_utils.RBDDriver, 'get_fsid',
                                   return_value=self.FSID),
@@ -1514,7 +1514,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
     def test_direct_snapshot_cleans_up_on_failures(self):
         image = self.image_class(self.INSTANCE, self.NAME)
-        test_snap = 'rbd://%s/%s/%s/snap' % (self.FSID, image.pool,
+        test_snap = 'rbd://{0!s}/{1!s}/{2!s}/snap'.format(self.FSID, image.pool,
                                              image.rbd_name)
         with test.nested(
                 mock.patch.object(rbd_utils.RBDDriver, 'get_fsid',
@@ -1538,7 +1538,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
     def test_cleanup_direct_snapshot(self):
         image = self.image_class(self.INSTANCE, self.NAME)
-        test_snap = 'rbd://%s/%s/%s/snap' % (self.FSID, image.pool,
+        test_snap = 'rbd://{0!s}/{1!s}/{2!s}/snap'.format(self.FSID, image.pool,
                                              image.rbd_name)
         with test.nested(
                 mock.patch.object(rbd_utils.RBDDriver, 'remove_snap'),
@@ -1557,7 +1557,7 @@ class RbdTestCase(_ImageTestCase, test.NoDBTestCase):
 
     def test_cleanup_direct_snapshot_destroy_volume(self):
         image = self.image_class(self.INSTANCE, self.NAME)
-        test_snap = 'rbd://%s/%s/%s/snap' % (self.FSID, image.pool,
+        test_snap = 'rbd://{0!s}/{1!s}/{2!s}/snap'.format(self.FSID, image.pool,
                                              image.rbd_name)
         with test.nested(
                 mock.patch.object(rbd_utils.RBDDriver, 'remove_snap'),

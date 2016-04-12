@@ -86,11 +86,11 @@ class Guest(object):
         self._domain = domain
 
     def __repr__(self):
-        return "<Guest %(id)d %(name)s %(uuid)s>" % {
+        return "<Guest {id:d} {name!s} {uuid!s}>".format(**{
             'id': self.id,
             'name': self.name,
             'uuid': self.uuid
-        }
+        })
 
     @property
     def id(self):
@@ -160,7 +160,7 @@ class Guest(object):
             for interface in interfaces:
                 utils.execute(
                     'tee',
-                    '/sys/class/net/%s/brport/hairpin_mode' % interface,
+                    '/sys/class/net/{0!s}/brport/hairpin_mode'.format(interface),
                     process_input='1',
                     run_as_root=True,
                     check_exit_code=[0, 1])
@@ -258,7 +258,7 @@ class Guest(object):
             doc = etree.fromstring(self._domain.XMLDesc(0))
         except Exception:
             return None
-        node = doc.find("./devices/disk/target[@dev='%s'].." % device)
+        node = doc.find("./devices/disk/target[@dev='{0!s}']..".format(device))
         if node is not None:
             conf = vconfig.LibvirtConfigGuestDisk()
             conf.parse_dom(node)

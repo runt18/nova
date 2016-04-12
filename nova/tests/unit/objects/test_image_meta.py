@@ -292,8 +292,8 @@ class TestImageMetaProps(test.NoDBTestCase):
 
         obj = objects.ImageMetaProps(**props)
         primitive = obj.obj_to_primitive('1.0')
-        self.assertFalse(any([x in primitive['nova_object.data']
-                              for x in props]))
+        self.assertFalse(any(x in primitive['nova_object.data']
+                              for x in props))
 
         for bus in ('lxc', 'uml'):
             obj.hw_disk_bus = bus

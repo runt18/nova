@@ -561,10 +561,9 @@ class _TestSRIOVPciDeviceObject(object):
                              self.inst.uuid)
             self.assertEqual(len(self.inst.pci_devices), 0)
             # check if the all the dependants are UNCLAIMABLE
-            self.assertTrue(all(
-                 [dev.status == fields.PciDeviceStatus.UNCLAIMABLE for
+            self.assertTrue(all(dev.status == fields.PciDeviceStatus.UNCLAIMABLE for
                   dev in self._fake_get_by_parent_address(None, None,
-                                        self.sriov_pf_devices[0].address)]))
+                                        self.sriov_pf_devices[0].address)))
 
     def test_claim_VF(self):
         self._create_fake_instance()
@@ -598,10 +597,9 @@ class _TestSRIOVPciDeviceObject(object):
                              self.inst.uuid)
             self.assertEqual(len(self.inst.pci_devices), 1)
             # check if the all the dependants are UNAVAILABLE
-            self.assertTrue(all(
-                 [dev.status == fields.PciDeviceStatus.UNAVAILABLE for
+            self.assertTrue(all(dev.status == fields.PciDeviceStatus.UNAVAILABLE for
                   dev in self._fake_get_by_parent_address(None, None,
-                                        self.sriov_pf_devices[0].address)]))
+                                        self.sriov_pf_devices[0].address)))
 
     def test_allocate_VF(self):
         self._create_fake_instance()
@@ -683,10 +681,9 @@ class _TestSRIOVPciDeviceObject(object):
                              fields.PciDeviceStatus.AVAILABLE)
             self.assertIsNone(devobj.instance_uuid)
             # check if the all the dependants are AVAILABLE
-            self.assertTrue(all(
-                 [dev.status == fields.PciDeviceStatus.AVAILABLE for
+            self.assertTrue(all(dev.status == fields.PciDeviceStatus.AVAILABLE for
                   dev in self._fake_get_by_parent_address(None, None,
-                                        self.sriov_pf_devices[0].address)]))
+                                        self.sriov_pf_devices[0].address)))
 
     def test_free_allocated_VF(self):
         self._create_fake_instance()

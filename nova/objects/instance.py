@@ -348,9 +348,9 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
                                                     instance.info_cache,
                                                     db_inst['info_cache'])
 
-        if any([x in expected_attrs for x in ('flavor',
+        if any( x in expected_attrs for x in ('flavor',
                                               'old_flavor',
-                                              'new_flavor')]):
+                                              'new_flavor')):
             if have_extra and db_inst['extra'].get('flavor'):
                 instance._flavor_from_db(db_inst['extra']['flavor'])
 
@@ -537,8 +537,8 @@ class Instance(base.NovaPersistentObject, base.NovaObject,
         pass
 
     def _save_flavor(self, context):
-        if not any([x in self.obj_what_changed() for x in
-                    ('flavor', 'old_flavor', 'new_flavor')]):
+        if not any( x in self.obj_what_changed() for x in
+                    ('flavor', 'old_flavor', 'new_flavor')):
             return
         # FIXME(danms): We can do this smarterly by updating this
         # with all the other extra things at the same time

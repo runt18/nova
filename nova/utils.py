@@ -1352,8 +1352,8 @@ def filter_and_format_resource_metadata(resource_type, resource_list,
     def _match_any(pattern_list, string):
         if isinstance(pattern_list, str):
             pattern_list = [pattern_list]
-        return any([re.match(pattern, string)
-                    for pattern in pattern_list])
+        return any( re.match(pattern, string)
+                    for pattern in pattern_list)
 
     def _filter_metadata(resource, search_filt, input_metadata):
         ids = search_filt.get('resource_id', [])

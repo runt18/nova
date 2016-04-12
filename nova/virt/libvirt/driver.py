@@ -3827,8 +3827,8 @@ class LibvirtDriver(driver.ComputeDriver):
         is_able = self._host.is_cpu_control_policy_capable()
 
         cputuning = ['shares', 'period', 'quota']
-        wants_cputune = any([k for k in cputuning
-            if "quota:cpu_" + k in flavor.extra_specs.keys()])
+        wants_cputune = any( k for k in cputuning
+            if "quota:cpu_" + k in flavor.extra_specs.keys())
 
         if wants_cputune and not is_able:
             raise exception.UnsupportedHostCPUControlPolicy()

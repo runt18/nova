@@ -58,8 +58,10 @@ class SupportMatrixFeature(object):
                   STATUS_CONDITION, STATUS_OPTIONAL]
 
     def __init__(self, key, title, status=STATUS_OPTIONAL,
-                 group=None, notes=None, cli=[]):
+                 group=None, notes=None, cli=None):
         # A unique key (eg 'foo.bar.wizz') to identify the feature
+        if cli is None:
+            cli = []
         self.key = key
         # A human friendly short title for the feature
         self.title = title

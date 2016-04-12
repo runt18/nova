@@ -2461,7 +2461,7 @@ def _exact_instance_filter(query, filters, legal_keys):
 
 
 def process_sort_params(sort_keys, sort_dirs,
-                        default_keys=['created_at', 'id'],
+                        default_keys=None,
                         default_dir='asc'):
     """Process the sort parameters to include default keys.
 
@@ -2487,6 +2487,8 @@ def process_sort_params(sort_keys, sort_dirs,
                                    are specified or if an invalid sort
                                    direction is specified
     """
+    if default_keys is None:
+        default_keys = ['created_at', 'id']
     # Determine direction to use for when adding default keys
     if sort_dirs and len(sort_dirs) != 0:
         default_dir_value = sort_dirs[0]

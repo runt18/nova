@@ -304,14 +304,12 @@ class UnsupportedDbRegexpTestCase(DbTestCase):
     def _assert_equals_inst_order(self, correct_order, filters,
                                   sort_keys=None, sort_dirs=None,
                                   limit=None, marker=None,
-                                  match_keys=None):
+                                  match_keys=['uuid', 'vm_state',
+                                              'display_name', 'id']):
         '''Retrieves instances based on the given filters and sorting
         information and verifies that the instances are returned in the
         correct sorted order by ensuring that the supplied keys match.
         '''
-        if match_keys is None:
-            match_keys = ['uuid', 'vm_state',
-                                              'display_name', 'id']
         result = db.instance_get_all_by_filters_sort(
             self.context, filters, limit=limit, marker=marker,
             sort_keys=sort_keys, sort_dirs=sort_dirs)

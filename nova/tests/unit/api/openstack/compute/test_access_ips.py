@@ -318,9 +318,7 @@ class AccessIPsControllerTestV21(test.NoDBTestCase):
         super(AccessIPsControllerTestV21, self).setUp()
         self.controller = access_ips.AccessIPsController()
 
-    def _test_with_access_ips(self, func, kwargs=None):
-        if kwargs is None:
-            kwargs = {'id': 'fake'}
+    def _test_with_access_ips(self, func, kwargs={'id': 'fake'}):
         req = wsgi.Request({'nova.context':
                     fakes.FakeRequestContext('fake_user', 'fake',
                                              is_admin=True)})
@@ -336,9 +334,7 @@ class AccessIPsControllerTestV21(test.NoDBTestCase):
         self.assertEqual(resp_obj.obj['server'][access_ips.AccessIPs.v6_key],
                          'fe80::')
 
-    def _test_without_access_ips(self, func, kwargs=None):
-        if kwargs is None:
-            kwargs = {'id': 'fake'}
+    def _test_without_access_ips(self, func, kwargs={'id': 'fake'}):
         req = wsgi.Request({'nova.context':
                     fakes.FakeRequestContext('fake_user', 'fake',
                                              is_admin=True)})

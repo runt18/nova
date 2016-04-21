@@ -10378,11 +10378,9 @@ def fake_rpc_method(context, method, **kwargs):
     pass
 
 
-def _create_service_entries(context, values=None):
-    if values is None:
-        values = [['avail_zone1', ['fake_host1',
+def _create_service_entries(context, values=[['avail_zone1', ['fake_host1',
                                                              'fake_host2']],
-                                             ['avail_zone2', ['fake_host3']]]
+                                             ['avail_zone2', ['fake_host3']]]):
     for (avail_zone, hosts) in values:
         for host in hosts:
             db.service_create(context,

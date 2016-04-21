@@ -2923,11 +2923,9 @@ class XenAPISRSelectionTestCase(stubs.XenAPITestBaseNoDB):
                          expected)
 
 
-def _create_service_entries(context, values=None):
-    if values is None:
-        values = {'avail_zone1': ['fake_host1',
+def _create_service_entries(context, values={'avail_zone1': ['fake_host1',
                                                          'fake_host2'],
-                                         'avail_zone2': ['fake_host3'], }
+                                         'avail_zone2': ['fake_host3'], }):
     for avail_zone, hosts in six.iteritems(values):
         for service_host in hosts:
             db.service_create(context,
@@ -3116,9 +3114,7 @@ class XenAPIAggregateTestCase(stubs.XenAPITestBase):
     def _aggregate_setup(self, aggr_name='fake_aggregate',
                          aggr_zone='fake_zone',
                          aggr_state=pool_states.CREATED,
-                         hosts=None, metadata=None):
-        if hosts is None:
-            hosts = ['host']
+                         hosts=['host'], metadata=None):
         aggregate = objects.Aggregate(context=self.context)
         aggregate.name = aggr_name
         aggregate.metadata = {'availability_zone': aggr_zone,
